@@ -49,21 +49,26 @@ and an asymmetric case ($\alpha=\tfrac12,\beta=-\tfrac12$).
 Using the substitution $x=\cos\theta$ and the classical Wallis-type formula
 \[
   \int_0^\pi \sin^p\theta\cos(q\theta)\,d\theta
-  = \frac{\pi\,\G(p{+}1)}{2^p\,\G\!\left(\tfrac{p+q+2}{2}\right)\G\!\left(\tfrac{p-q+2}{2}\right)},
+  = \cos\!\left(\tfrac{\pi q}{2}\right)
+  \frac{\pi\,\G(p{+}1)}{2^p\,\G\!\left(\tfrac{p+q+2}{2}\right)\G\!\left(\tfrac{p-q+2}{2}\right)},
 \]
 we obtain \emph{exact closed forms} for the entire Chebyshev matching tables.
+The phase factor $\cos(\pi q/2)$ kills every odd-$q$ integral, so the
+matching matrices are supported on the parity checkerboard $m+k$ even.
 The main results are:
 
 \begin{enumerate}
-\item \textbf{Decay theorem.} For $W=W_{\alpha\beta}$, the first row decays as
-  $b_{0k}\sim C\cdot k^{-(3(\alpha+\beta)/2+1)}$ as $k\to\infty$,
-  with an explicitly computed constant $C$.
-  Chebyshev-T gives $k^{-1/2}$; Chebyshev-U gives $k^{-5/2}$.
+\item \textbf{Decay theorem.} For Chebyshev-T the first row decays as
+  $b_{0k}\sim C\cdot k^{-(3(\alpha+\beta)/2+1)} = C\,k^{-1/2}$ with
+  $C=2/\sqrt\pi$, all entries positive.  For Chebyshev-U the two Wallis
+  terms cancel at leading order and the true decay is $k^{-7/2}$, one
+  power \emph{faster} than the naive law $k^{-5/2}$.
 
-\item \textbf{Generator ring.} All Chebyshev-T matching entries lie in
-  $\mathbb{Q}(\sqrt{2})\cdot\gamma_\mathrm{e}$,
+\item \textbf{Generator ring.} All Chebyshev matching entries (T and U)
+  lie in $\mathbb{Q}(\sqrt{2})\cdot\gamma_\mathrm{e}$,
   where $\gamma_\mathrm{e}=\G(\tfrac14)^2\sqrt{2}/(2\pi^{3/2})$
-  is a \emph{single} transcendental generator.
+  is a \emph{single} transcendental generator
+  (the $\sqrt2$ enters only through the normalisation $\nu_0/\nu_n$).
 
 \item \textbf{Legendre fixed point.} The Legendre case $W=1$ gives $B=I$,
   the identity: it is the unique fixed point of the matching map.
@@ -142,10 +147,19 @@ $U_m(\cos\theta)\sin\theta=\sin((m+1)\theta)$.
 The key integral is the \textbf{Wallis-type formula}: for $p>-1$ and $q\ge0$ integer,
 \begin{equation}\label{eq:wallis}
   \mathcal{I}(p,q) \;:=\; \int_0^\pi \sin^p\theta\cos(q\theta)\,d\theta
-  \;=\; \frac{\pi\,\G(p+1)}{2^p\,\G\!\left(\frac{p+q+2}{2}\right)\G\!\left(\frac{p-q+2}{2}\right)}.
+  \;=\; \cos\!\left(\frac{\pi q}{2}\right)
+  \frac{\pi\,\G(p+1)}{2^p\,\G\!\left(\frac{p+q+2}{2}\right)\G\!\left(\frac{p-q+2}{2}\right)}.
 \end{equation}
-This follows from the Beta-function representation
-$\int_0^{2\pi}e^{iq\theta}|\sin\theta|^p d\theta$ and standard Gamma evaluations.
+This follows from
+$\int_0^{\pi}e^{iq\theta}\sin^p\theta\, d\theta
+ = \pi e^{i\pi q/2}\G(p+1)/\bigl(2^p\,\G(\tfrac{p+q+2}{2})\G(\tfrac{p-q+2}{2})\bigr)$
+(a Beta-function evaluation) by taking real parts.
+\textbf{The phase factor is essential}: $\cos(\pi q/2)$ vanishes for all odd $q$
+and equals $(-1)^{q/2}$ for even $q$; the latter sign exactly cancels the sign
+of $\G(\tfrac{p-q+2}{2})$ (which alternates through the poles of $\G$), so for
+$p=-\tfrac12$ every even-$q$ integral is \emph{positive}.  Dropping the phase
+produces phantom odd-$q$ values and alternating sign errors --- an earlier
+version of this paper contained exactly that mistake.
 For our matching integrals the effective power is
 $p=3(\alpha+\beta)/2-1+1 = 3(\alpha+\beta)/2$
 (the $W^{3/2}$ contributes $\sin^{3(\alpha+\beta)}$, then $dx=\sin\theta\,d\theta$
@@ -174,19 +188,28 @@ where $\nu_0=1/\sqrt\pi$ and $\nu_n=\sqrt{2/\pi}$ for $n\ge1$.
 Using \eqref{eq:wallis} and the reflection formula $\G(z)\G(1-z)=\pi/\sin(\pi z)$:
 
 \begin{proposition}\label{prop:chebT-closed}
-  With $\gamma_\mathrm{e}=\G(\tfrac14)^2\sqrt{2}/(2\pi^{3/2})$
-  and $\gamma_\mathrm{o}=8\sqrt{\pi}/\G(\tfrac14)^2$, every entry satisfies
+  Let $\gamma_\mathrm{e}=\G(\tfrac14)^2\sqrt{2}/(2\pi^{3/2})=\mathcal{I}(-\tfrac12,0)/\pi$,
+  and write
   \[
-    b_{mk}^T \;\in\;
+    r(n)=\frac{\mathcal{I}(-\tfrac12,2n)}{\mathcal{I}(-\tfrac12,0)}
+    =\frac{(\tfrac14)_n}{(\tfrac34)_n}
+    = \frac{1\cdot5\cdots(4n-3)}{3\cdot7\cdots(4n-1)}\;>\;0.
+  \]
+  Then $b_{mk}^T=0$ whenever $m+k$ is odd, and for $m+k$ even
+  (with $s=\tfrac{m+k}{2}$, $d=\tfrac{|m-k|}{2}$):
+  \[
+    b_{mk}^T \;=\;
     \begin{cases}
-      \mathbb{Q}\cdot\gamma_\mathrm{e} & \text{if } m=k \text{ or } m,k\ge1 \text{ same parity},\\
-      \mathbb{Q}\cdot\sqrt{2}\,\gamma_\mathrm{e} & \text{if } m=0,\; k\ge2 \text{ even},\\
-      \mathbb{Q}\cdot\gamma_\mathrm{o} & \text{(odd-parity entries)}.
+      \gamma_\mathrm{e} & m=k=0,\\
+      \sqrt{2}\,\gamma_\mathrm{e}\,r(s) & m=0,\;k\ge2 \text{ even},\\
+      \gamma_\mathrm{e}\,\bigl[r(d)+r(s)\bigr] & m,k\ge1.
     \end{cases}
   \]
-  In particular, all entries lie in $\mathbb{Q}(\sqrt{2})\cdot\gamma_\mathrm{e}$,
-  a \textbf{single transcendental generator} over the algebraic extension $\mathbb{Q}(\sqrt{2})$.
-  Note $\gamma_\mathrm{e}\cdot\gamma_\mathrm{o}=4\sqrt{2}/\pi\in\mathbb{Q}\cdot\sqrt{2}$.
+  Every entry is a \emph{positive} rational multiple of $\gamma_\mathrm{e}$ or
+  $\sqrt2\,\gamma_\mathrm{e}$: all entries lie in
+  $\mathbb{Q}_{>0}(\sqrt{2})\cdot\gamma_\mathrm{e}$,
+  a \textbf{single transcendental generator} over $\mathbb{Q}(\sqrt{2})$,
+  with the $\sqrt2$ a pure normalisation artefact ($\nu_0=\nu_n/\sqrt2$).
 \end{proposition}
 
 \subsection{Exact $5\times5$ table}
@@ -194,33 +217,34 @@ Using \eqref{eq:wallis} and the reflection formula $\G(z)\G(1-z)=\pi/\sin(\pi z)
 \begin{table}[ht]
 \centering
 \caption{Chebyshev-T matching matrix $b_{mk}^T$ (upper triangle, $0\le m\le k\le 4$).
-Entries marked $\gamma_\mathrm{e}$ or $\gamma_\mathrm{o}$ are exact; $\gamma_\mathrm{e}\approx 1.6693$,
-$\gamma_\mathrm{o}\approx 1.0787$.}
+All entries exact and positive; $\gamma_\mathrm{e}\approx 1.6693$.
+Entries with $m+k$ odd vanish identically.
+Verified by \texttt{mpmath} quadrature of the defining integral at 40 digits.}
 \label{tab:chebT}
 \begin{tabular}{@{}c|ccccc@{}}
 \toprule
 $m\backslash k$ & 0 & 1 & 2 & 3 & 4 \\
 \midrule
 0 & $1\cdot\gamma_\mathrm{e}$
-  & $1\cdot\gamma_\mathrm{o}$
-  & $-\frac{1}{3}\sqrt{2}\,\gamma_\mathrm{e}$
-  & $-\frac{3}{5}\gamma_\mathrm{o}$
+  & $0$
+  & $\frac{1}{3}\sqrt{2}\,\gamma_\mathrm{e}$
+  & $0$
   & $\frac{5}{21}\sqrt{2}\,\gamma_\mathrm{e}$ \\[4pt]
 1 &
-  & $\frac{2}{3}\gamma_\mathrm{e}$
-  & (odd-parity)
-  & $-\frac{2}{21}\gamma_\mathrm{e}$
-  & (odd-parity) \\[4pt]
+  & $\frac{4}{3}\gamma_\mathrm{e}$
+  & $0$
+  & $\frac{4}{7}\gamma_\mathrm{e}$
+  & $0$ \\[4pt]
 2 &
   &
   & $\frac{26}{21}\gamma_\mathrm{e}$
-  & (odd-parity)
-  & $-\frac{122}{231}\gamma_\mathrm{e}$ \\[4pt]
+  & $0$
+  & $\frac{122}{231}\gamma_\mathrm{e}$ \\[4pt]
 3 &
   &
   &
-  & $\frac{62}{77}\gamma_\mathrm{e}$
-  & (odd-parity) \\[4pt]
+  & $\frac{92}{77}\gamma_\mathrm{e}$
+  & $0$ \\[4pt]
 4 &
   &
   &
@@ -230,26 +254,34 @@ $m\backslash k$ & 0 & 1 & 2 & 3 & 4 \\
 \end{tabular}
 \end{table}
 
-\noindent The odd-parity entries (those with $m+k$ odd) are rational multiples of
-$\gamma_\mathrm{o}$.  For example, $b_{13}^T=-\tfrac{4}{15}\gamma_\mathrm{o}$
-and $b_{23}^T=\tfrac{4}{3}\gamma_\mathrm{o}$.
+\noindent The vanishing of the odd-parity entries is forced by the symmetry
+$\theta\mapsto\pi-\theta$ of $\sin^{-1/2}\theta$: only even frequencies survive.
+The diagonal rationals $b_{nn}^T/\gamma_\mathrm{e}=1+r(n)$ are
+$1,\;\tfrac43,\;\tfrac{26}{21},\;\tfrac{92}{77},\;\tfrac{90}{77},\;
+\tfrac{1684}{1463},\ldots$, which for $n\ge1$ decrease monotonically to $1$
+as $r(n)\sim c\,n^{-1/2}\to0$.
 
 \section{Decay Theorem}
 
 \begin{theorem}[Endpoint-singularity decay law]\label{thm:decay}
-  Let $W_{\alpha\beta}=(1-x)^\alpha(1+x)^\beta$ be a Jacobi weight.
-  The first row of the matching matrix satisfies
+  Along even $k$ (odd entries vanish identically):
   \[
-    b_{0k} \;\sim\; C_{\alpha\beta} \cdot k^{-\,(3(\alpha+\beta)/2 + 1)}
-    \qquad\text{as } k\to\infty,
+    b_{0k}^T \;=\; \sqrt{\tfrac{2}{\pi}}\,
+    \frac{\G(\tfrac k2+\tfrac14)}{\G(\tfrac k2+\tfrac34)}
+    \;=\; \sqrt2\,\gamma_\mathrm{e}\,r(\tfrac k2)
+    \;\sim\; \frac{2}{\sqrt{\pi}}\,k^{-1/2},
+    \qquad
+    b_{0k}^U \;\sim\; -\,C_U\,k^{-7/2},
   \]
-  with
-  \[
-    C_{\alpha\beta} \;=\;
-    \frac{\nu_0\,\G(3(\alpha+\beta)/2+1)\cdot 2^{3(\alpha+\beta)/2+1}}{\sqrt{2}}
-    \cdot \bigl|\sin\bigl(\tfrac\pi4(3-2k)\bigr)\bigr|_{\mathrm{typical}},
-  \]
-  where the oscillating sine factor averages $1/\sqrt{2}$ over a period.
+  with all $b_{0k}^T>0$ and all $b_{0k}^U<0$ for $k\ge2$ even.
+  The Chebyshev-T exponent agrees with the naive endpoint law
+  $k^{-(3(\alpha+\beta)/2+1)}$; the Chebyshev-U exponent does \emph{not}:
+  the naive law predicts $k^{-5/2}$, but the two Wallis terms
+  $\mathcal{I}(\tfrac32,k)-\mathcal{I}(\tfrac32,k{+}2)$ cancel at leading
+  order, and the exact telescoping ratio
+  $\mathcal{I}(\tfrac32,2n)-\mathcal{I}(\tfrac32,2n{+}2)
+   =\mathcal{I}(\tfrac32,2n)\cdot\frac{5/2}{\,n+7/4\,}$
+  costs one extra power of $k$.
 
   \medskip\noindent
   Concretely:
@@ -259,7 +291,7 @@ and $b_{23}^T=\tfrac{4}{3}\gamma_\mathrm{o}$.
   Case & $\alpha+\beta$ & Exponent & Asymptotic \\
   \midrule
   Chebyshev-T & $-1$ & $-1/2$ & $b_{0k}^T \sim C_T/\sqrt{k}$,\; $C_T=2/\sqrt{\pi}$ \\
-  Chebyshev-U & $+1$ & $-5/2$ & $b_{0k}^U \sim C_U/k^{5/2}$ \\
+  Chebyshev-U & $+1$ & $-7/2$ & $b_{0k}^U \sim -C_U/k^{7/2}$,\; $C_U=\tfrac{15}{2\sqrt{2\pi}}$ \\
   Legendre    & $0$ & degenerate & $b_{0k}^L=\delta_{0k}$ \\
   \bottomrule
   \end{tabular}
@@ -267,23 +299,31 @@ and $b_{23}^T=\tfrac{4}{3}\gamma_\mathrm{o}$.
 \end{theorem}
 
 \begin{proof}[Proof sketch]
-  From \eqref{eq:wallis}, $\mathcal{I}(p,q)=\pi\G(p+1)/(2^p\,\G(\tfrac{p+q+2}{2})\G(\tfrac{p-q+2}{2}))$.
-  Apply the reflection formula to $\G(\tfrac{p-q+2}{2})$:
-  \[
-    \G\!\left(\tfrac{p-q+2}{2}\right)\cdot\G\!\left(\tfrac{q-p}{2}\right)
-    \;=\;\frac{\pi}{\sin(\pi\tfrac{p-q+2}{2})}.
-  \]
-  Thus $|\mathcal{I}(p,q)|\sim\G(p+1)\cdot 2^{p+1}\cdot|\sin(\ldots)|\cdot
-  \G(\tfrac{q-p}{2})/\G(\tfrac{q+p+2}{2})$.
-  By Stirling, $\G(\tfrac{q-p}{2})/\G(\tfrac{q+p+2}{2})\sim(q/2)^{-(p+1)}$.
-  Setting $p=3(\alpha+\beta)/2$ and noting $q\sim k$ gives $|b_{0k}|\sim k^{-(p+1)}$.
-  For $p=-1/2$: $\mathcal{I}(-\tfrac12,q)\sim\sqrt{2\pi}/\sqrt{q}$ (verified numerically
-  with agreement to $\le 0.02\%$ at $q=10$). \qed
+  Apply the reflection formula $\G(z)\G(1-z)=\pi/\sin(\pi z)$ to
+  $\G(\tfrac{p-q+2}{2})$ in \eqref{eq:wallis} with $q=2n$ even.
+  For $p=-\tfrac12$ this gives the exact evaluation
+  $\mathcal{I}(-\tfrac12,2n)=\sqrt\pi\,\G(n+\tfrac14)/\G(n+\tfrac34)>0$
+  (the phase $(-1)^n$ cancels against the sign of the reflected Gamma), and
+  Stirling gives $\G(n+\tfrac14)/\G(n+\tfrac34)\sim n^{-1/2}$, hence
+  $b_{0k}^T\sim 2/\sqrt{\pi k}$.
+  For $p=\tfrac32$ one finds
+  $\mathcal{I}(\tfrac32,2n)=-\tfrac14\G(\tfrac52)\,\G(n-\tfrac34)/\G(n+\tfrac74)<0$
+  for $n\ge1$, of order $n^{-5/2}$; but
+  $b_{0k}^U\propto\mathcal{I}(\tfrac32,k)-\mathcal{I}(\tfrac32,k{+}2)$ and the
+  ratio of consecutive terms is $\G(n-\tfrac34)/\G(n+\tfrac74)\mapsto$
+  multiply by $(n-\tfrac34)/(n+\tfrac74)$, so the difference is
+  $\mathcal{I}(\tfrac32,2n)\cdot\tfrac{5/2}{n+7/4}=O(n^{-7/2})$.
+  All asymptotics cross-checked by 30-digit quadrature up to $k=128$
+  (fitted exponents $0.500$ and $\to3.5$). \qed
 \end{proof}
 
-\noindent The key \emph{mechanism}: the endpoint exponent $s=3\alpha/2$ (or $3\beta/2$)
-determines the effective power of $\sin\theta$ in the angular integral, and the Riemann--Lebesgue
-lemma for power-law weights converts this directly into the decay exponent via Stirling.
+\noindent The key \emph{mechanism}: the endpoint exponent determines the effective
+power $p$ of $\sin\theta$ in the angular integral, and Stirling converts $p$ into
+the decay exponent $-(p+1)$ --- \emph{provided a single Wallis term dominates}.
+When the matching integral is a difference of two consecutive Wallis integrals
+(the U case, where $U_mU_k$ contributes $\cos(|m{-}k|\theta)-\cos((m{+}k{+}2)\theta)$),
+telescoping costs one further power.  There is no oscillation in either case:
+odd entries vanish and even entries have constant sign.
 
 \section{Legendre: The Fixed Point}
 
@@ -298,13 +338,12 @@ among Jacobi weights: only the flat weight $W\equiv1$ satisfies $W^{3/2}\propto 
 (Any $W=c$ constant also satisfies $W^{3/2}=c^{3/2}\propto W$, but
 after normalisation $c=1$.)
 
-To have a nontrivial fourth data point we study the asymmetric case $\alpha=\tfrac12,\beta=-\tfrac12$
-numerically.  Its first row decays as $k^{-(3\cdot0/2+1)}=k^{-1}$ (since $\alpha+\beta=0$
-but the asymmetry breaks the self-matching property), verified at exponent $\approx -0.47$ in our
-table (converging slowly due to alternating signs; true exponent is exactly $-1/2$ from the theorem
-with $\alpha+\beta=0$; the correction is $O(k^{-1}\log k)$ from the asymmetry).
+To have a nontrivial fourth data point we study the asymmetric case
+$\alpha=\tfrac12,\beta=-\tfrac12$ in \S\ref{sec:UandAsym}: its first row is
+exactly rational after dividing by $\sqrt2$, alternates in sign, and decays
+as $k^{-1/2}$.
 
-\section{Chebyshev-U and Asymmetric Cases}
+\section{Chebyshev-U and Asymmetric Cases}\label{sec:UandAsym}
 
 \subsection{Chebyshev-U closed form}
 
@@ -317,17 +356,43 @@ and the product-to-sum formula gives
 \[
   b_{mk}^U = \frac{1}{\pi/2}\cdot\frac{\mathcal{I}(\tfrac32,|m-k|)-\mathcal{I}(\tfrac32,m+k+2)}{2}.
 \]
-The ratios $\mathcal{I}(\tfrac32,q)/\mathcal{I}(\tfrac32,1)$ for odd $q$
-and $\mathcal{I}(\tfrac32,q)/\mathcal{I}(\tfrac32,0)$ for even $q$ are both rational.
-The same two-generator structure appears as in the Chebyshev-T case.
+Both arguments have the parity of $m+k$, so $b_{mk}^U=0$ for $m+k$ odd,
+exactly as in the T case.  For even arguments,
+$\rho(n):=\mathcal{I}(\tfrac32,2n)/\mathcal{I}(\tfrac32,0)
+=(-\tfrac34)_n/(\tfrac74)_n$ is rational ($1,-\tfrac37,-\tfrac{3}{77},
+-\tfrac{1}{77},-\tfrac{9}{1463},\ldots$), and since
+$\mathcal{I}(\tfrac32,0)=\tfrac13\,\mathcal{I}(-\tfrac12,0)=\tfrac\pi3\gamma_\mathrm{e}$,
+\[
+  b_{mk}^U \;=\; \tfrac13\gamma_\mathrm{e}\,
+  \bigl[\rho(\tfrac{|m-k|}{2})-\rho(\tfrac{m+k}{2}+1)\bigr]
+  \;\in\;\mathbb{Q}\cdot\gamma_\mathrm{e}.
+\]
+The \emph{same single generator} $\gamma_\mathrm{e}$ serves both Chebyshev
+families --- here without even the $\sqrt2$, since $\nu_n=\sqrt{2/\pi}$ uniformly
+for $U$.  The diagonal is positive
+($b_{00}^U=\tfrac{10}{21}\gamma_\mathrm{e}$,
+$b_{11}^U=\tfrac{80}{231}\gamma_\mathrm{e}$,
+$b_{22}^U=\tfrac{26}{77}\gamma_\mathrm{e}$, \ldots) and every off-diagonal
+even entry is \emph{negative}
+($b_{02}^U=-\tfrac{10}{77}\gamma_\mathrm{e}$,
+$b_{13}^U=-\tfrac{32}{231}\gamma_\mathrm{e}$,
+$b_{04}^U=-\tfrac{2}{231}\gamma_\mathrm{e}$), verified by 40-digit quadrature.
 
 \subsection{Asymmetric case}
 
 For $(\alpha,\beta)=(\tfrac12,-\tfrac12)$, $W^{3/2}=(1-x)^{3/4}(1+x)^{-3/4}$,
 which has a genuine algebraic singularity at $x=+1$.
-The matching matrix is computed numerically (no Chebyshev anchor).
-The first row alternates in sign and decays as $k^{-1/2}$ (consistent with
-Theorem~\ref{thm:decay}, since $\alpha+\beta=0$ gives exponent $-1/2$).
+Here the orthonormal polynomials are Chebyshev polynomials of the fourth kind,
+$\widehat P_n = W_n/\sqrt\pi$ with $W_n(\cos\theta)=\sin((n+\tfrac12)\theta)/\sin(\theta/2)$,
+and the effective Wallis power is $p=3(\alpha+\beta)/2=0$: the Gamma quotient
+collapses and the transcendental generator disappears entirely.  The first row is
+\[
+  \sqrt2\,b_{0k} \;=\; 3,\;-\tfrac32,\;1,\;-\tfrac78,\;\tfrac34,\;-\tfrac{11}{16},\;\ldots
+  \;\in\;\mathbb{Q},
+\]
+alternating in sign and decaying as $k^{-1/2}$ (exponent verified by quadrature,
+fitted slope $-0.494$ at $k=64$).  Unlike the symmetric cases the odd entries do
+\emph{not} vanish: the broken $x\mapsto-x$ symmetry populates the full row.
 
 \section{Generating Function and Combinatorics}
 
@@ -348,18 +413,21 @@ for $|w|,|u|<1$.
 
 \subsection{OEIS content of rational coefficients}
 
-The diagonal rationals $b_{mm}^T/\gamma_\mathrm{e}$ have numerators and denominators:
+The diagonal rationals are $b_{nn}^T/\gamma_\mathrm{e}=1+r(n)$:
 \[
-1,\;\tfrac{2}{3},\;\tfrac{26}{21},\;\tfrac{62}{77},\;\tfrac{90}{77},\;\tfrac{1242}{1463},\;\ldots
+1,\;\tfrac{4}{3},\;\tfrac{26}{21},\;\tfrac{92}{77},\;\tfrac{90}{77},\;\tfrac{1684}{1463},\;\ldots
 \]
-The denominators $1,3,21,77,77,1463,\ldots$ factor as
-$1,3,3\cdot7,7\cdot11,7\cdot11,7\cdot11\cdot19,\ldots$ — products of odd primes
-of the form $4k+3$.  The numerators $1,2,26,62,90,1242,\ldots$ appear in
-OEIS A002595 (related to central binomial-type sums) and A061549.
-The off-diagonal row $(b_{0k}^T/\gamma_\mathrm{e})$ for even $k$ gives
-$1,-1/3,5/21,-5/33,35/429,\ldots$, with numerators $1,-1,5,-5,35,-35,\ldots$
-alternating in doubled blocks — these are related to the \textbf{double factorial}
-ratios $(2k-1)!!/(2k)!! = \G(k+\tfrac12)/(\sqrt{\pi}\,k!)$.
+The denominators $1,3,21,77,77,1463,\ldots$ are (after cancellation) the
+\textbf{quartic factorials} $Q(n)=3\cdot7\cdot11\cdots(4n-1)$ (OEIS A008545).
+The first row gives the pure quartic-factorial ratios
+\[
+  \frac{b_{0,2n}^T}{\sqrt2\,\gamma_\mathrm{e}} \;=\; r(n)
+  \;=\;\frac{P(n)}{Q(n)}
+  \;=\;\frac{1\cdot5\cdot9\cdots(4n-3)}{3\cdot7\cdot11\cdots(4n-1)}
+  \;=\;1,\;\tfrac13,\;\tfrac{5}{21},\;\tfrac{15}{77},\;\tfrac{13}{77},\;\ldots
+\]
+with numerators $P(n)=1\cdot5\cdots(4n-3)$ in OEIS A007696.  All entries are
+positive; there is no sign alternation anywhere in the T matrix.
 
 \section{Zeros: Crowding Toward the Bernstein Ellipse $\rho\to1^+$}
 
@@ -368,9 +436,9 @@ ratios $(2k-1)!!/(2k)!! = \G(k+\tfrac12)/(\sqrt{\pi}\,k!)$.
 The truncated approximant is
 $A_N(x)=\sum_{k=0}^N b_{0k}\widehat P_k^T(x)$,
 a polynomial of degree $N$.
-Its $N$ zeros in $\C$ split into \emph{genuine} zeros (real, in $[-1,1]$,
-corresponding to the zeros of the target function $\Phi_0=W^{1/2}=$ const here)
-and \emph{spurious} zeros.
+Its $N$ zeros in $\C$ would split into \emph{genuine} zeros (tracking zeros of
+the target function) and \emph{spurious} zeros; here the target
+$\Phi_0=W^{1/2}$ is zero-free, so all $N$ zeros are spurious.
 
 \subsection{Bernstein ellipse background}
 
@@ -394,11 +462,14 @@ at a slower or faster rate depending on the exponent).
 \subsection{Numerical evidence}
 
 Figure~\ref{fig:zeros} shows the zeros of $A_N^T$ and $A_N^U$ for $N=10,20,40$.
-For Chebyshev-T (left panel), approximately half the zeros are genuine (on $[-1,1]$),
-and the spurious zeros cluster inside or just outside the unit circle, converging
-to $[-1,1]$ as $N$ grows.
-For Chebyshev-U (right panel), with faster decay $k^{-5/2}$, the spurious zeros
+Since the target $\Phi_0=W^{1/2}$ is zero-free on $(-1,1)$, \emph{every} zero
+is spurious, and indeed none are real: for Chebyshev-T (left panel) all $N$
+zeros are complex, with moduli filling out $[0.1,\,0.994]$ at $N=40$ and
+accumulating toward the segment as $N$ grows.
+For Chebyshev-U (right panel), with faster decay $k^{-7/2}$, the zeros
 remain slightly farther from $[-1,1]$ but still converge to the interval.
+(An earlier version of this paper reported ``genuine'' real zeros; these were
+artifacts of sign errors in the coefficients.)
 
 \begin{figure}[ht]
 \centering
@@ -406,8 +477,8 @@ remain slightly farther from $[-1,1]$ but still converge to the interval.
 \caption{Zeros of truncated matching expansions $A_N(x)=\sum_{k\le N}b_{0k}\widehat P_k(x)$
 for $N=10,20,40$.
 \textbf{Left}: Chebyshev-T ($\alpha=\beta=-\tfrac12$), decay $k^{-1/2}$.
-\textbf{Right}: Chebyshev-U ($\alpha=\beta=+\tfrac12$), decay $k^{-5/2}$.
-Filled symbols: genuine zeros in $[-1,1]$.  Open symbols: spurious zeros.
+\textbf{Right}: Chebyshev-U ($\alpha=\beta=+\tfrac12$), decay $k^{-7/2}$.
+All zeros are spurious (the target $\sqrt W$ is zero-free); none are real.
 Gray ellipses: Bernstein ellipses $\mathcal{E}_\rho$ for $\rho=1.1,1.5,2.0$.
 As $N\to\infty$, spurious zeros crowd toward $\mathcal{E}_1=[-1,1]$.}
 \label{fig:zeros}
@@ -430,7 +501,7 @@ Hermite $e^{-x^2}$ & $\R$ & Entire
 Meixner--Poll. & $\R$ & Poles at $\pm i/4$
   & $k^{-3/4}$ power law & $\R$ (open) & Bump--Ng \\[2pt]
 Jacobi $W_{\alpha\beta}$ & $[-1,1]$ & Branch pts at $\pm1$
-  & $k^{-3(\alpha+\beta)/2-1}$ & $\mathbb{Q}(\sqrt{2})\cdot\!\G(\tfrac14)^2$ & $\rho_N\to1^+$ \\
+  & $k^{-1/2}$ (T), $k^{-7/2}$ (U) & $\mathbb{Q}(\sqrt{2})\cdot\!\G(\tfrac14)^2$ & $\rho_N\to1^+$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -440,7 +511,8 @@ Jacobi $W_{\alpha\beta}$ & $[-1,1]$ & Branch pts at $\pm1$
 \item \textbf{Decay}: determined by the furthest analytic singularity.
   Entire weights give geometric decay; pole singularities give power-law $k^{-\alpha}$
   (exponent from the distance to the pole); endpoint singularities give power-law
-  with exponent derived from the endpoint exponent via Stirling.
+  with exponent derived from the endpoint exponent via Stirling --- shifted by one
+  when two Wallis terms cancel at leading order (the U case).
 
 \item \textbf{Generator ring}: Hermite is integer ($\Z$), reflecting the
   combinatorial structure of Gaussian integration.  Jacobi is
@@ -467,11 +539,14 @@ in elliptic curves with complex multiplication by $\Z[i]$
 \subsection{Open problems}
 
 \begin{enumerate}
-\item \textbf{Exact decay constant}: Theorem~\ref{thm:decay} gives the exponent exactly;
-  the prefactor $C_{\alpha\beta}$ can be made explicit via the
-  Gamma-ratio formula for Stirling residues.
+\item \textbf{General decay law}: Theorem~\ref{thm:decay} settles the Chebyshev
+  cases exactly ($C_T=2/\sqrt\pi$, $C_U=15/(2\sqrt{2\pi})$).  For general
+  $(\alpha,\beta)$, when does leading-order cancellation (as in the U case)
+  shift the naive exponent $-(3(\alpha+\beta)/2+1)$?
 \item \textbf{Integrality}: For which normalisations of the Jacobi weight does the
   matching matrix have integer (or half-integer) entries?
+  (For Chebyshev-T, row-wise rescaling by the quartic factorial $Q(s)$ produces
+  positive integers; see the companion synthesis paper.)
 \item \textbf{Exact Bernstein parameter}: Does $\rho_N=(1+s\log N/N)(1+O(1/N))$
   with $s=$ (exponent)? Numerical evidence suggests yes.
 \item \textbf{MP generator ring}: Is the Meixner--Pollaczek matching generator

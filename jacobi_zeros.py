@@ -20,9 +20,17 @@ mp.mp.dps = 50
 
 # ─── Reconstruct b_{0k} from closed form for large N ───────────────────────
 def I_sin_cos(p, q):
+    """I(p,q) = ∫₀^π sin^p θ cos(qθ) dθ
+             = cos(πq/2) · π Γ(p+1) / (2^p Γ((p+q+2)/2) Γ((p−q+2)/2)).
+    The phase factor cos(πq/2) is essential: it kills all odd q and
+    contributes (−1)^{q/2} for even q (which cancels the sign of the
+    reflected Gamma, making e.g. all I(−1/2, 2n) positive)."""
     p = mp.mpf(p)
     q = int(abs(q))
-    num = mp.pi * mp.gamma(p + 1)
+    if q % 2 == 1:
+        return mp.mpf(0)
+    phase = (-1) ** (q // 2)
+    num = phase * mp.pi * mp.gamma(p + 1)
     den = mp.power(2, p) * mp.gamma((p + q + 2)/2) * mp.gamma((p - q + 2)/2)
     return num / den
 

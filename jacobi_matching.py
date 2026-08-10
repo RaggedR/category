@@ -79,17 +79,23 @@ def compute_b_numerical(m, k, alpha, beta):
 # More precisely, ∫₀^π cos(mθ)cos(kθ) sinᵖ(θ) dθ
 # = (π/4) · [B((p+1)/2, |(m-k)|+... ) + B(...)]-type expression.
 # We use the Wallis-type formula directly:
-#   ∫₀^π sinᵖ(θ) cos(qθ) dθ = π·Γ(p+1) / (2^p · Γ((p+q+2)/2) · Γ((p-q+2)/2))
-# This is valid for p > -1, q integer ≥ 0.
+#   ∫₀^π sinᵖ(θ) cos(qθ) dθ = cos(πq/2)·π·Γ(p+1) / (2^p · Γ((p+q+2)/2) · Γ((p-q+2)/2))
+# This is valid for p > -1, q integer ≥ 0.  (Phase factor added 2026-08-10.)
 # cos(mθ)cos(kθ) = [cos((m+k)θ) + cos((m-k)θ)] / 2
 
 def I_sin_cos(p, q):
     """∫₀^π sin^p(θ) cos(qθ) dθ  (q ≥ 0 integer, p > -1)
-    = π Γ(p+1) / (2^p Γ((p+q+2)/2) Γ((p-q+2)/2))
+    = cos(πq/2) · π Γ(p+1) / (2^p Γ((p+q+2)/2) Γ((p-q+2)/2))
+    CORRECTED 2026-08-10: the phase factor cos(πq/2) is essential.
+    It kills all odd q and contributes (−1)^{q/2} for even q, which
+    cancels the alternating sign of Γ((p−q+2)/2).
     """
     p = mp.mpf(p)
     q = int(abs(q))
-    num = mp.pi * mp.gamma(p + 1)
+    if q % 2 == 1:
+        return mp.mpf(0)
+    phase = (-1) ** (q // 2)
+    num = phase * mp.pi * mp.gamma(p + 1)
     den = mp.power(2, p) * mp.gamma((p + q + 2)/2) * mp.gamma((p - q + 2)/2)
     return num / den
 
