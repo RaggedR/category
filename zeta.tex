@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\emergencystretch=1.5em
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand{\R}{\mathbb{R}}
+
+\title{Polynomial Approximation of the Riemann $\Xi$ Function\\
+in the Log-Hermite Polynomials}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We approximate $\Xi(T) = \xi(\tfrac12 + iT)$ by \emph{polynomials} --- on $\R_+$, by $x^{-1/2}$ times polynomials in $\log x$ --- rather than truncating its expansion in the log-Hermite basis functions, and compare the zeros of the two approximants. The projection coefficients obey the identity $\beta_k = \langle \Xi(\lambda\,\cdot)\, e^{-t^2/2},\, \psi_k\rangle$, so one Gaussian factor in the quadrature separates the two problems. The polynomial approximant is markedly worse at capturing Riemann zeros: at degree $60$ it reproduces two (the sections reproduce five to six digits), because its tail modes grow like $e^{t^2/2}$ exactly where $\Xi$ decays. The crossover height is governed by a quadratic balance law in place of the sections' linear one, the measured coefficient decay is the inf-convolution of the arithmetic decay with the geometric rate $\tfrac12\ln 3$ of the Hermite matching matrix, and the complex defects at the crossover now form short arcs. This adds a fourth row to the taxonomy of section-zero geometries.
+\end{abstract}
+
+\section{Two approximations, one Gaussian apart}
+
+Let $\Xi(T) = \xi(\tfrac12 + iT)$ and $F(t) = \Xi(\lambda t)$ with $\lambda = 10$. Our companion paper studied the \emph{sections} of the Hermite-function expansion $F = \sum_k b_k \psi_k$: truncations $S_N = \sum_{k \le N} b_k \psi_k$, each a polynomial times $e^{-t^2/2}$. Here we instead take the best approximation of $F$ by a \emph{polynomial} of degree $\le N$ in $L^2(\R, e^{-t^2}dt)$:
+\[
+P_N F \;=\; \sum_{k \le N} \beta_k\, \tilde h_k, \qquad
+\tilde h_k = \frac{H_k}{(2^k k! \sqrt{\pi})^{1/2}} = \psi_k\, e^{t^2/2}.
+\]
+Under $x = e^t$ this is approximation by $x^{-1/2}$ times polynomials in $\log x$ against the log-normal weight: the \emph{log-Hermite polynomial} approximation of the multiplicative side of $\zeta$. It is well posed --- polynomials in $\log x$ transport to ordinary polynomials in $t$, where Hermite completeness holds --- even though polynomials in $x$ are not dense against the log-normal weight (Stieltjes--Wigert indeterminacy).
+
+The two computations differ by a single Gaussian:
+\begin{equation}
+\beta_k \;=\; \langle F, \tilde h_k \rangle_{e^{-t^2}}
+\;=\; \int_\R F(t)\, \psi_k(t)\, e^{-t^2/2}\, dt,
+\label{eq:identity}
+\end{equation}
+the Hermite-\emph{function} coefficients of the damped target $F e^{-t^2/2}$. Coefficients were computed by $80$-digit quadrature for even $k \le 60$; roots at $120$ digits. Code: \texttt{xi\_polyapprox.py}.
+
+\section{Coefficient decay: an inf-convolution}
+
+If the target were itself Gaussian-decaying (the setting of our Szeg\H{o}-type paper), $\beta_k$ would decay like $3^{-k/2}$, the rate of the Hermite matching matrix. Measured local slopes of $\ln|\beta_k|$ per unit $k$ are
+\[
+-0.24,\; -0.21,\; -0.22,\; -0.23,\; -0.25,\; -0.26
+\qquad (k = 4, 14, 24, 34, 44, 54):
+\]
+far from $-\tfrac12\ln 3 = -0.549$, and slowly steepening. The mechanism: inserting $F = \sum_m b_m \psi_m$ into \eqref{eq:identity} gives $\beta_k = \sum_m b_m M_{mk}$ with the Gaussian overlap matrix $M_{mk} = \langle \psi_m e^{-t^2/2}, \psi_k\rangle \asymp 3^{-(k-m)/2}$. On the log scale this is an inf-convolution:
+\[
+-\ln|\beta_k| \;\approx\; \min_m \Bigl( -\ln|b_m| + \tfrac{\ln 3}{2}(k - m) \Bigr).
+\]
+The geometric rate $\tfrac12 \ln 3$ can only dominate once the local slope of $-\ln|b_m|$ exceeds it, which the section data locates near $m \approx 42$; below that the arithmetic decay of $b_m$ sets the (slower) pace. The slopes should therefore drift to $-0.549$ for $k$ well beyond $60$ --- a prediction we have not yet tested.
+
+\section{Zeros: three zones, a quadratic balance law}
+
+The tail of the polynomial approximation is a combination of the modes $\tilde h_k = \psi_k e^{t^2/2}$, which \emph{grow} like the inverse square root of the weight. Spurious zeros appear where the tail overtakes the target:
+\begin{equation}
+|\beta_N|\, e^{t^2/2} \;\gtrsim\; |\Xi(\lambda t)| \asymp e^{-\pi\lambda t/4}
+\quad\Longleftrightarrow\quad
+\tfrac{t^2}{2} + \tfrac{\pi\lambda}{4}\,t \;=\; -\ln|\beta_N|,
+\label{eq:balance}
+\end{equation}
+a quadratic balance law, in contrast to the sections' linear one $\tfrac{\pi}{4}T_c = -\ln|b_N|$ (up to the $T^{7/4}$ factor). The extra $t^2/2$ on the left is the price of the basis: it caps the capture height far below the sections'.
+
+\begin{observation}
+For $N = 20, 40, 60$, with $T_c$ from \eqref{eq:balance} using the measured $\beta_N$:
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & $N=20$ & $N=40$ & $N=60$ \\
+\midrule
+predicted $T_c$ & $6.8$ & $12.0$ & $17.5$ \\
+Riemann zeros captured & $0$ & $1$ & $2$ \\
+first detached real zero & $15.44$ & $21.71$ & $26.16$ \\
+sections (companion paper) & $\approx 1$ & $\approx 4$ & $\approx 7$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+At $N = 60$ the approximant reproduces $14.1348$ and $21.0293$ (true: $14.1347$, $21.0220$); the third real zero sits at $26.16$ against the true $25.01$. Beyond the crossover the real zeros drift to the free spacing $\lambda\pi/\sqrt{2N} \approx 2.9$ of the top Hermite mode and terminate at $102.8$, near the turning point $\lambda\sqrt{2N} \approx 109.5$. The only non-real zeros --- $1, 2, 3$ conjugate pairs for $N = 20, 40, 60$ --- again sit at the crossover, but now form short arcs climbing off the axis: at $N = 60$, $(24.5, 1.7)$, $(21.6, 8.1)$, $(17.2, 16.4)$ in $(T, \operatorname{Im})$ coordinates.
+\end{observation}
+
+\section{The updated taxonomy}
+
+\begin{center}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+target / basis & decay & balance law & spurious zeros \\
+\midrule
+$e^z$ / monomials (Szeg\H{o}) & $1/k!$ & --- & complex curve only \\
+$\psi_m$ / Hermite polys & $3^{-k/2}$ & $t^2 = \tfrac{N}{2}\ln 3$ & real band $[\alpha,1]$ + arcs \\
+$\Xi$ / Hermite fns & superexp.\ in $\sqrt{k}$ & linear \eqref{eq:balance}$'$ & real past $T_c$, defects at $T_c$ \\
+$\Xi$ / Hermite polys & inf-convolution & quadratic \eqref{eq:balance} & real past $T_c$, defect \emph{arcs} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The moral, stated multiplicatively: to see Riemann zeros through truncations on $\R_+$, the Gaussian factor $e^{-(\log x)^2/2}$ in the log-Hermite \emph{functions} is not cosmetic. Dropping it --- approximating by $x^{-1/2}$ times bare polynomials in $\log x$ --- trades the linear balance law for a quadratic one and shrinks the verified height from $T \approx 46$ to $T \approx 21$ at degree $60$. Both pictures obey the same principle: spurious zeros appear exactly where the truncation tail overtakes the target, and complex zeros mark the boundary. Only the exponents change.
+
+\end{document}

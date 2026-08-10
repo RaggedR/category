@@ -1,0 +1,99 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.1in]{geometry}
+\emergencystretch=1.5em
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title{The Zeta Family, Simply}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\section{Riemann's construction is a machine with one input}
+
+Riemann built the completed zeta function $\xi$ in three steps:
+\[
+\text{Gaussian } e^{-\pi x^2}
+\;\longrightarrow\;
+\text{sum over } \Z \text{ (the theta function)}
+\;\longrightarrow\;
+\text{Mellin transform}
+\;\longrightarrow\;
+\xi(s).
+\]
+The functional equation $\xi(s) = \xi(1-s)$ comes from a single fact: \emph{the Gaussian is fixed by the Fourier transform}. Poisson summation converts that self-duality into the modularity $\theta(1/x) = \sqrt{x}\,\theta(x)$, and Mellin converts modularity into the reflection symmetry across $\operatorname{Re} s = \tfrac12$.
+
+\section{The Gaussian is not alone}
+
+The Gaussian is the ground state $\psi_0$ of the Hermite family $\psi_0, \psi_1, \psi_2, \dots$, and every member is a Fourier eigenfunction: $\widehat{\psi_n} = (-i)^n \psi_n$. So feed each one into the same machine:
+\[
+\psi_n
+\;\longrightarrow\;
+\theta_n(x) = \sum_{m\in\Z} \psi_n(mx)
+\;\longrightarrow\;
+\text{Mellin}
+\;\longrightarrow\;
+\xi_n(s),
+\qquad
+\xi_n(1-s) = (-1)^{n/2}\,\xi_n(s).
+\]
+One zeta function per (even) Hermite function; $\xi_0$ is the classical $\xi$. Odd $n$ give zero (odd sums cancel); that half of the family belongs to odd Dirichlet $L$-functions.
+
+\section{The family costs almost nothing}
+
+The Mellin integral factors through the lattice sum: $\xi_n(s) = \zeta(s) \cdot \mathcal{M}\psi_n(s)$, and the Mellin transform of a Hermite function is a Gamma factor times a polynomial:
+\[
+\boxed{\;\xi_n(s) \;=\; (\text{const}) \cdot P_n(s) \cdot \xi(s).\;}
+\]
+The $n$-th zeta function is the original $\xi$ times a polynomial of degree $n/2$. Its zeros are the Riemann zeros (conjecturally on the line) together with the zeros of $P_n$ --- which are \emph{provably} on the line (Bump--Ng's ``local Riemann Hypothesis''). The $P_n$ are classical: Meixner--Pollaczek orthogonal polynomials.
+
+\section{The inner product}
+
+The Hermite functions are orthonormal, and the machine preserves this. On the critical line $s = \tfrac12 + i\tau$, define
+\[
+\langle \xi_m, \xi_n \rangle
+\;=\;
+\frac{1}{2\pi}\int_\R
+\frac{\xi_m\, \overline{\xi_n}}{|\zeta(\tfrac12+i\tau)|^2}\, d\tau
+\;=\; \tfrac12\,\delta_{mn}\cdot(\text{const}).
+\]
+Dividing by $|\zeta|^2$ looks alarming but is harmless: every family member contains $\zeta$ as a factor, so the quotient is finite. The inner product strips the shared arithmetic and measures the Hermite functions underneath, via Mellin--Plancherel.
+
+\section{What makes the $P_n$ orthogonal}
+
+Substitute $\xi_n = \text{const} \cdot \zeta \cdot 2^{s/2-1}\Gamma(\tfrac s2) P_n$ into the inner product above. The $|\zeta|^2$ cancels, $|2^{s/2}|$ is constant on the line, and what remains is
+\[
+\boxed{\;
+\int_\R P_m\bigl(\tfrac12+i\tau\bigr)\, \overline{P_n\bigl(\tfrac12+i\tau\bigr)}\;
+\Bigl|\Gamma\Bigl(\tfrac14 + \tfrac{i\tau}{2}\Bigr)\Bigr|^2\, d\tau
+\;\propto\; \delta_{mn}.
+\;}
+\]
+The weight is the modulus squared of the \emph{archimedean Gamma factor} --- the local zeta factor at the infinite place, evaluated on the critical line. The structure is exactly parallel:
+\begin{center}
+\begin{tabular}{ll}
+$\xi_n = \zeta \cdot (\Gamma\text{-factor}) \cdot P_n$ orthogonal for weight & $d\tau / |\zeta|^2$ \\[2pt]
+$P_n$ orthogonal for weight & $|\Gamma(\tfrac14 + \tfrac{i\tau}{2})|^2\, d\tau$
+\end{tabular}
+\end{center}
+--- the same fact, with the Gamma factor moved from the functions into the measure. This is the standard Meixner--Pollaczek orthogonality ($P^{(1/4)}_m(\tfrac\tau2; \tfrac\pi2)$, whose weight $|\Gamma(\tfrac14+ix)|^2$ decays like $e^{-\pi|\tau|/2}$).
+
+And it has a plain meaning on the other side of the Mellin transform: it is nothing but Hermite orthogonality on the half-line,
+\[
+\int_\R P_m \overline{P_n}\, \bigl|\Gamma\bigr|^2\, d\tau
+\;\propto\;
+\int_0^\infty H_m(x)\, H_n(x)\, e^{-x^2} dx
+\;=\; \tfrac12\, \delta_{mn} \cdot \|H_n\|^2
+\quad (m, n \text{ even}).
+\]
+The Gamma-squared weight is what the Gaussian weight $e^{-x^2}$ looks like after Mellin transform. One orthogonality, three costumes: Gaussian weight on $\R_+$, Gamma weight on the critical line, $|\zeta|^{-2}$ weight for the full family.
+
+\section{Summary}
+
+$\zeta$ is not a lone object. It is the ground state of an orthonormal family --- one zeta function per Hermite function --- in which the excited states differ from $\xi$ only by Meixner--Pollaczek polynomials whose zeros provably satisfy the Riemann Hypothesis. The critical line is simultaneously the Mellin unitarity line, the orthogonality line of the polynomials, and (conjecturally) the home of all the zeros.
+
+\end{document}

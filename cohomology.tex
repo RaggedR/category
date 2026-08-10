@@ -1,0 +1,1113 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\emergencystretch=1.5em
+
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}[proposition]{Theorem}
+\newtheorem{corollary}[proposition]{Corollary}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{conjecture}[proposition]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[proposition]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[proposition]{Remark}
+\newtheorem{prediction}[proposition]{Prediction}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Gm}{\mathbb{G}_m}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\dR}{\mathrm{dR}}
+\newcommand{\rd}{\mathrm{rd}}
+\newcommand{\ch}{\operatorname{ch}}
+\newcommand{\G}{\Gamma}
+\newcommand{\hbarr}{\hbar}
+
+\title{The Geometry Behind the Bessel Lattice:\\
+Twisted de Rham Cohomology, the Quantum Cohomology of $\PP^1$,\\
+and the Meixner--Pollaczek Matching Matrices}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The forward matching matrix of the Meixner--Pollaczek dual pair
+(\texttt{meixner-pollaczek2.tex}) is integral over the rank-two
+lattice $\Z A \oplus \Z B$ with $A = \sqrt{2e}\,K_0(\tfrac12)$,
+$B = \sqrt{2e}\,K_1(\tfrac12)$, and we do not know why. This note
+assembles, with complete definitions, the geometric machinery that
+we conjecture explains it: the twisted de Rham cohomology of the
+multiplicative group $\Gm$ with superpotential
+$f(u) = \tfrac14(u + u^{-1})$; its rapid-decay homology, whose two
+integral generators pair with cohomology to give exactly
+$K_0(\tfrac12)$, $K_1(\tfrac12)$ (and $I_0(\tfrac12)$,
+$I_1(\tfrac12)$), with period determinant $-8\pi i$; the small
+quantum cohomology ring of $\PP^1$, whose quantum differential
+equation is the modified Bessel equation; Givental's mirror theorem
+identifying the two, forcing $q = \tfrac1{16}$; and Iritani's
+$\widehat\G$-integral structure, which explains in general why
+$\G$-kernel period matrices are integral over K-theory lattices. We
+state the resulting conjecture for the matching matrices, derive
+three falsifiable predictions, and record honestly what is proved,
+what is standard, and what is still a gap.
+\end{abstract}
+
+\tableofcontents
+
+%% ===================================================================
+\section{Introduction: the chain of identifications}
+%% ===================================================================
+
+The papers \texttt{matching-coefficients.tex} and
+\texttt{meixner-pollaczek2.tex} establish, numerically and in part
+rigorously, the following facts. The Mellin transform on the
+critical line $s = \tfrac12 + 2ix$ carries the even Hermite
+functions to the Meixner--Pollaczek dual functions
+$F_n = \G(\tfrac14+ix)\widehat P_n$ of the $\lambda = \tfrac14$
+family, and the odd Hermite functions to the $\lambda = \tfrac34$
+family. The matching coefficients
+\[
+  c_{mk} \;=\; \int_\R \widehat P_m\,\widehat P_k\;
+  \G(\tfrac14+ix)^2\,\G(\tfrac14-ix)\,dx
+\]
+satisfy the empirical phase law $c_{mk} = (-i)^{|m-k|}|c_{mk}|$, and
+after removing the phase every entry lies in the rank-two lattice
+\begin{equation}\label{eq:lattice}
+  \Z A \oplus \Z B, \qquad
+  A = \sqrt{2e}\;K_0(\tfrac12), \qquad
+  B = \sqrt{2e}\;K_1(\tfrac12).
+\end{equation}
+Why a \emph{lattice}? Why \emph{rank two}? Why \emph{Bessel}, and
+why the argument $\tfrac12$?
+
+This note proposes an answer in the form of a chain of standard
+identifications:
+\[
+  \begin{array}{ccc}
+  \text{$\G$-kernel integrals}
+  & \longleftrightarrow &
+  \text{periods of } (\Gm,\, f = \tfrac14(u+u^{-1})) \\[2pt]
+  & \longleftrightarrow &
+  \text{flat sections of the quantum connection of } \PP^1
+  \text{ at } q = \tfrac1{16} \\[2pt]
+  & \longleftrightarrow &
+  \text{the K-theory lattice } K^0(\PP^1) = \Z[\mathcal O] \oplus
+  \Z[\mathcal O(1)] \text{ via } \widehat\G.
+  \end{array}
+\]
+Each link in the chain is established mathematics; what is
+conjectural is that the matching matrices of our papers are an
+instance of it. Sections 2--7 define everything;
+Section~\ref{sec:weil} adds a second, independent roof --- the
+Weil representation, which explains the parameters
+$\tfrac14, \tfrac34$, the role of Mellin, and the phases; the
+final section states the conjecture and its testable
+consequences.
+
+%% ===================================================================
+\section{The Landau--Ginzburg model on $\Gm$}
+%% ===================================================================
+
+\subsection{The space}
+
+\begin{definition}[Multiplicative group]
+$\Gm$ denotes the algebraic group $\C^\times = \C \setminus \{0\}$,
+with coordinate ring the Laurent polynomials
+$\mathcal O(\Gm) = \C[u, u^{-1}]$ and invariant $1$-form $du/u$. As
+a topological space it is a twice-punctured sphere (punctures at
+$0$ and $\infty$). Its compact real form is the circle $|u| = 1$;
+its split real form is $\R_+$, the home of the Mellin transform.
+\end{definition}
+
+\begin{definition}[Superpotential]
+A \emph{Landau--Ginzburg model} is a pair $(X, f)$ of a smooth
+affine variety $X$ and a regular function
+$f \colon X \to \C$, called the \emph{superpotential}. A
+\emph{critical point} of $f$ is a point where $df = 0$; $f$ is a
+\emph{Morse} superpotential if all critical points are
+nondegenerate (Hessian invertible) with distinct critical values.
+\end{definition}
+
+Our object of study is
+\begin{equation}\label{eq:f}
+  X = \Gm, \qquad f(u) = \tfrac14\bigl(u + u^{-1}\bigr).
+\end{equation}
+Then $df = \tfrac14(1 - u^{-2})\,du$ vanishes at $u = \pm 1$, with
+critical values $f(\pm1) = \pm\tfrac12$: two Morse critical points.
+The map $f \colon \Gm \to \C$ is a double cover branched over
+$\pm\tfrac12$, with deck transformation $u \mapsto u^{-1}$; this
+involution fixes $f$, swaps the punctures $0 \leftrightarrow
+\infty$, and fixes both critical points.
+
+\subsection{Twisted de Rham cohomology}
+
+\begin{definition}[Twisted de Rham complex]
+Let $(X, f)$ be a Landau--Ginzburg model with $X$ an affine curve.
+The \emph{twisted de Rham complex} is
+\[
+  0 \longrightarrow \mathcal O(X)
+  \xrightarrow{\;\nabla_f\;} \Omega^1(X) \longrightarrow 0,
+  \qquad \nabla_f(g) = dg - g\,df,
+\]
+i.e.\ the de Rham complex of the trivial line bundle with the
+connection $\nabla_f = d - df\wedge$. Formally $\nabla_f =
+e^{f} \circ d \circ e^{-f}$: a $1$-form is $\nabla_f$-exact iff it
+becomes exact after multiplication by $e^{-f}$. The \emph{twisted
+de Rham cohomology} is
+\[
+  H^0_{\dR}(X, f) = \ker \nabla_f, \qquad
+  H^1_{\dR}(X, f) = \Omega^1(X)\,/\,\nabla_f\,\mathcal O(X).
+\]
+\end{definition}
+
+\begin{remark}
+The connection $\nabla_f$ has \emph{irregular} singularities at the
+punctures wherever $f$ has a pole. For \eqref{eq:f}, $f$ has a
+simple pole at both $u = 0$ and $u = \infty$, so both punctures are
+irregular of slope $1$. This is what removes the periods from the
+classical (regular-singular, hypergeometric) world and places them
+in the exponential (Bessel, Kloosterman) world.
+\end{remark}
+
+\begin{proposition}[Computation of the cohomology]\label{prop:H1}
+For $(X, f)$ as in \eqref{eq:f}:
+\[
+  H^0_{\dR} = 0, \qquad
+  H^1_{\dR} = \C\,\bigl[\tfrac{du}{u}\bigr] \oplus
+              \C\,\bigl[u\,\tfrac{du}{u}\bigr],
+\]
+and in $H^1_{\dR}$ the classes $\omega_\nu := u^\nu\,du/u$
+($\nu \in \Z$) satisfy the three-term relation
+\begin{equation}\label{eq:rec}
+  \omega_{\nu+1} \;=\; 4\nu\,\omega_\nu + \omega_{\nu-1}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+$H^0$: $\nabla_f g = 0$ means $g = c\,e^{f}$, which is not a
+Laurent polynomial unless $c = 0$.
+
+$H^1$: applying $\nabla_f$ to the monomial $u^\nu$,
+\[
+  \nabla_f(u^\nu)
+  = \nu u^\nu\,\tfrac{du}{u}
+    - \tfrac14\bigl(u^{\nu+1} - u^{\nu-1}\bigr)\tfrac{du}{u}
+  = \tfrac14\bigl(4\nu\,\omega_\nu - \omega_{\nu+1}
+    + \omega_{\nu-1}\bigr),
+\]
+so in the quotient $\omega_{\nu+1} = 4\nu\,\omega_\nu +
+\omega_{\nu-1}$, which is \eqref{eq:rec}. Reading it upward reduces
+every $\omega_\nu$ with $\nu \ge 2$ to $\omega_0, \omega_1$;
+reading it downward ($\omega_{\nu-1} = \omega_{\nu+1} -
+4\nu\,\omega_\nu$) does the same for $\nu \le -1$. Hence
+$\omega_0, \omega_1$ span. They are independent because the period
+pairing of Section 3 is nondegenerate on them
+(Theorem~\ref{thm:legendre}: the period determinant is $-8\pi i
+\ne 0$).
+\end{proof}
+
+\begin{proposition}[Dimension = number of critical points]
+For a Morse superpotential $f$ on an affine curve $X$,
+$\dim H^1_{\dR}(X, f)$ equals the number of critical points of $f$.
+\end{proposition}
+
+This is the algebraic avatar of Morse theory (for the exponential
+setting see e.g.\ the framework of Katz, or
+Kouchnirenko's theorem in the Newton-polytope form: for a Laurent
+polynomial in one variable with Newton segment $[a,b]$ the
+dimension is $b - a$; here $[-1,1]$ gives $2$). It is the
+structural source of the ranks in our papers:
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+weight & space & superpotential & crit.\ pts & rank \\
+\midrule
+Gaussian $e^{-t^2/2}$ & $\mathbb A^1$ & $t^2/2$ & $1$ ($t=0$) & $1$ \\
+Bessel kernel & $\Gm$ & $\tfrac14(u+u^{-1})$ & $2$ ($u=\pm1$) & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+One critical point $\Rightarrow$ the Hermite matching matrix of
+\texttt{hermite-matching-matrix.tex} is integral over a
+\emph{single} transcendental constant. Two critical points
+$\Rightarrow$ the rank-two lattice \eqref{eq:lattice}.
+
+%% ===================================================================
+\section{Rapid-decay homology and the period pairing}
+%% ===================================================================
+
+\subsection{Cycles}
+
+To integrate $e^{-f}\omega$ we need chains on which $e^{-f}$
+decays, or which have no boundary at all.
+
+\begin{definition}[Rapid-decay homology, after Bloch--Esnault]
+Let $(X, f)$ be as above, $X$ a curve with punctures. A
+\emph{rapid-decay chain} is a (possibly unbounded) topological
+chain in $X$ whose ends approach the punctures only within sectors
+where $\operatorname{Re} f \to +\infty$ (so that $e^{-f}$ decays
+faster than any power). The \emph{rapid-decay homology}
+$H_1^{\rd}(X, f)$ is the homology of the complex of such chains; it
+carries a natural $\Z$-structure $H_1^{\rd}(X, f; \Z)$, the classes
+of integral chains. For Morse $f$ one basis is given by the
+\emph{Lefschetz thimbles}: the steepest-descent paths of
+$\operatorname{Re} f$ through the critical points.
+\end{definition}
+
+\begin{definition}[Period pairing]
+The \emph{period pairing} is
+\[
+  H_1^{\rd}(X, f) \times H^1_{\dR}(X, f) \longrightarrow \C,
+  \qquad
+  \langle \gamma, \omega \rangle
+  = \int_\gamma e^{-f}\,\omega.
+\]
+It is well defined ($\nabla_f$-exact forms integrate to zero
+because $e^{-f}\nabla_f g = d(e^{-f}g)$ and the boundary terms die
+in the rapid-decay sectors) and perfect (Bloch--Esnault). Its
+values are called \emph{exponential periods}.
+\end{definition}
+
+\subsection{The two cycles for $f = \tfrac14(u+u^{-1})$}
+
+Near $u = \infty$, $f \sim u/4$, so the rapid-decay sector is
+$\operatorname{Re} u > 0$; near $u = 0$, $f \sim 1/(4u)$, rapid
+decay again requires $\operatorname{Re} u > 0$. Two independent
+integral classes:
+
+\begin{itemize}
+\item[$\gamma_1$:] \emph{the positive real axis} $\R_+$, oriented
+$0 \to \infty$. On $\R_+$, $f$ is real, tends to $+\infty$ at both
+ends, and has its minimum $\tfrac12$ at $u = 1$: so $\R_+$ is
+precisely the Lefschetz thimble through the critical point $u=+1$.
+\emph{The Mellin half-line is itself a homology class.}
+\item[$\gamma_2$:] \emph{the unit circle} $|u| = 1$,
+counterclockwise. A closed loop needs no decay condition. (The
+thimble through $u = -1$ is an integral combination of $\gamma_1$
+and $\gamma_2$; the circle is the more convenient generator.)
+\end{itemize}
+
+\begin{proposition}[The periods are Bessel values]\label{prop:periods}
+With $\omega_\nu = u^\nu\,du/u$ and $\nu \in \Z$:
+\begin{align}
+  \langle \gamma_1, \omega_\nu \rangle
+  &= \int_0^\infty e^{-\frac14(u+u^{-1})}\,u^\nu\,\frac{du}{u}
+   = 2\,K_\nu(\tfrac12), \label{eq:Kperiod}\\
+  \langle \gamma_2, \omega_\nu \rangle
+  &= \oint_{|u|=1} e^{-\frac14(u+u^{-1})}\,u^\nu\,\frac{du}{u}
+   = 2\pi i\,(-1)^\nu\, I_\nu(\tfrac12). \label{eq:Iperiod}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+\eqref{eq:Kperiod} is the classical integral representation
+$\int_0^\infty e^{-\frac z2(u+u^{-1})}u^\nu\,du/u = 2K_\nu(z)$ at
+$z = \tfrac12$. \eqref{eq:Iperiod}: the generating function
+$e^{\frac z2(u+u^{-1})} = \sum_{\mu\in\Z} I_\mu(z)\,u^\mu$ at
+$z = -\tfrac12$ gives $e^{-\frac14(u+u^{-1})} = \sum_\mu
+(-1)^\mu I_\mu(\tfrac12)\,u^\mu$ (using $I_\mu(-z) =
+(-1)^\mu I_\mu(z)$ for integer $\mu$), and the contour integral
+extracts the coefficient of $u^{-\nu}$, which is
+$(-1)^\nu I_\nu(\tfrac12)$ since $I_{-\nu} = I_\nu$.
+\end{proof}
+
+\begin{remark}[The cohomology relation is the Bessel recurrence]
+Pairing relation \eqref{eq:rec} against $\gamma_1$ and $\gamma_2$
+must give identities, and does: $K_{\nu+1}(z) = \tfrac{2\nu}{z}
+K_\nu(z) + K_{\nu-1}(z)$ at $z=\tfrac12$ reads $K_{\nu+1} =
+4\nu K_\nu + K_{\nu-1}$, and $a_\nu := (-1)^\nu I_\nu(\tfrac12)$
+satisfies $a_{\nu+1} = 4\nu a_\nu + a_{\nu-1}$ by the $I$-Bessel
+recurrence. The three-term recurrence of the Bessel family
+\emph{is} the relation $\nabla_f(u^\nu) \equiv 0$ in cohomology.
+\end{remark}
+
+\subsection{The period matrix and the quadratic relation}
+
+\begin{definition}[Period matrix]
+Relative to the bases $(\gamma_1, \gamma_2)$ of $H_1^{\rd}(\Z)$ and
+$(\omega_0, \omega_1)$ of $H^1_{\dR}$, the \emph{period matrix} is
+\[
+  P \;=\;
+  \begin{pmatrix}
+    2K_0(\tfrac12) & 2K_1(\tfrac12) \\[2pt]
+    2\pi i\, I_0(\tfrac12) & -2\pi i\, I_1(\tfrac12)
+  \end{pmatrix}.
+\]
+\end{definition}
+
+\begin{theorem}[Legendre-type period relation]\label{thm:legendre}
+$\det P = -8\pi i$.
+\end{theorem}
+
+\begin{proof}
+$\det P = -4\pi i\,\bigl(K_0 I_1 + K_1 I_0\bigr)(\tfrac12)$. The
+Wronskian identity for the modified Bessel equation is
+$I_0(z)K_1(z) + I_1(z)K_0(z) = 1/z$; at $z = \tfrac12$ the bracket
+is $2$.
+\end{proof}
+
+This is the exponential-period analogue of the Legendre relation
+$\eta_1\omega_2 - \eta_2\omega_1 = 2\pi i$ for elliptic periods:
+Poincar\'e duality forces the determinant of a full period matrix
+to be an explicit power of $2\pi i$ times a rational number. The
+transcendentals $K_0, K_1, I_0, I_1$ at $\tfrac12$ are constrained
+by exactly one algebraic relation, and this is it. (This is the
+mechanism behind the quadratic relations among Bessel moments of
+Broadhurst, proved by Fres\'an--Sabbah--Yu.)
+
+%% ===================================================================
+\section{Quantum cohomology of $\PP^1$}
+%% ===================================================================
+
+We now build the B-side\,\footnote{Conventions differ on which side
+is ``A'' and which ``B''; we call the curve-counting side A and the
+Landau--Ginzburg side B and will not fuss about it.} partner of
+Sections 2--3 from scratch.
+
+\subsection{Classical cohomology and stable maps}
+
+\begin{definition}
+$H^\ast(\PP^1; \C) = \C\,1 \oplus \C\,h$, where $1$ is the
+fundamental class (degree $0$) and $h$ is the point class
+(degree $2$), with $h^2 = 0$ and Poincar\'e pairing
+$g(1, h) = \int_{\PP^1} h = 1$, $g(1,1) = g(h,h) = 0$. The dual
+basis of $(1, h)$ under $g$ is $(h, 1)$.
+\end{definition}
+
+\begin{definition}[Stable maps and Gromov--Witten invariants]
+For $d \ge 0$ let $\overline{M}_{0,n}(\PP^1, d)$ be the moduli
+space of \emph{stable maps}: degree-$d$ holomorphic maps
+$\varphi \colon C \to \PP^1$ from a connected nodal genus-$0$ curve
+with $n$ marked smooth points, such that $\varphi$ has finitely
+many automorphisms fixing the marks. It is a compact orbifold of
+complex dimension
+\[
+  \dim \overline{M}_{0,n}(\PP^1, d)
+  = \dim \PP^1 - 3 + \textstyle\int_d c_1(T\PP^1) + n
+  = 2d + n - 2,
+\]
+using $c_1(T\PP^1) = 2h$. With evaluation maps
+$\mathrm{ev}_i \colon \overline{M}_{0,n}(\PP^1,d) \to \PP^1$,
+$\mathrm{ev}_i(\varphi) = \varphi(p_i)$, the \emph{genus-zero
+Gromov--Witten invariants} are
+\[
+  \langle \gamma_1, \dots, \gamma_n \rangle_d
+  = \int_{\overline{M}_{0,n}(\PP^1,d)}
+    \mathrm{ev}_1^\ast\gamma_1 \cup \dots \cup
+    \mathrm{ev}_n^\ast\gamma_n,
+\]
+nonzero only when the total codimension of the $\gamma_i$ equals
+$2d + n - 2$. They are (virtual) counts of rational curves meeting
+the cycles Poincar\'e-dual to the $\gamma_i$.
+\end{definition}
+
+\begin{lemma}\label{lem:gw}
+$\langle h, h, h \rangle_1 = 1$, and this is the only nonzero
+$3$-point invariant of positive degree with all insertions from
+$\{1, h\}$.
+\end{lemma}
+
+\begin{proof}
+Dimension count: $n = 3$ needs total codimension $2d + 1$;
+insertions from $\{1, h\}$ have codimension $\le 3$, forcing
+$d = 1$ and all three insertions equal to $h$. The invariant counts
+degree-$1$ maps $\PP^1 \to \PP^1$ (i.e.\ M\"obius transformations)
+sending three marked points to three specified points; by sharp
+$3$-transitivity of $\mathrm{PGL}_2$ there is exactly one.
+\end{proof}
+
+\subsection{The quantum product}
+
+\begin{definition}[Small quantum product]
+Introduce a formal variable $q$ (the \emph{Novikov variable})
+recording the degree. The \emph{small quantum product} on
+$H^\ast(\PP^1) \otimes \C[q]$ is defined by
+\[
+  g(\alpha \ast \beta,\, \gamma)
+  \;=\; \sum_{d \ge 0} q^d\,
+  \langle \alpha, \beta, \gamma \rangle_d ,
+\]
+i.e.\ the classical cup product corrected by curve counts. It is
+associative (a nontrivial theorem, the WDVV equations) and graded
+if $q$ is given degree $2\!\int_d c_1 = 4$.
+\end{definition}
+
+\begin{theorem}\label{thm:qh}
+$QH^\ast(\PP^1) = \C[h, q]\,/\,(h \ast h - q)$. In particular
+$h \ast h = q\cdot 1$: ``the square of a point is a curve.''
+\end{theorem}
+
+\begin{proof}
+$g(h \ast h, \gamma) = \langle h,h,\gamma\rangle_0 +
+q\,\langle h,h,\gamma\rangle_1 + \cdots$. The $d = 0$ invariants
+are classical: $\langle h,h,\gamma\rangle_0 = \int h\cup h\cup
+\gamma = 0$. By Lemma~\ref{lem:gw} the only quantum term is
+$\gamma = h$, $d = 1$, giving $g(h\ast h, h) = q$, and
+$g(h \ast h, 1) = 0$. Since $g(1, h) = 1$, this says
+$h \ast h = q \cdot 1$.
+\end{proof}
+
+\begin{proposition}[Semisimplicity: the two vacua]
+For $q \ne 0$ the algebra $QH^\ast(\PP^1)_q =
+\C[h]/(h^2 - q)$ is semisimple, with idempotents
+$e_\pm = \tfrac12\bigl(1 \pm h/\sqrt q\bigr)$ and with quantum
+multiplication by $h$ having eigenvalues $\pm\sqrt q$.
+\end{proposition}
+
+The two idempotents are the algebraic shadow of the two critical
+points of Section 2; the precise match is
+Theorem~\ref{thm:mirror}.
+
+%% ===================================================================
+\section{The quantum connection and the Bessel equation}
+%% ===================================================================
+
+\begin{definition}[Quantum connection]
+Fix $\hbarr \in \C^\times$ and set $q = e^t$. The \emph{quantum
+connection} (Dubrovin/Givental connection) on the trivial bundle
+with fibre $H^\ast(\PP^1)$ over the $q$-line is
+\[
+  \nabla_{q\partial_q}
+  = \hbarr\, q\frac{\partial}{\partial q} \;-\; (h\,\ast).
+\]
+A \emph{flat section} is $S(q)$ with $\nabla_{q\partial_q} S = 0$.
+\end{definition}
+
+\begin{proposition}[QDE $=$ modified Bessel]\label{prop:qde}
+Write $S = s_0(q)\,1 + s_1(q)\,h$. Flatness is the system
+$\hbarr\,q s_0' = q\,s_1$, $\hbarr\,q s_1' = s_0$ (using
+$h \ast 1 = h$, $h \ast h = q$), hence
+\[
+  \bigl(\hbarr\, q\tfrac{d}{dq}\bigr)^2 s_0 \;=\; q\,s_0 :
+\]
+the modified Bessel equation. Its solutions at $\hbarr = 1$ are
+spanned by $I_0(2\sqrt q\,)$ and $K_0(2\sqrt q\,)$.
+\end{proposition}
+
+\begin{proof}
+Substitute $z = 2\sqrt q/\hbarr$: $(q\,d/dq)^2 = \tfrac14
+(z\,d/dz)^2$ and the equation becomes $z^2 w'' + z w' - z^2 w = 0$,
+the modified Bessel equation of order $0$.
+\end{proof}
+
+\begin{definition}[$J$-function]
+The \emph{$J$-function} of $\PP^1$ is the $H^\ast$-valued flat
+generating series of gravitational descendants; for $\PP^1$ it has
+the closed form (Givental)
+\[
+  J_{\PP^1}(q, \hbarr)
+  = \sum_{d \ge 0} \frac{q^d}
+    {\prod_{r=1}^{d}(h + r\hbarr)^2}
+  \;\stackrel{h^2 = 0}{=}\;
+  \sum_{d\ge0} \frac{q^d}{(d!)^2\hbarr^{2d}}
+  \Bigl(1 - \tfrac{2h}{\hbarr}\,\mathstrut H_d\Bigr)
+  + \cdots,
+\]
+whose degree-$0$ component at $\hbarr = 1$ is
+$\sum_d q^d/(d!)^2 = I_0(2\sqrt q\,)$, with $H_d$ the harmonic
+numbers appearing in the $h$-component.
+\end{definition}
+
+Thus \emph{$I$-Bessel is the curve-counting function of $\PP^1$}:
+the coefficient of $q^d$ is $1/(d!)^2$, the reciprocal of the
+automorphism-weighted count of degree-$d$ covers with the requisite
+markings. $K$-Bessel is the transcendental second solution --- the
+flat section singled out not by holomorphy at $q=0$ but (as we
+recall in Section 7) by the integral structure.
+
+%% ===================================================================
+\section{The mirror theorem}
+%% ===================================================================
+
+\begin{definition}[Oscillatory integrals]
+For the Landau--Ginzburg model $(\Gm, W_q)$ with
+$W_q(u) = u + q/u$ and a class
+$\gamma \in H_1^{\rd}(\Gm, W_q/\hbarr)$, the \emph{oscillatory
+integral} is
+\[
+  \mathcal I_\gamma(q)
+  = \int_\gamma e^{-W_q(u)/\hbarr}\;\frac{du}{u}.
+\]
+\end{definition}
+
+\begin{theorem}[Givental's mirror theorem for $\PP^1$]
+\label{thm:mirror}
+The oscillatory integrals $\mathcal I_\gamma$ are exactly the
+solutions of the quantum differential equation of $\PP^1$
+(Proposition~\ref{prop:qde}), and the assignment
+$u^\nu\,du/u \mapsto$ (class in $H^\ast(\PP^1)$) identifies
+\[
+  H^1_{\dR}\bigl(\Gm,\, W_q/\hbarr\bigr) \;\cong\;
+  QH^\ast(\PP^1)_q
+\]
+compatibly with connections. Under this identification, quantum
+multiplication by $h$ corresponds to multiplication by $u$ in the
+Jacobi ring $\C[u,u^{-1}]/(W_q')$, and the eigenvalues
+$\pm 2\sqrt q$ of the grading operator match the critical values of
+$W_q$.
+\end{theorem}
+
+We do not reprove Givental's theorem, but the differential
+equation is a two-line check worth recording.
+
+\begin{proposition}
+At $\hbarr = 1$ let $m_\nu(q) = \int_\gamma e^{-W_q}u^\nu\,du/u$.
+Then $\bigl(q\frac{d}{dq}\bigr)^2 m_0 = q\,m_0$.
+\end{proposition}
+
+\begin{proof}
+Exactness of $d\bigl(e^{-W_q}u^\nu\bigr)$ on $\gamma$ gives the
+moment recursion $m_{\nu+1} = \nu\,m_\nu + q\,m_{\nu-1}$. Since
+$\partial_q e^{-W_q} = -(1/u)e^{-W_q}$ we get
+$q\,\partial_q m_\nu = -q\,m_{\nu-1}$, hence
+$(q\partial_q)^2 m_0 = -q\,m_{-1} + q^2 m_{-2}$, and the recursion
+at $\nu = -1$ ($m_0 = -m_{-1} + q\,m_{-2}$) turns this into
+$q\,m_0$.
+\end{proof}
+
+\begin{corollary}[Why $q = \tfrac1{16}$]\label{cor:q}
+The substitution $u = 4u'$ carries our superpotential
+\eqref{eq:f} to the mirror superpotential:
+\[
+  \tfrac14\bigl(u + u^{-1}\bigr)
+  = u' + \frac{1/16}{u'} = W_{1/16}(u').
+\]
+Equivalently: the critical values $\pm\tfrac12$ of $f$ must equal
+the eigenvalues $\pm2\sqrt q$ of quantum multiplication, forcing
+$q = \tfrac1{16}$; and the Bessel argument $2\sqrt q = \tfrac12$ in
+Proposition~\ref{prop:periods} is the same statement. The
+argument $\tfrac12$ in $K_0(\tfrac12), K_1(\tfrac12)$ is not
+fitted: it is the critical value of the superpotential, i.e.\ the
+point on the $q$-line where the matching-coefficient geometry
+sits.
+\end{corollary}
+
+So the constants \eqref{eq:lattice} are, up to the normalization
+$\sqrt{2e}$, values of the flat sections of the quantum connection
+of $\PP^1$ at $q = \tfrac1{16}$, $\hbarr = 1$.
+
+%% ===================================================================
+\section{Integral structures: K-theory, the $\widehat\G$-class,
+and Dubrovin's theorem}
+%% ===================================================================
+
+The period pairing of Section 3 lands in $\C$; the lattice
+\eqref{eq:lattice} demands an integral structure. On the homology
+side it is $H_1^{\rd}(\Z)$; the modern formulation on the quantum
+side, due to Iritani and Katzarkov--Kontsevich--Pantev, is
+K-theoretic.
+
+\begin{definition}[K-theory of $\PP^1$]
+$K^0(\PP^1)$ is the Grothendieck group of algebraic vector bundles
+on $\PP^1$: formal differences $[E] - [F]$ modulo
+$[E] = [E'] + [E'']$ for every short exact sequence. It is free of
+rank $2$:
+\[
+  K^0(\PP^1) = \Z[\mathcal O] \oplus \Z[\mathcal O(1)],
+\]
+where $\mathcal O(n)$ is the line bundle of degree $n$. The
+\emph{Chern character} $\ch \colon K^0(\PP^1) \to H^\ast(\PP^1;
+\Q)$ is the ring map $\ch(\mathcal O(n)) = e^{nh} = 1 + nh$ (as
+$h^2 = 0$).
+\end{definition}
+
+\begin{definition}[Euler pairing]
+$\chi(E, F) = \sum_i (-1)^i \dim \operatorname{Ext}^i(E, F)$. On
+$\PP^1$, in the basis $(\mathcal O, \mathcal O(1))$:
+\[
+  \chi = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix},
+\]
+since $\chi(\mathcal O, \mathcal O(1)) = \dim H^0(\PP^1,
+\mathcal O(1)) = 2$ (the two sections $x, y$) and
+$\chi(\mathcal O(1), \mathcal O) = \chi(\mathcal O(-1)) = 0$.
+\end{definition}
+
+\begin{definition}[$\widehat\G$-class]
+For a vector bundle $T$ with Chern roots $\delta_i$, set
+$\widehat\G(T) = \prod_i \G(1 + \delta_i)$, expanded by
+\[
+  \log\G(1+x) = -\gamma x + \sum_{k\ge2}
+  \frac{(-1)^k\zeta(k)}{k}\,x^k .
+\]
+For $\PP^1$ (Euler sequence: $T\PP^1$ has the roots of
+$\mathcal O(1)^{\oplus2}$ modulo a trivial factor):
+\[
+  \widehat\G_{\PP^1} = \G(1+h)^2 = 1 - 2\gamma\,h
+  \pmod{h^2}.
+\]
+\end{definition}
+
+\begin{definition}[$\widehat\G$-integral structure, Iritani]
+To a class $E \in K^0(\PP^1)$ associate the flat section of the
+quantum connection whose asymptotic class at $q \to 0$ is
+\[
+  s(E) \;=\; \frac{1}{(2\pi)^{\dim/2}}\,
+  \widehat\G_{\PP^1} \cup
+  (2\pi i)^{\deg/2}\ch(E)
+\]
+(the operator $(2\pi i)^{\deg/2}$ multiplies $H^{2k}$ by
+$(2\pi i)^k$). The \emph{$\widehat\G$-integral structure} is the
+$\Z$-local system of flat sections $\{s(E) : E \in K^0(\PP^1)\}$.
+\end{definition}
+
+\begin{theorem}[Iritani; Katzarkov--Kontsevich--Pantev]
+\label{thm:iritani}
+The $\widehat\G$-integral structure is preserved by the monodromy
+and Stokes automorphisms of the quantum connection, and under the
+mirror identification (Theorem~\ref{thm:mirror}) it corresponds to
+the integral rapid-decay homology $H_1^{\rd}(\Gm, W_q; \Z)$ of
+Section 3. Moreover the pairing of flat sections matches the Euler
+pairing $\chi$ on $K^0$.
+\end{theorem}
+
+This theorem is the general answer to ``why do $\G$-kernel
+integrals produce integer matrices over transcendental lattices'':
+\emph{the $\G$-factors are the $\widehat\G$-class, the mechanism
+that rotates the topological $\Z$-lattice into the algebraic de
+Rham frame}. Whenever one expands periods of an exponential
+connection in an algebraic basis, the coefficients lie in the
+$\Z$-span of finitely many periods --- one for each generator of
+the K-theory (equivalently, rapid-decay homology) lattice.
+
+\begin{definition}[Exceptional collection; Stokes matrix]
+An \emph{exceptional collection} in the derived category
+$D^b(\PP^1)$ is a sequence $(E_1, \dots, E_r)$ with
+$\operatorname{Ext}^\bullet(E_i, E_i) = \C$ and
+$\operatorname{Ext}^\bullet(E_j, E_i) = 0$ for $j > i$, generating
+$D^b$. For $\PP^1$: $(\mathcal O, \mathcal O(1))$ (Beilinson). The
+\emph{Stokes matrix} of the quantum connection is the unipotent
+matrix comparing the two sectorial bases of flat sections at the
+irregular point $q = \infty$ along the two Stokes directions.
+\end{definition}
+
+\begin{theorem}[Dubrovin's conjecture for $\PP^1$; proved by
+Dubrovin, Guzzetti]
+The Stokes matrix of the quantum connection of $\PP^1$ is the
+Euler matrix of the exceptional collection:
+\[
+  S = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix},
+  \qquad S_{12} = \chi(\mathcal O, \mathcal O(1)) = 2 .
+\]
+\end{theorem}
+
+\begin{remark}[The two 2's]
+The off-diagonal Stokes entry $2 = \dim H^0(\PP^1, \mathcal O(1))$
+and the Wronskian value $\bigl(I_0K_1 + I_1K_0\bigr)(\tfrac12) = 2$
+of Theorem~\ref{thm:legendre} are cousins, not strangers: both are
+computed from the same rank-two irregular connection, one from its
+Stokes data, one from its period determinant. We flag, without
+claiming, that a uniform statement should exist.
+\end{remark}
+
+%% ===================================================================
+\section{The Weil representation: why $\lambda = \tfrac14, \tfrac34$}
+\label{sec:weil}
+%% ===================================================================
+
+The geometry of Sections 2--7 explains the \emph{lattice}. A
+parallel and equally classical structure explains the \emph{cast of
+characters} --- why Hermite, why Meixner--Pollaczek, why the
+parameters $\tfrac14$ and $\tfrac34$, and why the Mellin transform
+intertwines them. The statement (Robin's observation): \emph{the
+Mellin-sends-Hermite-to-MP theorem is the explicit unitary
+intertwiner between the Schr\"odinger model and the Mellin model of
+the Weil representation.}
+
+\subsection{The representation}
+
+\begin{definition}[Heisenberg group; Stone--von Neumann]
+The Heisenberg group $H_1$ is $\R^2 \times \R$ with
+$(p,q,z)(p',q',z') = (p{+}p',\, q{+}q',\, z{+}z'+\tfrac12(pq'-qp'))$.
+By the Stone--von Neumann theorem it has, for each nontrivial
+central character, a \emph{unique} irreducible unitary
+representation: on $L^2(\R)$, with $q$ acting by translation and
+$p$ by multiplication by $e^{2\pi i t}$-type characters (the
+\emph{Schr\"odinger model}).
+\end{definition}
+
+\begin{definition}[Metaplectic group and Weil representation]
+$SL_2(\R)$ acts on $H_1$ by automorphisms fixing the centre;
+uniqueness in Stone--von Neumann then gives a projective
+representation of $SL_2(\R)$ on $L^2(\R)$, which lifts to an
+honest unitary representation $\omega$ of the double cover
+$Mp_2(\R)$: the \emph{Weil} (oscillator, metaplectic)
+representation. On the Lie algebra $\mathfrak{sl}_2 =
+\langle e, h, f \rangle$ it acts by
+\[
+  \omega(e) = \tfrac{i}{2}\,t^2, \qquad
+  \omega(f) = \tfrac{i}{2}\,\frac{d^2}{dt^2}, \qquad
+  \omega(h) = t\frac{d}{dt} + \tfrac12 .
+\]
+\end{definition}
+
+\begin{proposition}[Irreducible decomposition]\label{prop:weilsplit}
+$\omega = \omega^+ \oplus \omega^-$, the even and odd subspaces of
+$L^2(\R)$. These are irreducible lowest-weight representations of
+$Mp_2(\R)$ with lowest $K$-weights
+\[
+  \tfrac12 = 2\cdot\tfrac14
+  \qquad\text{and}\qquad
+  \tfrac32 = 2\cdot\tfrac34 .
+\]
+In the normalization $D(\lambda)$ (weight $= 2\lambda$) these are
+exactly the Meixner--Pollaczek parameters: \emph{the two MP
+families are the two irreducible components of the Weil
+representation.} The even/odd split of the Hermite family
+(\S8 of \texttt{matching-coefficients.tex}: ``one family on $\R$,
+two on $\R_+$'') is the irreducible decomposition.
+\end{proposition}
+
+\subsection{Two Cartan subalgebras, two models}
+
+Inside $\mathfrak{sl}_2$ there are two conjugacy classes of Cartan
+subalgebra, and each gives a ``model'' of $\omega$ by
+diagonalization:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & elliptic (compact $K = SO(2)$) & hyperbolic (split torus $A$) \\
+\midrule
+generator via $\omega$ &
+$\tfrac12\bigl(-\tfrac{d^2}{dt^2} + t^2\bigr)$ (oscillator) &
+$\tfrac{1}{2i}\bigl(t\tfrac{d}{dt} + \tfrac12\bigr)$ (dilation) \\
+spectrum & discrete, $n + \tfrac12$ & continuous, $x \in \R$ \\
+eigenbasis & Hermite $\psi_n$ & $|t|^{-1/2 + 2ix}$ (generalized) \\
+model & Schr\"odinger & Mellin \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{theorem}[The intertwiner]\label{thm:weil}
+The unitary map diagonalizing the dilation generator is the Mellin
+transform on the critical line $s = \tfrac12 + 2ix$ (restricted to
+even or odd functions, i.e.\ to $\omega^\pm$). It intertwines the
+Schr\"odinger model with the Mellin model, and its matrix elements
+against the $K$-basis --- the overlaps
+$\langle\, |t|^{-1/2+2ix} \,,\, \psi_n \,\rangle$ --- are, up to
+normalization, the Meixner--Pollaczek dual functions
+\[
+  F_n(x) = \G(\lambda + ix)\,\widehat P_n^{(\lambda)}(x),
+  \qquad \lambda = \tfrac14 \ (n \text{ even}), \quad
+  \lambda = \tfrac34 \ (n \text{ odd}),
+\]
+with $|\G(\lambda+ix)|^2$ appearing as the Plancherel density of
+the hyperbolic basis. This is the content of the
+Mellin$\,\to\,$MP theorem of \texttt{matching-coefficients.tex}
+\S8, restated representation-theoretically.
+\end{theorem}
+
+The overlap coefficients between elliptic and hyperbolic bases of
+$SL_2(\R)$ representations are classical (Basu--Wolf's
+subgroup-reduction tables; Koornwinder; Vilenkin--Klimyk), but
+there they are an entry in a table --- the matching-matrix
+arithmetic built on top of them appears to be new.
+
+\subsection{Three payoffs}
+
+\begin{enumerate}
+\item \textbf{The phase law.} $K$ acts on $\omega$ by
+$e^{-i\theta(N + 1/2)}$ ($N$ the number operator); the Fourier
+transform is rotation by $\theta = \tfrac\pi2$ up to a metaplectic
+phase in $\mu_8$ --- the same eighth roots of unity that govern
+the phases of the matching matrices. The unproved phase law
+$c_{mk} = (-i)^{|m-k|}|c_{mk}|$ should follow by writing the
+matching integral as a matrix coefficient of an explicit group
+element, with the phase supplied by the $K$-action: a proof
+strategy, not merely an explanation.
+\item \textbf{The order--argument gap
+(\S\ref{sec:gaps}, item 1).} Proposition~\ref{prop:fubini} put the
+spectral variable in the Bessel \emph{order}; the passage to
+integer order and fixed argument is the Kontorovich--Lebedev
+transform --- which is precisely $A$-side Plancherel harmonic
+analysis on $SL_2(\R)$. The main technical gap of this paper is a
+known transform on the group.
+\item \textbf{Tate's thesis.} The pairing
+$\langle F_m, G_n\rangle$ with kernel
+$\G(\tfrac14+ix)\G(\tfrac14-ix) = |\G(s/2)|^2$ is the archimedean
+local zeta-integral: $\G_\R(s) = \pi^{-s/2}\G(s/2)$ is the local
+$L$-factor of $\Q$ at the real place, and the involution
+$F \leftrightarrow G$ under $s \mapsto 1-s$ is the local
+functional equation with its $\varepsilon$-factor. The zeta
+connection is not an appendix: the entire matching programme is
+local harmonic analysis at the real place, and $\zeta$ enters only
+when the global sum over $\Z$ (the $\theta$-function) is taken.
+\end{enumerate}
+
+\begin{remark}[The open seam]
+The paper now has two independent classical roofs over the same
+computation: the Weil representation (this section: why
+$\tfrac14, \tfrac34$, why Mellin, the phases) and the quantum
+cohomology of $\PP^1$ (Sections 4--7: why rank two, why
+$K_\nu(\tfrac12)$, the lattice). What is \emph{not} in the
+literature, to our knowledge, is the dictionary between them ---
+what the $\PP^1$-geometry means on the group side. The obvious
+first entry: the two saddles $u = \pm1$ of the superpotential
+against the two components $\omega^\pm$ of the Weil
+representation. Preserved as an open disagreement between two
+true descriptions.
+\end{remark}
+
+%% ===================================================================
+\section{The conjecture for the matching matrices}
+%% ===================================================================
+
+\subsection{$\G$-kernels are Bessel periods: an identity}
+
+The bridge from the Meixner--Pollaczek weight to the geometry is
+already visible at the level of a Fubini exercise.
+
+\begin{proposition}\label{prop:fubini}
+For $\operatorname{Re} a, \operatorname{Re} b > 0$,
+\[
+  \G(a)\,\G(b)
+  = 4\int_0^\infty t^{\,a+b}\,K_{a-b}(2t)\,\frac{dt}{t}.
+\]
+In particular the Meixner--Pollaczek kernel is
+\[
+  \G(\tfrac14+ix)\,\G(\tfrac14-ix)
+  = 4\int_0^\infty t^{1/2}\,K_{2ix}(2t)\,\frac{dt}{t}:
+\]
+a Mellin transform (in the argument) of the $K$-Bessel kernel, with
+the spectral variable $x$ sitting in the \emph{order}.
+\end{proposition}
+
+\begin{proof}
+Write $\G(a)\G(b) = \iint_{(0,\infty)^2} e^{-u-v}u^a v^b\,
+\frac{du\,dv}{uv}$ and substitute $u = tr$, $v = t/r$; then
+$\frac{du\,dv}{uv} = 2\,\frac{dt}{t}\frac{dr}{r}$, $u+v =
+t(r + r^{-1})$, $u^av^b = t^{a+b}r^{a-b}$, and the $r$-integral is
+$2K_{a-b}(2t)$ by \eqref{eq:Kperiod}'s general form.
+\end{proof}
+
+So every $\G$-product weight in our papers is, literally, a period
+of the Bessel geometry of Sections 2--3 --- but with $x$ in the
+order $\nu = 2ix$, whereas the lattice \eqref{eq:lattice} lives at
+integer orders $\nu \in \{0,1\}$ and fixed argument $\tfrac12$. The
+passage from continuous order to the integer-order lattice is a
+Kontorovich--Lebedev-type spectral decomposition, and carrying it
+out cleanly for the matching integrals is the main technical gap
+(\S\ref{sec:gaps}).
+
+\subsection{The conjecture}
+
+\begin{conjecture}\label{conj:main}
+Let $C = (c_{mk})$ be the forward matching matrix of the
+$\lambda = \tfrac14$ Meixner--Pollaczek dual pair, with phases
+removed as in \texttt{meixner-pollaczek2.tex}. Then, up to the
+global normalization $\sqrt{2e}$:
+\begin{enumerate}
+\item[(i)] each entry of $C$ is a period pairing
+$\langle \gamma_{mk},\, \omega \rangle$ of the Landau--Ginzburg
+model $(\Gm,\ \tfrac14(u + u^{-1}))$, i.e.\ a flat-section value of
+the quantum connection of $\PP^1$ at $q = \tfrac1{16}$, with
+$\gamma_{mk} \in H_1^{\rd}(\Z)$;
+\item[(ii)] the lattice $\Z A \oplus \Z B$ is the image of the
+integral lattice --- equivalently, via Theorem~\ref{thm:iritani},
+of $K^0(\PP^1) = \Z[\mathcal O]\oplus\Z[\mathcal O(1)]$ under the
+$\widehat\G$-integral structure --- in the $K$-directions of the
+period matrix $P$;
+\item[(iii)] the integrality of $C$ over $\Z A \oplus \Z B$ is an
+instance of Iritani integrality: expansion of periods in an
+algebraic basis has coefficients in the $\Z$-span of the lattice
+periods.
+\end{enumerate}
+\end{conjecture}
+
+\subsection{Falsifiable predictions}
+
+\begin{prediction}[$I$-companions]\label{pred:I}
+The geometry has \emph{four} distinguished periods, not two:
+$K_0, K_1$ (thimble $\gamma_1 = \R_+$) and $I_0, I_1$ (circle
+$\gamma_2$), at argument $\tfrac12$. If
+Conjecture~\ref{conj:main} holds, the constants
+$A' = \sqrt{2e}\,\pi I_0(\tfrac12)$,
+$B' = \sqrt{2e}\,\pi I_1(\tfrac12)$ (normalization to be pinned
+down) must appear somewhere in the theory.
+\end{prediction}
+
+\begin{remark}[Test outcome: the naive version of
+Prediction~\ref{pred:I} is refuted]\label{rem:testI}
+The obvious place to look --- the inverse of the forward matrix ---
+fails, twice over, and instructively (numerics on
+\texttt{mp\_dual\_matching.pkl}, August 2026):
+\begin{enumerate}
+\item Truncated inverses $C_N^{-1}$ \emph{diverge} as $N$ grows:
+the slow decay $|c_{0k}| \sim k^{-0.7}$ makes the truncations
+ill-conditioned, and entries oscillate without settling. The
+matrix inverse of a truncation is not the analytic inverse.
+\item The \emph{exact} analytic inverse is the biorthogonal
+expansion $\widehat P_k = \sum_m r_{mk} F_m$ with
+$r_{mk} = \int \widehat P_m \widehat P_k\,\G(\tfrac14 - ix)\,dx$
+--- single-$\G$ integrals. These are \emph{rational}: from the
+inverse Mellin transform $\tfrac1{2\pi}\int_\R
+\G(\tfrac14+ix)\,t^{-ix}\,dx = t^{1/4}e^{-t}$, applying
+$\theta = t\,d/dt$ repeatedly and setting $t = 1$,
+\[
+  \int_\R x^{\,j}\,\G(\tfrac14 - ix)\,dx
+  \;=\; i^{\,j}\,\frac{2\pi}{e}\,\rho_j, \qquad \rho_j \in \Q,
+\]
+$\rho_{0..4} = 1,\ \tfrac34,\ -\tfrac7{16},\ -\tfrac{53}{64},\
+\tfrac{497}{256}$ (PSLQ-confirmed at 25+ digits, and provable by
+the $\theta$-recursion $p_{j+1} = \theta p_j + (\tfrac14 - t)p_j$
+on $p_j$ defined by $\theta^j(t^{1/4}e^{-t}) =
+p_j(t)\,t^{1/4}e^{-t}$). So the reverse matrix lies in
+$\tfrac{2\pi}{e}\,\Q$: no Bessel values at all.
+\end{enumerate}
+Two salvage observations. First, the reverse constant is
+$2\pi e^{-1} = 2\pi\,e^{-(f(1) - f(-1))}$: the exponential of
+(minus) the \emph{difference of the two critical values} --- in
+Stokes language, the instanton factor between the two vacua ---
+whereas the forward constants carry $e^{-f(\pm1)}$ separately. We
+flag this as suggestive, not established. Second, the Hermite
+precedent locates the $I$-family elsewhere: in
+\texttt{hermite-matching-matrix.tex} the $I$-Bessel appears in the
+\emph{generating function of the integer matrix} (diagonal EGF
+$e^x I_0(2x)$), not in any inverse. The revised prediction:
+$I_\nu(\tfrac12)$-values (or the $I$-series termwise) appear in
+generating functions of the integer pair
+$(\mathfrak a_{mk}, \mathfrak b_{mk})$, the arithmetic shadow of
+the circle cycle $\gamma_2$.
+\end{remark}
+
+\begin{prediction}[Determinant rationality]\label{pred:det}
+Products pairing $K$-rows against $I$-rows must rationalize by
+Theorem~\ref{thm:legendre}: any $2\times2$ block of the full
+period structure built from $(A, B)$ and $(A', B')$ has
+determinant in $2\pi i\,e\,\Q$ (the $e$ from $\sqrt{2e}^2$; note
+$AB' + A'B = \sqrt{2e}^2\,\pi(K_0I_1 + I_0K_1)(\tfrac12)
+= 4\pi e$). Numerically checkable to hundreds of digits.
+\end{prediction}
+
+\begin{prediction}[K-theory basis]\label{pred:K}
+There is a basis change $(A, B) \to (A'', B'')$ with
+$\mathrm{GL}_2(\Z)$-matrix determined by
+$\ch(\mathcal O), \ch(\mathcal O(1))$ and the $\widehat\G$-class,
+in which the matching matrix becomes distinguished --- e.g.\
+triangular against the Euler form
+$\bigl(\begin{smallmatrix}1&2\\0&1\end{smallmatrix}\bigr)$, or
+with unimodular leading blocks. If no $\mathrm{GL}_2(\Z)$ change
+of basis makes the matrix structurally nicer, the K-theoretic
+reading is wrong even if (i) holds.
+\end{prediction}
+
+\begin{prediction}[Rank law for other kernels]\label{pred:rank}
+For the other weights in the programme
+(\texttt{orthogonal-plan.tex}) the lattice rank should be
+computable \emph{before any integrals}: it is the number of
+critical points of the superpotential attached to the kernel by
+the analogue of Proposition~\ref{prop:fubini}. Gaussian: $1$
+(observed). Bessel/MP: $2$ (observed). A kernel with $r$
+$\G$-factor pairs should produce the geometry of an $(r-1)$-fold
+fibre product and a predictable rank. A single failed rank
+prediction refutes the framework; each success is strong
+structural evidence.
+\end{prediction}
+
+\subsection{What is proved, what is standard, what is a gap}
+\label{sec:gaps}
+
+\emph{Proved here or standard:} Everything in Sections 2--7.
+Proposition~\ref{prop:H1}, Proposition~\ref{prop:periods},
+Theorem~\ref{thm:legendre}, Proposition~\ref{prop:fubini} are
+self-contained. Theorems~\ref{thm:qh}, \ref{thm:mirror},
+\ref{thm:iritani} and Dubrovin--Guzzetti are literature.
+
+\emph{The gaps:}
+\begin{enumerate}
+\item \textbf{Order vs.\ argument.} Proposition~\ref{prop:fubini}
+puts $x$ in the Bessel \emph{order}; the lattice lives at integer
+order and argument $\tfrac12$. The missing step is a
+Kontorovich--Lebedev/stationary-phase argument showing that the
+$x$-integration in $c_{mk}$ localizes the continuous-order kernel
+onto the two integer-order periods at the critical value. The
+appearance of $K_0(\tfrac12)$ in the closed form of $c_{00}$ via
+Tricomi's $U(\tfrac12,1,\cdot)$ (\texttt{meixner-pollaczek2.tex})
+is strong evidence that this localization is exact, not
+asymptotic.
+\item \textbf{The third $\G$-factor.} The kernel is
+$\G(\tfrac14+ix)^2\G(\tfrac14-ix)$ --- three factors, not a
+balanced pair. Three factors suggest a fibre product
+$(\Gm^2, u + v + \text{constraint})$ rather than the bare Bessel
+geometry; the reduction to rank two must come out of the
+computation rather than be assumed.
+\item \textbf{The normalization $\sqrt{2e}$.} $e^{1/2} =
+e^{f(1)}\,e^{-f(-1)}\cdots$ --- the factor is suggestively
+$e^{\text{critical value}}$, i.e.\ the regularization constant
+that relates thimble periods to Stokes-normalized flat sections,
+but we have not pinned it down.
+\end{enumerate}
+
+We assess the probability that Conjecture~\ref{conj:main} is
+correct as it stands at roughly $40\%$, and the probability that
+the correct explanation lives in this circle of ideas (exponential
+periods of a $\Gm$-geometry with a K-theoretic integral structure)
+as substantially higher. It is the only mechanism known to us that
+produces rank-two lattices with Bessel generators, quadratic
+relations with rational $2\pi i$-determinants, and $\G$-factor
+kernels, simultaneously and for structural reasons.
+
+%% ===================================================================
+\section*{Glossary of the main objects}
+%% ===================================================================
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+object & role in the story \\
+\midrule
+$\Gm$, $f = \tfrac14(u+u^{-1})$ & the stage; Mellin's half-line
+$\R_+ \subset \Gm$ is a thimble \\
+$H^1_{\dR}(\Gm, f)$ & rank $2$ $=$ \#critical points; basis
+$du/u,\ u\,du/u$ \\
+$H_1^{\rd}(\Gm, f;\Z)$ & the integral lattice: thimble $\R_+$ and
+circle $|u|=1$ \\
+period pairing & $\int_\gamma e^{-f}\omega$; values
+$2K_\nu(\tfrac12)$, $2\pi i(-1)^\nu I_\nu(\tfrac12)$ \\
+$\det P = -8\pi i$ & Poincar\'e duality $=$ Bessel Wronskian at
+$z = \tfrac12$ \\
+$QH^\ast(\PP^1) = \C[h,q]/(h^2{-}q)$ & one curve through two
+points; two vacua \\
+quantum connection & $\hbarr q\partial_q - h\,\ast$; QDE $=$
+modified Bessel equation \\
+$J$-function $I_0(2\sqrt q)$ & curve counts; $K$ is the second,
+transcendental solution \\
+mirror map, $q = \tfrac1{16}$ & critical values $\pm\tfrac12 =
+\pm2\sqrt q$; the Bessel argument \\
+$K^0(\PP^1)$, $\widehat\G = \G(1{+}h)^2$ & the $\Z$-structure;
+why $\G$-kernels give integer matrices \\
+Euler/Stokes matrix
+$\bigl(\begin{smallmatrix}1&2\\0&1\end{smallmatrix}\bigr)$ &
+Dubrovin: derived category controls the irregular connection \\
+$u \mapsto u^{-1}$ & deck involution $=$ functional equation
+$s \mapsto 1-s$, $F \leftrightarrow G$ \\
+Weil rep.\ $\omega = \omega^+ \oplus \omega^-$ & lowest weights
+$\tfrac12, \tfrac32$ $=$ MP parameters $2\lambda$; Mellin $=$
+$K\!\to\!A$ intertwiner \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{References (informal)}
+
+Bloch--Esnault, \emph{Homology for irregular connections};
+Givental, \emph{Homological geometry and mirror symmetry} /
+\emph{Equivariant Gromov--Witten invariants}; Iritani,
+\emph{An integral structure in quantum cohomology and mirror
+symmetry for toric orbifolds}; Katzarkov--Kontsevich--Pantev,
+\emph{Hodge theoretic aspects of mirror symmetry}; Dubrovin,
+\emph{Geometry of 2D topological field theories}; Guzzetti,
+\emph{Stokes matrices and monodromy of the quantum cohomology of
+projective spaces}; Fres\'an--Sabbah--Yu, \emph{Quadratic
+relations between Bessel moments}; Kontsevich--Zagier,
+\emph{Periods}.
+
+\end{document}

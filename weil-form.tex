@@ -1,0 +1,304 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[most]{tcolorbox}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\G}{\Gamma}
+\newcommand{\sech}{\operatorname{sech}}
+
+\title{\textbf{The Weil Explicit Formula\\ in the Meixner--Pollaczek Basis}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We evaluate the Weil explicit-formula quadratic form on the
+polarized Meixner--Pollaczek basis at $\lambda=\tfrac14$, whose
+weight $|\G(\tfrac14+ix)|^2$ is the archimedean Euler factor of
+$\zeta$ on the critical line.  Every matrix entry is exactly
+computable: the pole term is rational in $\sqrt{\pi}$, the
+archimedean term lies in the rank-two lattice
+$\Q\sqrt{2\pi}\oplus\Q\sqrt{2\pi}\,(\gamma+\log 8\pi)$, and the
+prime term is a rational series in the values
+$-\zeta'/\zeta(1+2k)$, $k\ge 1$, with no prime sum remaining.
+The Riemann hypothesis implies every truncation of the resulting
+explicit matrix is positive semidefinite.
+\end{abstract}
+
+%% ===================================================================
+\section{The form}
+
+Let $P_m$ be the Meixner--Pollaczek polynomials with
+$\lambda=\tfrac14$, $\phi=\tfrac\pi2$:
+\[
+2t\,P_m = (m+1)P_{m+1} + (m-\tfrac12)P_{m-1},
+\qquad P_0 = 1,\quad P_1 = 2t,
+\]
+orthogonal on $\R$ for the weight $W(t)=|\G(\tfrac14+it)|^2$ with
+norms $h_m = 2\pi\,\G(m+\tfrac12)/(\sqrt2\,m!)$, and write
+$\widehat P_m = P_m/\sqrt{h_m}$.  For $m\equiv n \pmod 2$ define
+the even test functions
+\[
+h_{mn}(r) \;=\; \bigl(r^2+\tfrac14\bigr)\,
+\widehat P_m(\tfrac r2)\,\widehat P_n(\tfrac r2)\,
+\bigl|\G(\tfrac14+\tfrac{ir}2)\bigr|^2 ,
+\qquad
+Q_{mn}(r) \;=\; \bigl(r^2+\tfrac14\bigr)\,
+P_m(\tfrac r2)\,P_n(\tfrac r2)\;\in\;\Q[r^2].
+\]
+The factor $r^2+\tfrac14$ cancels the poles of the weight at
+$r=\pm\tfrac i2$, so $h_{mn}$ is analytic on
+$|\mathrm{Im}\,r| < \tfrac52$ and decays like
+$e^{-\pi|r|/2}$: it is admissible for the explicit formula.  With
+$g(u) = \tfrac1{2\pi}\int_\R h(r)e^{-iur}\,dr$, the formula for
+$\zeta$ reads (Iwaniec--Kowalski, Thm.~5.12)
+\[
+\sum_{\rho} h(\gamma_\rho)
+= h(\tfrac i2)+h(-\tfrac i2)
+- g(0)\log\pi
++ \frac1{2\pi}\int_\R h(r)\,
+   \mathrm{Re}\,\psi\bigl(\tfrac14+\tfrac{ir}2\bigr)dr
+- 2\sum_{n\ge2}\frac{\Lambda(n)}{\sqrt n}\,g(\log n),
+\]
+the sum running over nontrivial zeros $\rho=\tfrac12+i\gamma_\rho$.
+Set $W_{mn}=\sum_\rho h_{mn}(\gamma_\rho)$.
+
+\begin{tcolorbox}[colback=black!5!white,colframe=black!40!white]
+\begin{theorem}\label{thm:main}
+For $m\equiv n\pmod 2$,
+\[
+\sqrt{h_m h_n}\;W_{mn}
+\;=\;
+2\sqrt{\pi}\,q_{mn}
+\;+\;\sqrt{2\pi}\,\Bigl[\alpha_{mn}+\beta_{mn}\bigl(\gamma+\log 8\pi\bigr)\Bigr]
+\;-\;4\sqrt{\pi}\sum_{k\ge1} a^{(mn)}_k
+\Bigl(-\frac{\zeta'}{\zeta}(1+2k)\Bigr),
+\]
+where $\gamma$ is Euler's constant and
+$q_{mn},\alpha_{mn},\beta_{mn},a^{(mn)}_k\in\Q$ are explicitly
+computable (Lemmas \ref{lem:pole}--\ref{lem:prime}); the series
+converges geometrically ($|a_k| = O(k^{m+n})$ against
+$-\zeta'/\zeta(1+2k)\sim \log 2\cdot 4^{-k}$).
+\end{theorem}
+\end{tcolorbox}
+
+\begin{corollary}
+$\beta_{mn}=0$ whenever $|m-n|\ge4$: those archimedean entries are
+pure rational multiples of $\sqrt{2\pi}$.
+\end{corollary}
+
+%% ===================================================================
+\section{Proofs}
+
+\begin{lemma}[pole term]\label{lem:pole}
+$\sqrt{h_mh_n}\,\bigl[h_{mn}(\tfrac i2)+h_{mn}(-\tfrac i2)\bigr]
+ = 2\sqrt{\pi}\,q_{mn}$ with
+$q_{mn} = P_mP_n(\tfrac i4)+P_mP_n(-\tfrac i4)\in\Q$.
+\end{lemma}
+
+\begin{proof}
+Near $r=\tfrac i2$ put $r=\tfrac i2+\varepsilon$: the first Gamma
+factor is $\G(\tfrac{i\varepsilon}2)\sim \tfrac2{i\varepsilon}$
+while $r^2+\tfrac14\sim i\varepsilon$, so their product tends to
+$2$; the second factor is $\G(\tfrac12)=\sqrt\pi$.  Hence
+$h_{mn}(\tfrac i2) = 2\sqrt\pi\,\widehat P_m\widehat
+P_n(\tfrac i4)$, and likewise at $-\tfrac i2$.  Since $P_m$ has
+rational coefficients, $P_mP_n(\tfrac i4)+P_mP_n(-\tfrac i4)$
+is rational.
+\end{proof}
+
+\begin{lemma}[Fourier transform of the weight]\label{lem:fourier}
+For $\lambda>0$,
+\[
+\frac1{2\pi}\int_\R \bigl|\G(\lambda+\tfrac{ir}2)\bigr|^2
+e^{-iur}\,dr
+\;=\; 2\,\G(2\lambda)\,(2\cosh u)^{-2\lambda}
+\;=\; \frac{\G(\lambda)\G(\lambda+\tfrac12)}{\sqrt\pi}\,
+\sech^{2\lambda}u .
+\]
+\end{lemma}
+
+\begin{proof}
+Substituting $v=e^{-2u}$ in
+$\int_\R (2\cosh u)^{-2\lambda}e^{-iur}\,du$ gives
+$\tfrac12\int_0^\infty v^{\lambda+ir/2-1}(1+v)^{-2\lambda}dv
+=\tfrac12 B(\lambda+\tfrac{ir}2,\lambda-\tfrac{ir}2)
+=|\G(\lambda+\tfrac{ir}2)|^2/(2\G(2\lambda))$; Fourier inversion
+gives the first equality, and the Legendre duplication formula
+$\G(2\lambda)=4^{\lambda}\G(\lambda)\G(\lambda+\tfrac12)/(2\sqrt\pi)$
+the second.
+\end{proof}
+
+Two consequences.  First, taking $2k$ derivatives at $u=0$: with
+$\sech^{2\lambda}u = \sum_j \sigma_j(\lambda)u^{2j}$,
+$\sigma_j\in\Q[\lambda]$,
+\begin{equation}\label{eq:moments}
+\widetilde\mu_k(\lambda)
+:= \int_\R r^{2k}\bigl|\G(\lambda+\tfrac{ir}2)\bigr|^2 dr
+= 2\sqrt\pi\,(-1)^k(2k)!\,\sigma_k(\lambda)\,
+   \G(\lambda)\G(\lambda+\tfrac12):
+\end{equation}
+every moment is a $\Q[\lambda]$-multiple of
+$\G(\lambda)\G(\lambda+\tfrac12)$.  Second, multiplication by $r$
+under the integral is $i\,d/du$ outside, and on functions
+$p(\tanh u)\sech^{1/2}u$ the derivative acts as
+$p \mapsto (1-t^2)p' - \tfrac t2\,p$ on $\Q[t]$.
+
+\begin{lemma}[archimedean term]\label{lem:arch}
+Write $Q_{mn}(r)=\sum_k q_k r^{2k}$.  Then
+\[
+\sqrt{h_mh_n}\Bigl[\frac1{2\pi}\int_\R h_{mn}(r)\,
+\mathrm{Re}\,\psi(\tfrac14+\tfrac{ir}2)\,dr - g_{mn}(0)\log\pi\Bigr]
+= \sqrt{2\pi}\,\bigl[\alpha_{mn}+\beta_{mn}(\gamma+\log8\pi)\bigr]
+\]
+with
+$\alpha_{mn} = \tfrac12\sum_k q_k(-1)^k(2k)!\,\sigma_k'(\tfrac14)$
+and
+$\beta_{mn} = -\sum_k q_k(-1)^k(2k)!\,\sigma_k(\tfrac14)
+= -\,\frac1{2\sqrt2\,\pi^{3/2}}\int_\R Q_{mn}(r)\,
+\bigl|\G(\tfrac14+\tfrac{ir}2)\bigr|^2 dr$.
+\end{lemma}
+
+\begin{proof}
+Since
+$2\,\mathrm{Re}\,\psi(\lambda+ix)\,|\G(\lambda+ix)|^2
+=\partial_\lambda|\G(\lambda+ix)|^2$, the digamma integral is
+$\tfrac12\sum_k q_k\,\widetilde\mu_k'(\tfrac14)/(2\pi)$.
+Differentiate \eqref{eq:moments}:
+$\widetilde\mu_k' = 2\sqrt\pi(-1)^k(2k)!\,
+\G(\lambda)\G(\lambda+\tfrac12)
+[\sigma_k' + \sigma_k(\psi(\lambda)+\psi(\lambda+\tfrac12))]$.
+At $\lambda=\tfrac14$: $\G(\tfrac14)\G(\tfrac34)=\pi\sqrt2$ and
+$\psi(\tfrac14)+\psi(\tfrac34)=-2\gamma-6\log2$
+(the reflection and duplication values
+$\psi(\tfrac14)=-\gamma-3\log2-\tfrac\pi2$,
+$\psi(\tfrac34)=-\gamma-3\log2+\tfrac\pi2$).  The $\log\pi$ term
+contributes $-\log\pi\sum_k q_k\widetilde\mu_k(\tfrac14)/(2\pi)$.
+Collecting, with $\G(\tfrac14)\G(\tfrac34)/\pi=\sqrt2$ turning the
+prefactor into $\sqrt{2\pi}$, the constants $\gamma+3\log2$ and
+$\log\pi$ appear with the same rational coefficient
+$\beta_{mn}$, giving the single constant
+$\gamma+3\log2+\log\pi=\gamma+\log8\pi$.
+\end{proof}
+
+\begin{proof}[Proof of the Corollary]
+$\beta_{mn}$ is proportional to
+$\int (4t^2+\tfrac14)P_mP_n\,W\,dt$, and
+$\deg\,(4t^2+\tfrac14)P_m = m+2 < n$ when $n\ge m+4$, so the
+integral vanishes by orthogonality.
+\end{proof}
+
+\begin{lemma}[prime term]\label{lem:prime}
+Let $T_{mn}\in\Q[t]$ be the image of $1$ under
+$Q_{mn}(i\,\mathcal D)$, where
+$\mathcal D\colon p\mapsto(1-t^2)p'-\tfrac t2 p$.  Then
+\[
+g_{mn}(u) = \frac{\sqrt{2\pi}}{\sqrt{h_mh_n}}\,
+T_{mn}(\tanh u)\,\sech^{1/2}u,
+\qquad T_{mn}(1)=0,
+\]
+and, with
+$(1+w)^{-1/2}\,T_{mn}\bigl(\tfrac{1-w}{1+w}\bigr)
+= \sum_{k\ge1}a^{(mn)}_k w^k$,
+\[
+2\sum_{n\ge2}\frac{\Lambda(n)}{\sqrt n}\,g_{mn}(\log n)
+= \frac{4\sqrt\pi}{\sqrt{h_mh_n}}
+\sum_{k\ge1} a^{(mn)}_k\Bigl(-\frac{\zeta'}{\zeta}(1+2k)\Bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+The closed form for $g_{mn}$ is Lemma~\ref{lem:fourier} at
+$\lambda=\tfrac14$ together with $r\leftrightarrow i\,d/du$.  For
+$T_{mn}(1)=0$: $h_{mn}$ is analytic on
+$|\mathrm{Im}\,r|<\tfrac52$ (the pole at $r=-\tfrac i2$ is
+cancelled), so shifting the contour gives
+$g_{mn}(u)=O(e^{-cu})$ for every $c<\tfrac52$, while
+$\sech^{1/2}u\sim\sqrt2\,e^{-u/2}$; the coefficient of
+$e^{-u/2}$, namely $T_{mn}(1)$, must vanish.  At $u=\log n$ one
+has $\tanh = \tfrac{1-w}{1+w}$ and
+$n^{-1/2}\sech^{1/2}=\sqrt2\,n^{-1}(1+w)^{-1/2}$ with
+$w=n^{-2}$, so the prime sum becomes
+$\sum_n \Lambda(n)n^{-1}\sum_k a_k n^{-2k}$; since $a_0=0$
+(this is $T_{mn}(1)=0$) the double sum converges absolutely and
+swapping gives the $\zeta'/\zeta$ series.
+\end{proof}
+
+Theorem~\ref{thm:main} is the explicit formula assembled from
+Lemmas \ref{lem:pole}, \ref{lem:arch}, \ref{lem:prime}.
+\hfill$\square$
+
+%% ===================================================================
+\section{Numerical certification}
+
+All three sides were computed independently and compared with
+$2\sum_{\gamma_j\le 85} h_{mn}(\gamma_j)$ over the first $23$
+zeros of $\zeta$ (whose weight bounds the truncation by
+$e^{-85\pi/2}\approx10^{-58}$).  For all $16$ entries with
+$m,n\le6$ the identity of Theorem~\ref{thm:main} holds to between
+$39$ and $56$ digits, and the lattice memberships of
+Lemma~\ref{lem:arch} were confirmed by PSLQ at $125$ digits.
+Sample exact archimedean entries
+$u_{mn}=\sqrt{h_mh_n}\,A_{mn}$:
+\[
+u_{00}=\sqrt{2\pi}\Bigl[1-\tfrac34(\gamma+\log8\pi)\Bigr],\quad
+u_{11}=\sqrt{2\pi}\Bigl[\tfrac{21}4-\tfrac{15}8(\gamma+\log8\pi)\Bigr],\quad
+u_{04}=\tfrac3{16}\sqrt{2\pi},\quad
+u_{06}=-\tfrac1{16}\sqrt{2\pi}.
+\]
+Both parity blocks of $(W_{mn})_{m,n\le6}$ are positive
+definite, with eigenvalues cascading like the zero weights
+$e^{-\pi\gamma_j/2}$: the matrix is numerically a Gram matrix of
+the first few zeros, dominated by $\gamma_1\approx14.13$
+($W_{00}\approx 2.7\times10^{-8}$ is essentially the first
+zero's weight alone).
+
+%% ===================================================================
+\section{Remarks}
+
+\begin{remark}[incommensurability]
+The three constituents live in different worlds: the pole in
+$\Q\sqrt\pi$, the archimedean term in a rank-two lattice over
+$\Q$, the prime term in the infinite $\Q$-tower spanned by
+$-\zeta'/\zeta(3), -\zeta'/\zeta(5),\dots$  PSLQ at $115$--$240$
+digits finds no rational relation between the prime entries and
+the other two sides, nor among the $16$ prime entries themselves.
+The near-vanishing $W_{mn}\approx0$ at small $m,n$ is therefore
+an analytic cancellation, not an algebraic identity.
+\end{remark}
+
+\begin{remark}[positivity]
+Under RH every $W_{mn}$ truncation is a Gram matrix, hence
+positive semidefinite --- and by Theorem~\ref{thm:main} this is a
+statement about explicit rational-coefficient combinations of
+$\sqrt\pi$, $\sqrt{2\pi}$, $\gamma+\log8\pi$ and
+$\zeta'/\zeta$ at odd integers.  The converse (Weil positivity
+over this family implies RH) would require the span of the
+$h_{mn}$ to be dense in an admissible class; we do not address
+this here.
+\end{remark}
+
+\begin{remark}[constant of the infinite prime]
+The single archimedean constant $\gamma+\log8\pi$ plays the role
+that $-\zeta'/\zeta(1+2k)$ plays for the finite primes: it is the
+logarithmic derivative of the archimedean Euler factor averaged
+against the basis, arising as
+$\partial_\lambda\log\bigl[\G(\lambda)\G(\lambda+\tfrac12)
+\pi^{-\lambda}\bigr]$ at $\lambda=\tfrac14$, up to sign and
+rationals.
+\end{remark}
+
+\end{document}

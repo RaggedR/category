@@ -1,0 +1,488 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Shortcuts
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\Stab}{\operatorname{Stab}}
+\newcommand{\Hecke}{\mathcal{H}}
+\newcommand{\PP}{\mathbb{P}}
+
+\title{The Iwahori--Hecke Algebra\\from Lines in Projective Space}
+\author{Notes}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We derive the Iwahori--Hecke algebra $H_n(q)$ from the double coset
+algebra $\Hecke(\GL_n(\F_q), B_n(\F_q))$ by computing how the double
+coset operators act on the flag variety. The quadratic relation
+$(T_s - q)(T_s + 1) = 0$ is derived by counting incidences of lines
+in $\PP^1(\F_q)$. The braid relation is derived from the geometry of
+flags in $\F_q^3$.
+\end{abstract}
+
+\tableofcontents
+
+%% ====================================================================
+\section{Setup}
+\label{sec:setup}
+%% ====================================================================
+
+\subsection{The groups}
+
+Let $q$ be a prime power and $G = \GL_n(\F_q)$ the group of invertible
+$n \times n$ matrices over $\F_q$. The \emph{Borel subgroup}
+$B = B_n(\F_q)$ is the subgroup of upper triangular matrices:
+\[
+  B = \left\{\begin{pmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\
+  0 & a_{22} & \cdots & a_{2n} \\
+  \vdots & & \ddots & \vdots \\
+  0 & 0 & \cdots & a_{nn} \end{pmatrix} : a_{ii} \in \F_q^*,\;
+  a_{ij} \in \F_q \text{ for } i < j\right\}.
+\]
+The order is $|B| = (q-1)^n \cdot q^{\binom{n}{2}}$ ($n$ diagonal
+entries from $\F_q^*$ and $\binom{n}{2}$ strictly upper-triangular
+entries from $\F_q$).
+
+\subsection{The flag variety}
+
+$B$ is the stabiliser of the \emph{standard flag}
+\[
+  F_\bullet : \quad \{0\} \subset \langle e_1 \rangle \subset
+  \langle e_1, e_2 \rangle \subset \cdots \subset
+  \langle e_1, \ldots, e_n \rangle = \F_q^n,
+\]
+where $e_1, \ldots, e_n$ is the standard basis. The coset space
+$G/B$ is the \emph{complete flag variety}: the set of all complete
+flags
+\[
+  \{0\} = V_0 \subset V_1 \subset V_2 \subset \cdots \subset V_n =
+  \F_q^n, \qquad \dim V_i = i.
+\]
+For $n = 2$: a complete flag is just a line $V_1 \subset \F_q^2$,
+so $G/B = \PP^1(\F_q)$, the projective line with $q + 1$ points.
+
+For $n = 3$: a complete flag is a line $V_1$ inside a plane $V_2$
+inside $\F_q^3$, so $G/B$ is the set of incident line-plane pairs.
+
+\subsection{The Weyl group}
+
+The \emph{Weyl group} of $\GL_n$ is $W = S_n$, realised as
+permutation matrices. The \emph{simple reflections} are the adjacent
+transpositions $s_i = (i,\; i{+}1)$ for $i = 1, \ldots, n-1$,
+represented by the permutation matrix that swaps rows $i$ and $i{+}1$.
+
+\subsection{The Bruhat decomposition}
+
+\begin{theorem}[Bruhat]\label{thm:bruhat}
+$\GL_n(\F_q)$ decomposes as a disjoint union of double cosets:
+\[
+  \GL_n(\F_q) = \bigsqcup_{w \in S_n} BwB.
+\]
+The double cosets are indexed by the Weyl group $W = S_n$.
+\end{theorem}
+
+\begin{proof}[Proof for $n = 2$]
+$G = \GL_2(\F_q)$, $B$ = upper triangular, $W = \{e, s\}$ where
+$s = \bigl(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\bigr)$.
+
+Any $g = \bigl(\begin{smallmatrix} a & b \\ c & d \end{smallmatrix}\bigr) \in G$:
+\begin{itemize}
+\item If $c = 0$: then $g$ is upper triangular, so $g \in B = BeB$.
+\item If $c \neq 0$: we can write
+  $g = \bigl(\begin{smallmatrix} a & b \\ c & d \end{smallmatrix}\bigr)
+  = \bigl(\begin{smallmatrix} ac^{-1} & * \\ 1 & * \end{smallmatrix}\bigr)
+  \cdot \bigl(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\bigr)
+  \cdot \bigl(\begin{smallmatrix} c & d \\ 0 & * \end{smallmatrix}\bigr)$
+  (filling in the $*$'s to make the equation hold). So $g \in BsB$.
+\end{itemize}
+Thus $\GL_2 = B \sqcup BsB$: every matrix is either upper triangular
+or has nonzero $(2,1)$-entry, and in the latter case it belongs to
+$BsB$.
+\end{proof}
+
+It follows that $\Hecke(\GL_n(\F_q), B)$ has dimension
+$|W| = n!$, with basis $\{T_w : w \in S_n\}$ where $T_w$ is the
+characteristic function of $BwB$ (suitably normalised).
+
+%% ====================================================================
+\section{The quadratic relation from $\PP^1(\F_q)$}
+\label{sec:quadratic}
+%% ====================================================================
+
+We work with $G = \GL_2(\F_q)$ and $B$ = upper triangular. The Hecke
+algebra $\Hecke(G, B)$ is $2$-dimensional with basis $\{T_e, T_s\}$.
+We derive the quadratic relation by computing how $T_s$ acts on the
+projective line.
+
+\subsection{The action on $\PP^1(\F_q)$}
+
+$\PP^1(\F_q)$ has $q + 1$ points (the lines through the origin in
+$\F_q^2$). Let $\delta_L$ denote the basis vector for the point
+$L \in \PP^1(\F_q)$ in the permutation representation
+$k[\PP^1(\F_q)] = k[G/B]$. The Hecke algebra acts on this space.
+
+\medskip\noindent\textbf{$T_e$} is the identity: $T_e \cdot \delta_L
+= \delta_L$.
+
+\medskip\noindent\textbf{$T_s$} acts by sending each point to the sum
+of all \emph{other} points:
+\begin{equation}\label{eq:Ts-action}
+  T_s \cdot \delta_L = \sum_{L' \neq L} \delta_{L'}.
+\end{equation}
+
+\begin{proof}[Proof of~\eqref{eq:Ts-action}]
+The operator $T_s$ corresponds to the double coset $BsB$. It acts on
+$\delta_L$ by summing over all cosets $gB$ with $g^{-1}L' = L$ and
+$g \in BsB$, for varying $L'$. Since $B$ stabilises the standard
+line $\langle e_1 \rangle$ and $s$ swaps it to $\langle e_2 \rangle$,
+the double coset $BsB$ consists of all matrices that send
+$\langle e_1 \rangle$ to a line $\neq \langle e_1 \rangle$. By the
+transitivity of $B$ on lines $\neq \langle e_1 \rangle$ (upper
+triangular matrices act transitively on the $q$ affine points of
+$\PP^1$), each line $L' \neq L$ appears exactly once.
+\end{proof}
+
+Equivalently: $T_s$ is the adjacency matrix of the complete graph
+$K_{q+1}$ on $\PP^1(\F_q)$, minus the identity. In matrix form,
+$T_s = J - I$ where $J$ is the all-ones matrix and $I$ the identity.
+
+\subsection{Deriving the quadratic relation}
+
+\begin{theorem}\label{thm:quadratic}
+$T_s^2 = (q-1)\, T_s + q\, T_e$.
+\end{theorem}
+
+\begin{proof}
+Apply $T_s$ twice to $\delta_L$ for any point $L \in \PP^1(\F_q)$.
+
+\medskip\noindent\textbf{First application}: by~\eqref{eq:Ts-action},
+$T_s \cdot \delta_L = \sum_{L' \neq L} \delta_{L'}$ (a sum of $q$
+terms).
+
+\medskip\noindent\textbf{Second application}: apply $T_s$ to each
+$\delta_{L'}$:
+\[
+  T_s^2 \cdot \delta_L
+  = \sum_{L' \neq L} T_s \cdot \delta_{L'}
+  = \sum_{L' \neq L}\; \sum_{L'' \neq L'} \delta_{L''}.
+\]
+Now count how many times each point $L''$ appears in this double sum:
+
+\begin{itemize}
+\item \textbf{$L'' = L$}: for each $L' \neq L$, the inner sum
+  includes $L'' = L$ (since $L \neq L'$). There are $q$ such $L'$.
+  Contribution: $q \cdot \delta_L$.
+
+\item \textbf{$L'' \neq L$}: for a fixed $L'' \neq L$, the inner sum
+  includes $L''$ whenever $L' \neq L''$. Among the $q$ choices of
+  $L'$ (all $\neq L$), exactly one is excluded ($L' = L''$), leaving
+  $q - 1$ choices.
+  Contribution: $(q-1) \cdot \delta_{L''}$ for each $L'' \neq L$.
+\end{itemize}
+
+Combining:
+\[
+  T_s^2 \cdot \delta_L
+  = q \cdot \delta_L + (q-1) \sum_{L'' \neq L} \delta_{L''}
+  = q \cdot T_e \cdot \delta_L + (q-1) \cdot T_s \cdot \delta_L.
+\]
+Since this holds for every $L$, we have $T_s^2 = (q-1)\,T_s + q\,T_e$.
+\end{proof}
+
+\begin{corollary}\label{cor:quadratic-factored}
+The quadratic relation factors as
+\begin{equation}\label{eq:quadratic}
+  (T_s - q)(T_s + 1) = 0.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+$T_s^2 - (q-1)T_s - q = T_s^2 - qT_s + T_s - q
+= T_s(T_s - q) + (T_s - q) = (T_s + 1)(T_s - q) = 0$.
+\end{proof}
+
+\begin{remark}
+The two roots $T_s = q$ and $T_s = -1$ are the eigenvalues of
+$T_s$ on $k[\PP^1(\F_q)]$:
+\begin{itemize}
+\item $T_s = q$ on the trivial representation (the constant function
+  $\sum_L \delta_L$): $T_s$ sends it to $q$ times itself, since each
+  point has $q$ neighbours.
+\item $T_s = -1$ on the $q$-dimensional complement (functions summing
+  to zero): $T_s \cdot f = (J - I) \cdot f = -f$ since $J \cdot f = 0$
+  for $f$ orthogonal to the constant function.
+\end{itemize}
+\end{remark}
+
+\subsection{The limit $q \to 1$}
+
+At $q = 1$ (formally): the relation becomes $(T_s - 1)(T_s + 1) = 0$,
+i.e., $T_s^2 = 1$. This is the involution relation for the symmetric
+group. The projective line $\PP^1(\F_1)$ has $1 + 1 = 2$ points, and
+$T_s$ swaps them---exactly the transposition $(1\;2) \in S_2$.
+
+%% ====================================================================
+\section{The braid relation from flags in $\F_q^3$}
+\label{sec:braid}
+%% ====================================================================
+
+For $G = \GL_3(\F_q)$, the Weyl group is $W = S_3$ with generators
+$s_1 = (1\;2)$ and $s_2 = (2\;3)$. The Hecke algebra
+$\Hecke(G, B)$ has dimension $6$ with basis $\{T_w : w \in S_3\}$.
+
+We need to verify: $T_{s_1} T_{s_2} T_{s_1} = T_{s_2} T_{s_1}
+T_{s_2}$ (the braid relation).
+
+\subsection{The flag variety for $\GL_3$}
+
+A complete flag in $\F_q^3$ is an incident pair (line $\ell$,
+plane $\pi$) with $\ell \subset \pi \subset \F_q^3$. The standard
+flag is $F_\bullet = (\langle e_1 \rangle,\;
+\langle e_1, e_2 \rangle)$.
+
+The operators $T_{s_1}$ and $T_{s_2}$ act on flags by modifying one
+component:
+\begin{itemize}
+\item $T_{s_1}$ changes the \emph{line} $\ell$ while keeping the
+  plane $\pi$ fixed: it sums over all lines $\ell' \neq \ell$ in
+  $\pi$.
+\item $T_{s_2}$ changes the \emph{plane} $\pi$ while keeping the
+  line $\ell$ fixed: it sums over all planes $\pi' \neq \pi$
+  containing $\ell$.
+\end{itemize}
+
+\begin{proof}[Why $T_{s_1}$ changes only the line]
+The simple reflection $s_1$ swaps $e_1$ and $e_2$. So $BsB$ consists
+of matrices that move $\langle e_1 \rangle$ to another line inside
+$\langle e_1, e_2 \rangle$, while preserving $\langle e_1, e_2
+\rangle$ itself. That is, $T_{s_1}$ replaces the line component of the
+flag by another line in the same plane.
+\end{proof}
+
+\subsection{Counting}
+
+In $\F_q^3$:
+\begin{itemize}
+\item A plane $\pi \cong \F_q^2$ contains $q + 1$ lines. So
+  $T_{s_1}$ sums over $q$ lines (all lines in $\pi$ except $\ell$).
+\item Through a line $\ell$, there are $q + 1$ planes in $\F_q^3$.
+  So $T_{s_2}$ sums over $q$ planes (all planes through $\ell$
+  except $\pi$).
+\end{itemize}
+
+Each operator is a ``local $T_s$'': $T_{s_1}$ acts like the
+$\PP^1(\F_q)$-operator from Section~\ref{sec:quadratic} on the
+lines within a fixed plane, and $T_{s_2}$ acts like it on the planes
+through a fixed line. Each satisfies the quadratic relation
+$(T_{s_i} - q)(T_{s_i} + 1) = 0$ by the same counting argument as
+Theorem~\ref{thm:quadratic}.
+
+\subsection{The braid relation}
+
+\begin{theorem}\label{thm:braid}
+$T_{s_1} T_{s_2} T_{s_1} = T_{s_2} T_{s_1} T_{s_2}$.
+\end{theorem}
+
+\begin{proof}
+Apply both sides to a flag $(\ell, \pi)$ and show they give the same
+result.
+
+\medskip\noindent\textbf{Left side: $T_{s_1} T_{s_2} T_{s_1}$.}
+Starting from $(\ell, \pi)$:
+\begin{enumerate}
+\item $T_{s_1}$: replace $\ell$ by another line $\ell'$ in $\pi$
+  (sum over $q$ choices).
+\item $T_{s_2}$: replace $\pi$ by another plane $\pi'$ through
+  $\ell'$ (sum over $q$ choices).
+\item $T_{s_1}$: replace $\ell'$ by another line $\ell''$ in $\pi'$
+  (sum over $q$ choices).
+\end{enumerate}
+Result: sum over all flags $(\ell'', \pi')$ reachable by a path
+$(\ell, \pi) \to (\ell', \pi) \to (\ell', \pi') \to (\ell'', \pi')$,
+where each step changes one component.
+
+\medskip\noindent\textbf{Right side: $T_{s_2} T_{s_1} T_{s_2}$.}
+Starting from $(\ell, \pi)$:
+\begin{enumerate}
+\item $T_{s_2}$: replace $\pi$ by $\pi'$ through $\ell$ ($q$ choices).
+\item $T_{s_1}$: replace $\ell$ by $\ell'$ in $\pi'$ ($q$ choices).
+\item $T_{s_2}$: replace $\pi'$ by $\pi''$ through $\ell'$ ($q$ choices).
+\end{enumerate}
+Result: sum over all flags $(\ell', \pi'')$ reachable by a path
+$(\ell, \pi) \to (\ell, \pi') \to (\ell', \pi') \to (\ell', \pi'')$.
+
+\medskip\noindent Both sides produce a sum over flags at
+``Bruhat distance 3'' from $(\ell, \pi)$. The key point: a flag
+$(\ell'', \pi')$ is at distance 3 if and only if $\ell'' \neq \ell$
+and $\pi' \neq \pi$ and $\ell'' \not\subset \pi$ and
+$\ell \not\subset \pi'$. This set---and the multiplicity with which
+each flag appears---is the same for both orderings, because the
+composition $s_1 s_2 s_1 = s_2 s_1 s_2$ in $S_3$ means the two
+paths through the Bruhat graph reach the same double coset $Bs_1 s_2
+s_1 B = B w_0 B$ (where $w_0$ is the longest element of $S_3$).
+
+More precisely: both $T_{s_1}T_{s_2}T_{s_1}$ and $T_{s_2}T_{s_1}T_{s_2}$
+equal $T_{w_0}$ (the basis element for the longest Weyl group element),
+because in the Hecke algebra one has $T_{w} = T_{s_{i_1}} \cdots
+T_{s_{i_k}}$ whenever $w = s_{i_1} \cdots s_{i_k}$ is a reduced
+expression, and $w_0 = s_1 s_2 s_1 = s_2 s_1 s_2$ are the two
+reduced expressions.
+\end{proof}
+
+\begin{remark}
+The proof relies on the fact that $\ell(s_1 s_2 s_1) = 3 =
+\ell(s_1) + \ell(s_2) + \ell(s_1)$, where $\ell(w)$ is the length
+of $w$ (number of simple reflections in a reduced expression). This
+ensures that $T_{s_1}T_{s_2}T_{s_1}$ is a single basis element
+$T_{w_0}$, not a sum of basis elements. The multiplicativity
+$T_u T_v = T_{uv}$ holds whenever $\ell(uv) = \ell(u) + \ell(v)$.
+\end{remark}
+
+%% ====================================================================
+\section{The isomorphism}
+\label{sec:iso}
+%% ====================================================================
+
+\subsection{The Iwahori--Hecke algebra by generators and relations}
+
+\begin{definition}
+The \emph{Iwahori--Hecke algebra} $H_n(q)$ is the associative algebra
+over $k$ generated by elements $T_1, \ldots, T_{n-1}$ subject to:
+\begin{align}
+  (T_i - q)(T_i + 1) &= 0
+  && \text{for all } i, \label{eq:IH-quad} \\
+  T_i T_{i+1} T_i &= T_{i+1} T_i T_{i+1}
+  && \text{for all } i, \label{eq:IH-braid} \\
+  T_i T_j &= T_j T_i
+  && \text{for } |i - j| > 1. \label{eq:IH-comm}
+\end{align}
+\end{definition}
+
+At $q = 1$: the quadratic relation becomes $T_i^2 = 1$ and the
+algebra is $\C[S_n]$.
+
+\subsection{The isomorphism theorem}
+
+\begin{theorem}[Iwahori, 1964]\label{thm:iwahori}
+There is an algebra isomorphism
+\[
+  H_n(q) \;\xrightarrow{\;\sim\;}\;
+  \Hecke(\GL_n(\F_q),\; B_n(\F_q)),
+\]
+sending the generator $T_i$ to the (suitably normalised) characteristic
+function of the double coset $B s_i B$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+We must verify that the double coset operators $T_{s_i}$ satisfy
+the three relations of $H_n(q)$.
+
+\begin{enumerate}
+\item \emph{Quadratic relation}~\eqref{eq:IH-quad}: proved in
+  Theorem~\ref{thm:quadratic} for $n = 2$. The same argument works
+  for any $i$: the operator $T_{s_i}$ acts on the $i$-th component
+  of the flag (a line in a plane), and the counting on $\PP^1(\F_q)$
+  gives $(T_{s_i} - q)(T_{s_i} + 1) = 0$.
+
+\item \emph{Braid relation}~\eqref{eq:IH-braid}: proved in
+  Theorem~\ref{thm:braid} for $(s_1, s_2)$ in $\GL_3$. The same
+  argument works for any adjacent pair $(s_i, s_{i+1})$: both sides
+  equal $T_{s_i s_{i+1} s_i}$ because the product is length-additive.
+
+\item \emph{Commutativity}~\eqref{eq:IH-comm}: for $|i - j| > 1$,
+  the operators $T_{s_i}$ and $T_{s_j}$ act on disjoint components
+  of the flag (non-adjacent levels), so they commute.
+\end{enumerate}
+
+It remains to show the map is an isomorphism. Both algebras have
+dimension $n!$: the Iwahori--Hecke algebra by its standard basis
+$\{T_w : w \in S_n\}$ (defined by $T_w = T_{s_{i_1}} \cdots
+T_{s_{i_k}}$ for any reduced expression), and the Hecke algebra by
+the Bruhat decomposition (Theorem~\ref{thm:bruhat}). The map sends
+basis to basis.
+\end{proof}
+
+%% ====================================================================
+\section{Summary}
+\label{sec:summary}
+%% ====================================================================
+
+The Iwahori--Hecke algebra $H_n(q)$ has two faces:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}p{5.5cm}p{5.5cm}@{}}
+\toprule
+\textbf{Abstract (generators \& relations)}
+  & \textbf{Geometric (double cosets)} \\
+\midrule
+Generators $T_1, \ldots, T_{n-1}$
+  & Double cosets $Bs_iB$ \\
+Quadratic $(T_i - q)(T_i + 1) = 0$
+  & Counting on $\PP^1(\F_q)$: $q$ neighbours \\
+Braid $T_iT_{i+1}T_i = T_{i+1}T_iT_{i+1}$
+  & Flag geometry: two paths to $w_0$ \\
+Commuting $T_iT_j = T_jT_i$ for $|i-j|>1$
+  & Non-adjacent flag components \\
+$q = 1$ gives $\C[S_n]$
+  & $\F_1$: Borel = trivial, flags = permutations \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The parameter $q$ is the number of elements in $\F_q$, which is the
+number of points in a ``local $\PP^1$'' (the lines in a plane, or the
+planes through a line). The quadratic relation $(T_s - q)(T_s + 1) = 0$
+encodes this: $T_s$ acting on $\PP^1(\F_q)$ has eigenvalue $q$ on the
+constant function and eigenvalue $-1$ on the complement. As $q \to 1$,
+$\PP^1$ shrinks to two points, $T_s$ becomes a transposition, and
+$H_n(q)$ degenerates to $\C[S_n]$.
+
+\begin{thebibliography}{99}
+
+\bibitem{Bourbaki}
+N.~Bourbaki,
+\emph{Lie Groups and Lie Algebras}, Chapters 4--6,
+Springer-Verlag, 2002.
+
+\bibitem{Humphreys}
+J.~E.~Humphreys,
+\emph{Reflection Groups and Coxeter Groups},
+Cambridge Studies in Advanced Mathematics 29,
+Cambridge University Press, 1990.
+
+\bibitem{Iwahori}
+N.~Iwahori,
+\emph{On the structure of a Hecke ring of a Chevalley group over a
+finite field},
+J.~Fac.\ Sci.\ Univ.\ Tokyo Sect.\ I \textbf{10} (1964), 215--236.
+
+\end{thebibliography}
+
+\end{document}

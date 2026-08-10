@@ -1,0 +1,183 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\emergencystretch=1.5em
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\Hz}{\mathcal{H}_\zeta}
+
+\title{The Zeta Basis: a Family of Zeta Functions\\ and Their Inner Product}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The completed zeta function $\xi$ is the $n = 0$ member of a family: summing the $n$-th Hermite function over the lattice and taking Mellin transforms yields $\Lambda_n(s) = \zeta(s)\, \M\psi_n(s)$, one ``zeta function'' for each even $n$, each satisfying a functional equation with eigen-sign $(-1)^{n/2}$. The extra zeros of $\Lambda_n$ beyond the Riemann zeros are the zeros of a Meixner--Pollaczek polynomial and lie \emph{provably} on the critical line (the local Riemann Hypothesis of Bump--Ng). The family is orthogonal: under the Mellin--Plancherel pairing renormalised by $|\zeta|^{-2}$ on the critical line --- equivalently, under the Meixner--Pollaczek weight $|\Gamma(\tfrac14 + \tfrac{i\tau}{2})|^2$ --- one has $\langle \Lambda_m, \Lambda_n \rangle = \tfrac12 \delta_{mn}$, and the family is a basis of the even part of a Hilbert space $\Hz$ of ``zeta-like'' functions. We record the definitions, the orthogonality, and the coordinates of $\xi$ itself in the basis: geometric, with ratio $\sqrt{(2\pi-1)/(2\pi+1)}$.
+\end{abstract}
+
+\section{The family}
+
+Let $\psi_n(x) = c_n H_n(x) e^{-x^2/2}$, $c_n = (2^n n! \sqrt{\pi})^{-1/2}$, be the orthonormal Hermite functions, and for even $n$ set
+\[
+\theta_n(x) \;=\; \sum_{m \in \Z} \psi_n(mx), \qquad x > 0.
+\]
+For $n = 0$ this is the classical theta function up to the dilation $e^{-x^2/2}$ vs.\ $e^{-\pi x^2}$.
+
+\begin{definition}
+For even $n$, the $n$-th zeta function is
+\begin{equation}
+\Lambda_n(s) \;=\; \int_0^\infty \frac{\theta_n(x) - \psi_n(0)}{2}\; x^{s-1}\, dx
+\;=\; \zeta(s)\, \M\psi_n(s),
+\qquad \M\psi_n(s) = \int_0^\infty \psi_n(x)\, x^{s-1} dx,
+\label{eq:family}
+\end{equation}
+the factorisation holding for $\operatorname{Re} s > 1$ by summing $\int_0^\infty \psi_n(mx)\,x^{s-1}dx = m^{-s}\M\psi_n(s)$, and elsewhere by continuation.
+\end{definition}
+
+$\Lambda_n$ is meromorphic with (at most) simple poles at $s = 1$ (from $\zeta$) and $s = 0$ (from the $\Gamma$-factor below); it is regular and rapidly decaying on the critical line, which is all the inner product will see. Poisson summation and $\widehat{\psi_n} = (-i)^n \psi_n$ give $\theta_n(1/x) = (-1)^{n/2}\, x\, \theta_n(x)$ and hence the functional equation
+\[
+\Lambda_n(1 - s) \;=\; (-1)^{n/2}\, \Lambda_n(s):
+\]
+the family diagonalises the reflection $s \mapsto 1-s$ exactly as the Hermite functions diagonalise Fourier. (Odd $n$ give $\theta_n \equiv 0$; the odd half of the story belongs to $L(s,\chi)$ with $\chi(-1) = -1$, via the sign character at the archimedean place.)
+
+\section{The polynomial part and the local Riemann Hypothesis}
+
+From the companion paper on log-Hermite functions, for even $n$,
+\begin{equation}
+\M\psi_n(s) \;=\; c_n\, 2^{s/2 - 1}\, \Gamma\!\bigl(\tfrac{s}{2}\bigr)\, P_n(s),
+\label{eq:gammafactor}
+\end{equation}
+with $P_n$ a polynomial of degree $n/2$ in $s(1-s)$; e.g.\ $P_0 = 1$, $P_2 = 2(2s-1)$, $P_4 = 4(4s^2 - 4s + 3)$, $P_6 = 8(2s-1)(4s^2-4s+15)$. Thus
+\[
+\text{zeros of } \Lambda_n \;=\; \text{Riemann zeros} \;\cup\; \text{zeros of } P_n .
+\]
+Bump--Ng proved that all zeros of $P_n$ lie on $\operatorname{Re} s = \tfrac12$ (the \emph{local Riemann Hypothesis}). So every member of the family satisfies RH if and only if $\zeta$ does: the basis enlarges the zero set only by zeros that are certified.
+
+On the critical line the $P_n$ are classical: up to normalisation,
+\begin{equation}
+P_{2m}\bigl(\tfrac12 + i\tau\bigr) \;\propto\; P^{(1/4)}_m\bigl(\tfrac{\tau}{2};\, \tfrac{\pi}{2}\bigr),
+\label{eq:MP}
+\end{equation}
+the Meixner--Pollaczek polynomials, orthogonal on $\R$ with respect to $|\Gamma(\tfrac14 + ix)|^2\,dx$. (Check for $m = 2$: $P^{(1/4)}_2(x; \tfrac\pi2) = \tfrac{2}{3}(1 - 8x^2)$, zeros $x = \pm\tfrac{1}{2\sqrt2}$, i.e.\ $\tau = \pm\tfrac{1}{\sqrt2}$ --- the zeros of $P_4$.) The three-term recurrence and interlacing used by Bump--Ng are the Jacobi matrix of this orthogonal family.
+
+\section{The inner product}
+
+\begin{definition}
+Let $L^2_\zeta$ be the space of functions $F = \zeta \cdot G$ on the critical line with $G \in L^2\bigl(\tfrac12 + i\R,\, \tfrac{d\tau}{2\pi}\bigr)$, with
+\begin{equation}
+\langle F_1, F_2 \rangle_\zeta
+\;=\; \frac{1}{2\pi} \int_\R
+\frac{F_1\bigl(\tfrac12 + i\tau\bigr)\, \overline{F_2\bigl(\tfrac12 + i\tau\bigr)}}
+{\bigl|\zeta\bigl(\tfrac12 + i\tau\bigr)\bigr|^2}\; d\tau .
+\label{eq:innerproduct}
+\end{equation}
+\end{definition}
+
+The weight $|\zeta|^{-2}$ blows up at the Riemann zeros, but every member of $L^2_\zeta$ carries $\zeta$ as a factor, so the integrand is finite: the inner product simply strips the common arithmetic factor and applies Mellin--Plancherel to what remains.
+
+\begin{proposition}
+$\langle \Lambda_m, \Lambda_n \rangle_\zeta = \tfrac12\, \delta_{mn}$ for even $m, n$, and $\{\sqrt{2}\,\Lambda_n : n \text{ even}\}$ is an orthonormal basis of the even part of $L^2_\zeta$ (eigen-sign $+$ functions under $s \mapsto 1-s$ generated by Mellin transforms).
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+By \eqref{eq:family}, $\Lambda_n / \zeta = \M\psi_n$, and Mellin--Plancherel (Fourier--Plancherel read through $x = e^t$) gives
+\[
+\langle \Lambda_m, \Lambda_n \rangle_\zeta
+= \frac{1}{2\pi}\int_\R \M\psi_m \overline{\M\psi_n}\; d\tau
+= \int_0^\infty \psi_m(x)\, \psi_n(x)\, dx
+= \tfrac12\, \delta_{mn},
+\]
+the last step because $\psi_m \psi_n$ is even and $\{\psi_n\}$ is orthonormal on $\R$. Completeness: the even Hermite functions restricted to $\R_+$ span $L^2(\R_+)$, since restriction is an isomorphism from the even subspace of $L^2(\R)$.
+\end{proof}
+
+\begin{remark}
+Combining \eqref{eq:gammafactor} and \eqref{eq:MP}, the orthogonality can be written without $\zeta$ at all:
+\[
+\langle \Lambda_{2j}, \Lambda_{2k} \rangle_\zeta
+\;\propto\;
+\int_\R P^{(1/4)}_j\bigl(\tfrac\tau2\bigr)\, P^{(1/4)}_k\bigl(\tfrac\tau2\bigr)\,
+\bigl|\Gamma\bigl(\tfrac14 + \tfrac{i\tau}{2}\bigr)\bigr|^2\, d\tau .
+\]
+The critical line thus carries two structures at once: it is the Mellin--Plancherel \emph{unitarity} line, and the \emph{orthogonality} line of the polynomial parts of the basis.
+\end{remark}
+
+\section{Coordinates of $\xi$ in the basis}
+
+Modulo the pole-killing prefactor $\frac{s(s-1)}{2}$, the completed zeta function is
+$\pi^{-s/2}\Gamma(\tfrac s2)\zeta(s) = 2\,\zeta(s)\, \M g(s)$ with $g(x) = e^{-\pi x^2}$: a \emph{dilated} Gaussian, not the basis Gaussian $\psi_0$. Its coordinates follow from the classical expansion of a Gaussian of width $a$ in Hermite functions,
+\[
+\bigl\langle e^{-a x^2/2},\, \psi_{2m} \bigr\rangle
+\;=\; \pi^{1/4}\sqrt{\frac{2}{1+a}}\;
+\frac{\sqrt{(2m)!}}{2^m m!}\,
+\Bigl(\frac{a-1}{a+1}\Bigr)^{m},
+\]
+with $a = 2\pi$:
+\begin{equation}
+\pi^{-s/2}\Gamma\bigl(\tfrac s2\bigr)\zeta(s) \;=\; \sum_{m \ge 0} g_{2m}\, \Lambda_{2m}(s),
+\qquad
+g_{2m} \;\propto\; \frac{\sqrt{(2m)!}}{2^m m!} \Bigl(\frac{2\pi - 1}{2\pi + 1}\Bigr)^{m}.
+\end{equation}
+The coordinates of zeta in the zeta basis are geometric with ratio
+$q = \frac{2\pi - 1}{2\pi + 1} = 0.7254\ldots$ per index pair, i.e.\ $\sqrt{q} = 0.8517$ per Hermite index --- the arithmetic object is a small, explicit perturbation of the $n = 0$ basis vector.
+
+\section{Outlook}
+
+\begin{remark}
+For any even Schwartz $f = \sum_n a_n \psi_n$, linearity gives $\Lambda_f = \zeta \cdot \M f = \sum_n a_n \Lambda_n$, with $\|\Lambda_f\|^2_\zeta = \tfrac12\sum |a_n|^2$. The question ``which $\Lambda_f$ have all zeros on the line'' splits into the Riemann zeros (common to all members) plus the zeros of $\sum_n a_n\,\M\psi_n$: which linear combinations of Meixner--Pollaczek polynomials (weighted by the common $\Gamma$-factor) are real-rooted --- a question about orthogonal polynomials, where interlacing theory has teeth. This sharpens the open thread of the log-Hermite paper.
+\end{remark}
+
+\begin{remark}
+The truncation experiments of the companion papers can now be re-run \emph{inside} the basis: expanding a target in $\{\Lambda_n\}$, every basis element already satisfies RH, and the balance-law analysis of spurious zeros applies verbatim to the polynomial parts $\sum_{n \le N} a_n P_n$ on the critical line.
+\end{remark}
+
+\section{Numerical appendix: the approximation matrix of the family}
+
+Let $Z_{nk}$ be the coefficients of the best degree-$60$ polynomial approximation of $F_n(t) = \xi_n(\tfrac12 + i\lambda t)$, $\lambda = 10$, in $L^2(\R, e^{-t^2}dt)$ (the log-Hermite polynomial approximation of the companion paper, applied to each family member). Since $\xi_n = (c_n/c_0) P_n \cdot \xi$ and multiplication by $\tau$ acts on Hermite coefficients as the tridiagonal position operator $(Tv)_j = \sqrt{j/2}\,v_{j-1} + \sqrt{(j+1)/2}\,v_{j+1}$, the whole matrix is generated from the single $\Xi$ column $\beta$ of the companion paper:
+\[
+Z_n \;=\; \tfrac{c_n}{c_0}\, P_n\bigl(\tfrac12 + i\lambda T\bigr)\, \beta .
+\]
+The arithmetic lives in one column; the rest is oscillator representation theory. Row $n$ is supported on columns $k \equiv \tfrac n2 \pmod 2$ (the functional-equation eigen-sign as column parity; entries `$\cdot$' below vanish identically).
+
+\begin{center}
+\begin{tabular}{@{}lrrrrrrrrrrr@{}}
+\toprule
+$\log_{10}|Z_{nk}|$ & $k{=}0$ & $6$ & $12$ & $18$ & $24$ & $30$ & $36$ & $42$ & $48$ & $54$ & $60$ \\
+\midrule
+$n=0$ & $-0.4$ & $-1.1$ & $-1.7$ & $-2.2$ & $-2.8$ & $-3.4$ & $-4.0$ & $-4.6$ & $-5.3$ & $-6.0$ & $-6.6$ \\
+$n=2$ & $0.0$ & $-0.2$ & $-0.6$ & $-1.1$ & $-1.6$ & $-2.1$ & $-2.6$ & $-3.2$ & $-3.8$ & $-4.5$ & $\cdot$ \\
+$n=4$ & $0.6$ & $0.1$ & $0.0$ & $-0.2$ & $-0.6$ & $-1.1$ & $-1.5$ & $-2.1$ & $-2.6$ & $-3.2$ & $-3.8$ \\
+$n=6$ & $0.9$ & $0.0$ & $0.2$ & $0.2$ & $-0.1$ & $-0.4$ & $-0.8$ & $-1.3$ & $-1.8$ & $-2.4$ & $\cdot$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The zeros of each row's approximant split exactly as the family's zeros do: the certified $P_n$ zeros (captured to $3$--$4$ digits, deep inside the capture zone), the Riemann zeros (captured up to the balance height $T_c \approx 17$), and truncation artifacts beyond. Truncation treats provable and conjectural zeros identically --- it sees only the balance law.
+
+\begin{center}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+$n$ & certified zeros of $P_n$ & captured & first Riemann zeros captured \\
+\midrule
+$0$ & --- & --- & $14.1348$, $21.029$ \\
+$2$ & $0$ & $0.0000$ & $14.1348$, $20.964$ \\
+$4$ & $1/\sqrt{2} = 0.7071$ & $0.7069$ & $14.1332$, $21.061$ \\
+$6$ & $0$, $\sqrt{7/2} = 1.8708$ & $0.0000$, $1.8717$ & $14.1330$, $20.943$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+(True values: $14.1347$, $21.0220$; the third Riemann zero $25.0109$ lies past the crossover and is not captured by any row at degree $60$.) The rows decay more slowly as $n$ grows --- the $(\lambda\sqrt{2k})^{n/2}$ amplification of the Jacobi action --- so the capture of the second Riemann zero degrades visibly down the column. Code: \texttt{family\_matrix.py}.
+
+\end{document}

@@ -1,0 +1,194 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\G}{\Gamma}
+\newcommand{\La}{\Lambda}
+
+\title{\textbf{The Prime Side Does Not Compress}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The archimedean side of the Weil explicit formula, expanded in the
+Meixner--Pollaczek basis at $\lambda = \tfrac14$, lies in a rank-two
+lattice: every entry is $\Q\sqrt{2\pi} + \Q\sqrt{2\pi}\,(\gamma +
+\log 8\pi)$. We compute the prime side in the same basis in closed
+form --- each entry is an explicit $\Q$-linear series in
+$-\zeta'/\zeta(3), -\zeta'/\zeta(5), \dots$ --- and show numerically,
+to $500$ digits, that no analogous compression occurs: the sixteen
+entries with $m,n \le 6$ are $\Q$-linearly independent of each other
+and of the archimedean lattice. The two halves of the explicit
+formula are algebraically incommensurable in this basis. The
+integrality of the approximation matrix is purely archimedean.
+\end{abstract}
+
+\section{The quadratic form}
+
+Let $\widehat{P}_m$ denote the normalized Meixner--Pollaczek
+polynomials at $\lambda = \tfrac14$, $\phi = \tfrac\pi2$, with
+$h_m = 2\pi\,\G(m+\tfrac12)/(\sqrt2\,m!)$. Polarizing the Weil
+quadratic form on the basis $F_m = \G(\tfrac14 + ix)\widehat{P}_m$
+and regularizing the pole at $s = 0, 1$ gives the kernels
+\[
+h_{mn}(r) \;=\; \bigl(r^2 + \tfrac14\bigr)\,
+\widehat{P}_m\!\bigl(\tfrac r2\bigr)\widehat{P}_n\!\bigl(\tfrac r2\bigr)\,
+\bigl|\G\bigl(\tfrac14 + \tfrac{ir}2\bigr)\bigr|^2 ,
+\qquad m \equiv n \pmod 2 .
+\]
+The MP weight is the Weil kernel. The explicit formula
+(validated to $21$ digits against the first $60$ zeros) reads
+\[
+W_{mn} \;=\; \sum_\gamma h_{mn}(\gamma)
+\;=\; \underbrace{2\,\G(\tfrac12)\!
+   \left[\widehat{P}_m\widehat{P}_n\bigl(\tfrac i4\bigr) +
+         \widehat{P}_m\widehat{P}_n\bigl(-\tfrac i4\bigr)\right]}_{\text{pole}}
+\;+\; \underbrace{\frac1{2\pi}\!\int_\R h_{mn}(r)
+   \Bigl[\mathrm{Re}\,\psi\bigl(\tfrac14+\tfrac{ir}2\bigr) - \log\pi\Bigr]dr}_{\text{arch}}
+\;-\; P_{mn},
+\]
+where $P_{mn} = 2\sum_n \La(n)\, n^{-1/2} g_{mn}(\log n)$ and
+$g_{mn}$ is the Fourier transform of $h_{mn}$. The factor
+$r^2 + \tfrac14$ does not kill the pole terms: zero times
+$\G$-pole leaves the finite residue shown.
+
+The three known sides compress as follows. The pole side is
+$\Q\sqrt\pi$ exactly (the $\widehat{P}_m(\pm\tfrac i4)$ are rational
+up to the norms). For the archimedean side, the identity
+$2\,\mathrm{Re}\,\psi \cdot |\G|^2 = \partial_\lambda |\G(\lambda+ix)|^2$
+reduces every entry to MP moments, giving:
+
+\begin{theorem}\label{thm:arch}
+For all $m \equiv n \pmod 2$,
+\[
+\sqrt{h_m h_n}\cdot \mathrm{arch}_{mn} \;\in\;
+\Q\,\sqrt{2\pi} \;\oplus\; \Q\,\sqrt{2\pi}\,(\gamma + \log 8\pi).
+\]
+For example $\sqrt{h_0}\,h_0^{1/2}\,\mathrm{arch}_{00} =
+\sqrt{2\pi}\,[\,1 - \tfrac34(\gamma + \log 8\pi)\,]$, and the entries
+$(0,4)$, $(0,6)$, $(1,5)$, $(2,6)$ are pure rational multiples of
+$\sqrt{2\pi}$: $\tfrac3{16}$, $-\tfrac1{16}$, $\tfrac{15}{32}$,
+$\tfrac{97}{128}$.
+\end{theorem}
+
+\section{The prime side in closed form}
+
+\begin{theorem}\label{thm:closed}
+Let $t = \tanh u$. Then
+\[
+g_{mn}(u) \;=\; \frac{\sqrt{2\pi}}{\sqrt{h_m h_n}}\;
+T_{mn}(\tanh u)\,\operatorname{sech}^{1/2}(u),
+\qquad T_{mn} \in \Q[t], \quad T_{mn}(1) = 0 .
+\]
+\end{theorem}
+
+\begin{proof}
+The Fourier transform of the weight is
+$\tfrac1{2\pi}\int |\G(\tfrac14+\tfrac{ir}2)|^2 e^{-iur}\,dr =
+\sqrt{2\pi}\operatorname{sech}^{1/2}(u)$. Multiplication by $r$
+corresponds to $i\,d/du$, and $d/du$ acts on
+$p(t)\operatorname{sech}^{1/2}u$ by
+$p \mapsto (1-t^2)p' - \tfrac t2 p$, so the polynomial factor
+$(r^2+\tfrac14)P_m P_n$ becomes a differential operator preserving
+$\Q[t]\operatorname{sech}^{1/2}u$. The vanishing $T_{mn}(1) = 0$
+is the zero of $r^2 + \tfrac14$ at $r = -\tfrac i2$, which kills
+the leading $e^{-u/2}$ decay. E.g.\ $T_{00} = \tfrac34(1-t^2)$.
+\end{proof}
+
+At $u = \log n$ everything is algebraic in $n$: $\tanh(\log n) =
+\tfrac{n^2-1}{n^2+1}$, $\operatorname{sech}(\log n) =
+\tfrac{2n}{n^2+1}$. Writing $w = n^{-2}$ and expanding
+$\psi_{mn}(w) = (1+w)^{-1/2}\,T_{mn}\bigl(\tfrac{1-w}{1+w}\bigr) =
+\sum_{k\ge1} a_k w^k$ with $a_k \in \Q$ ($a_0 = 0$ by
+$T_{mn}(1)=0$), the von Mangoldt sum collapses onto
+$\zeta'/\zeta$ at odd integers:
+
+\begin{corollary}\label{cor:series}
+\[
+P_{mn} \;=\; \frac{4\sqrt\pi}{\sqrt{h_m h_n}}
+\sum_{k\ge1} a_k^{(mn)}
+\left(-\frac{\zeta'}{\zeta}(1+2k)\right),
+\qquad a_k^{(mn)} \in \Q .
+\]
+The terms decay like $4^{-k}$: five hundred digits cost $856$
+terms. For example
+\[
+P_{00} = \frac{6\sqrt2}\pi \sum_{k\ge1}
+\binom{-5/2}{\,k-1}\left(-\frac{\zeta'}\zeta(1+2k)\right)
+= 0.31111185543474192\ldots
+\]
+\end{corollary}
+
+Without the vanishing $T_{mn}(1) = 0$ the terms would be
+$\La(n)/n$ and the sum would diverge; with it they are
+$\La(n)/n^3$, and direct summation to $40$ digits would still
+require a cutoff near $10^{20}$. The series above is the only
+practical route.
+
+\section{The negative result}
+
+\begin{observation}\label{obs:negative}
+At $500$ digits of working precision, with
+$A = \sqrt{2e}\,K_0(\tfrac12)$, $B = \sqrt{2e}\,K_1(\tfrac12)$:
+\begin{enumerate}
+\item no entry $P_{mn}$, $m,n \le 6$, satisfies a $\Z$-relation
+with $\{A, B\} \times \{1, \log 2, \log\pi, \pi, \gamma\}$
+(PSLQ, coefficients to $10^{10}$, sixteen entries);
+\item the sixteen entries admit no $\Q$-relation among
+themselves: their $\Q$-rank is $16$;
+\item the single candidate relation found at coefficient bound
+$10^{14}$ had all coefficients ${\sim}10^{13}$ and failed
+re-verification at doubled precision (residual $10^{-93}$ in
+place of $10^{-480}$) --- spurious.
+\end{enumerate}
+\end{observation}
+
+The contrast with Theorem~\ref{thm:arch} is the point. In this
+basis the explicit formula splits as
+\[
+\sqrt{h_m h_n}\,W_{mn} \;=\;
+\underbrace{2\sqrt\pi\, q_{mn}}_{\text{pole}}
+\;+\; \underbrace{\sqrt{2\pi}\,\bigl[\alpha_{mn} +
+   \beta_{mn}(\gamma+\log 8\pi)\bigr]}_{\text{arch, rank }2}
+\;-\; \underbrace{4\sqrt\pi \sum_{k\ge1} a_k
+   \Bigl(-\tfrac{\zeta'}\zeta(1+2k)\Bigr)}_{\text{prime, rank}\,\ge\,16},
+\]
+with all of $q_{mn}, \alpha_{mn}, \beta_{mn}, a_k \in \Q$. The
+$\G$-side of the basis carries a rank-two lattice; the primes are
+generic. The integrality of the approximation matrix is a purely
+archimedean phenomenon.
+
+\begin{remark}[The form is a Gram matrix of zeros]
+Numerically $W_{00} = 2.7357\times10^{-8}$: not noise, but exactly
+$\sum_\gamma h_{00}(\gamma)$, dominated by the first zero
+($e^{-\pi\gamma_1/2}$ with $\gamma_1 = 14.13\ldots$). The identity
+$\mathrm{pole} + \mathrm{arch} - \mathrm{prime} = \sum_\gamma
+h_{mn}(\gamma)$ was confirmed to $39$--$56$ digits on all sixteen
+entries. Thus $W$ is the Gram matrix of the vectors
+$\bigl(\widehat{P}_m(\gamma_j/2)\bigr)_j$ under the weight
+$2(\gamma_j^2+\tfrac14)\,|\G(\tfrac14+\tfrac{i\gamma_j}2)|^2$; its
+eigenvalue cascade ($9.1,\ 5\times10^{-4},\ 6\times10^{-10},\
+3\times10^{-18}$ on the even block) tracks the successive weights
+$e^{-\pi\gamma_k/2}$. On RH the positivity of $W$ is trivial ---
+$h_{mm} \ge 0$ on $\R$ --- so the content of Weil positivity in
+this basis is exactly the reality of the $\gamma_j$, while the
+$O(1)$ pole/arch/prime structure cancels to eight digits before
+the first zero is heard.
+\end{remark}
+
+\end{document}

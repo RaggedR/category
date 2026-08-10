@@ -1,0 +1,337 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+
+\newtheorem{proposition}{Proposition}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\title{\textbf{The Dual Meixner--Pollaczek Matching Coefficients:\\
+the Calculation}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+%% ===================================================================
+\section{The Problem}
+%% ===================================================================
+
+Let $P_n$ be the Meixner--Pollaczek polynomials
+($\lambda = \tfrac14$, $\phi = \tfrac{\pi}{2}$),
+\[
+  (n+1) P_{n+1} = 2x P_n - (n - \tfrac12) P_{n-1},
+  \qquad P_0 = 1, \quad P_1 = 2x,
+\]
+orthogonal for the weight
+$W(x) = \Gamma(\tfrac14+ix)\,\Gamma(\tfrac14-ix)$ on $\R$, with
+$\int P_m P_k W = h_k \delta_{mk}$, $h_0 = \sqrt2\,\pi^{3/2}$, and
+$\widehat{P}_n = P_n/\sqrt{h_n}$.
+
+The weight factors into an analytic function and its reflection, and
+distributing one factor to each side defines a \emph{pair of dual
+Meixner--Pollaczek functions}
+\[
+  F_m(x) = \Gamma(\tfrac14+ix)\, \widehat{P}_m(x),
+  \qquad
+  G_m(x) = \Gamma(\tfrac14-ix)\, \widehat{P}_m(x),
+\]
+biorthonormal under the bilinear pairing:
+$\int_\R F_m G_k\, dx = \delta_{mk}$.
+
+\textbf{Problem.} Approximate each dual function by
+Meixner--Pollaczek polynomials: find the coefficients in the best
+$L^2(W)$-approximation
+\[
+  F_m \approx \sum_{k \le N} c_{mk}\, \widehat{P}_k,
+  \qquad
+  c_{mk} = \langle F_m, \widehat{P}_k \rangle_W
+  = \frac{J_{mk}}{\sqrt{h_m h_k}},
+\]
+where
+\begin{equation}\label{eq:J}
+  J_{mk} = \int_\R P_m(x)\, P_k(x)\;
+  \Gamma(\tfrac14+ix)^2\, \Gamma(\tfrac14-ix)\; dx.
+\end{equation}
+The coefficients for $G_m$ are the complex conjugates, so it suffices
+to compute $J_{mk}$. We do so in closed form.
+
+%% ===================================================================
+\section{The Three-Gamma Integral}
+%% ===================================================================
+
+\begin{proposition}\label{prop:3gamma}
+For $\operatorname{Re} a, b, c > 0$,
+\[
+  \int_\R \Gamma(a+ix)\,\Gamma(b+ix)\,\Gamma(c-ix)\, dx
+  = 2\pi\, \Gamma(a+c)\,\Gamma(b+c)\; U(a+c,\, a-b+1,\, 1),
+\]
+where $U$ is Tricomi's confluent hypergeometric function.
+\end{proposition}
+
+\begin{proof}
+Write each factor as $\Gamma(s) = \int_0^\infty t^{s-1} e^{-t}\, dt$
+with variables $t, u$ (for $+ix$) and $v$ (for $-ix$). The $x$-integral
+gives $\int_\R (tu/v)^{ix} dx = 2\pi\,\delta(\log(tu/v))$, which
+collapses the $v$-integral at $v = tu$:
+\[
+  \int_\R
+  = 2\pi \int_0^\infty\!\!\int_0^\infty
+    t^{a+c-1}\, u^{b+c-1}\, e^{-t-u-tu}\, dt\, du.
+\]
+The $u$-integral is $\Gamma(b+c)(1+t)^{-(b+c)}$, and the remaining
+$t$-integral is Tricomi's representation
+$\Gamma(\alpha)\, U(\alpha, \beta, 1)
+= \int_0^\infty t^{\alpha-1}(1+t)^{\beta-\alpha-1} e^{-t}\, dt$
+with $\alpha = a+c$, $\beta = a-b+1$.
+\end{proof}
+
+The same proof with an oscillatory factor $e^{isx}$ inserts $e^{-s}$
+into the delta constraint ($v = tu e^{-s}$) and gives the shifted form
+\begin{equation}\label{eq:shifted}
+  \int_\R \Gamma(a+ix)\,\Gamma(b+ix)\,\Gamma(c-ix)\, e^{isx}\, dx
+  = 2\pi\, e^{-as}\, \Gamma(a+c)\,\Gamma(b+c)\;
+    U(a+c,\, a-b+1,\, e^{-s}).
+\end{equation}
+
+At $a = b = c = \tfrac14$, using
+$U(\tfrac12, 1, 2z) = e^{z} K_0(z)/\sqrt{\pi}$,
+\begin{equation}\label{eq:base}
+  J_{00} = 2\pi\, \Gamma(\tfrac12)^2\, U(\tfrac12, 1, 1)
+  = 2\pi^{3/2} \sqrt{e}\; K_0(\tfrac12)
+  = 16.97348192607767\ldots
+\end{equation}
+(verified to 20 digits by quadrature).
+
+%% ===================================================================
+\section{Reduction of the Polynomial Moments}
+%% ===================================================================
+
+The recurrence $(a+ix)\,\Gamma(a+ix) = \Gamma(a+1+ix)$ converts
+multiplication by $x$ into integer shifts of the parameters:
+\[
+  ix\,\Gamma(a+ix) = \Gamma(a+1+ix) - a\,\Gamma(a+ix),
+  \qquad
+  -ix\,\Gamma(c-ix) = \Gamma(c+1-ix) - c\,\Gamma(c-ix).
+\]
+Applying these repeatedly, every moment
+$\int x^j\, \Gamma(\tfrac14+ix)^2 \Gamma(\tfrac14-ix)\, dx$ is a
+$\Q$-combination of integrals of Proposition~\ref{prop:3gamma} with parameters in
+$\tfrac14 + \mathbb{N}$, hence of values $U(\alpha, \beta, 1)$ with
+$\alpha \in \tfrac12 + \mathbb{N}$, $\beta \in \Z$. The contiguous
+relations for $U$ reduce all of these to the $\Q$-span of two
+generators, which we take (via
+$K_\nu(z) = \sqrt{\pi}\,(2z)^\nu e^{-z}\, U(\nu+\tfrac12, 2\nu+1, 2z)$)
+to be
+\[
+  A = \sqrt{2e}\; K_0(\tfrac12) = 2.155416163\ldots, \qquad
+  B = \sqrt{2e}\; K_1(\tfrac12) = 3.862230968\ldots
+\]
+Since the $P_m$ have rational coefficients, every $J_{mk}/h_0$ lies in
+$\Q A \oplus \Q B$. Empirically the denominators are exactly
+$2^m m!\; 2^k k!$:
+\begin{equation}\label{eq:T}
+  T_{mk} = \frac{2^m m!\, 2^k k!}{h_0}\, J_{mk}
+  \;\in\; \Z A \oplus \Z B
+  \qquad (\text{$T_{mk}$ real for $m+k$ even, } i \cdot \text{real
+  for $m+k$ odd}).
+\end{equation}
+
+%% ===================================================================
+\section{The Generating Function}
+%% ===================================================================
+
+The whole table has a closed generating function. Substituting the
+Meixner--Pollaczek generating function
+\[
+  \sum_{n \ge 0} P_n(x)\, w^n
+  = (1-iw)^{-\frac14+ix} (1+iw)^{-\frac14-ix}
+\]
+once in each index of~\eqref{eq:J} turns all $x$-dependence into a
+single oscillation $e^{isx}$ with
+\[
+  e^{-s} = \zeta(w,u) = \varphi(w)\,\varphi(u),
+  \qquad
+  \varphi(t) = \frac{1+it}{1-it}
+  \quad (\text{the Cayley transform}),
+\]
+and~\eqref{eq:shifted} evaluates the integral. The algebraic
+prefactors collapse, and using
+$U(\tfrac12, 1, 2z) = e^{z} K_0(z)/\sqrt{\pi}$ once more,
+\begin{equation}\label{eq:gf}
+  \sum_{m,k \ge 0} J_{mk}\, w^m u^k
+  = \frac{2\pi^{3/2}\, e^{\zeta/2}\, K_0(\zeta/2)}
+         {\sqrt{(1-iw)(1-iu)}}
+\end{equation}
+(verified numerically to $15$ digits against every entry of the
+table). At $w = u = 0$, $\zeta = 1$, recovering~\eqref{eq:base}.
+
+Formula~\eqref{eq:gf} explains the two-generator structure: every
+Taylor coefficient acts on $K_0$ through the closed derivative algebra
+$K_0' = -K_1$, $K_1' = -K_0 - K_1/z$, evaluated at $z = \tfrac12$, so
+each $J_{mk}/h_0$ lies in $\Q A \oplus \Q B$ automatically (proving
+what \S3 stated empirically, up to the denominators). It also makes
+the real/imaginary checkerboard of~\eqref{eq:T} visible by inspection:
+$(w,u) \mapsto (-w,-u)$ conjugates $\zeta$.
+
+The derivative algebra is a weighted \emph{two-state automaton} on
+states $\{K_0, K_1\}$: each differentiation either switches state
+(weight $-1$) or loops at $K_1$ (weight $-1/z$, i.e.\ $-2$ at
+$z = \tfrac12$). Expanding~\eqref{eq:gf} by Fa\`a di Bruno, the
+integer coefficients of $A$ and $B$ in $T_{mk}$ are thus signed sums
+over pairs (set partition of the $m+k$ derivatives, path in the
+automaton with one step per block), each derivative dressed by a
+Taylor coefficient of $\zeta = \varphi(w)\varphi(u)$ at the Cayley
+transform --- the source of the powers of $2$ absorbed by the
+normalisation $2^m m!\, 2^k k!$ in~\eqref{eq:T}. A self-contained
+combinatorial formula for the pair of integer matrices remains to be
+extracted.
+
+%% ===================================================================
+\section{The Coefficients}
+%% ===================================================================
+
+The table lists the rescaled integrals $T_{mk}$ of~\eqref{eq:T}, with
+integer coefficients recovered by PSLQ at $40$ digits (the factor $i$
+for $m+k$ odd is dropped); $(3,5)$ exceeded the coefficient search
+bound. To recover the approximation coefficients of $F_m$: since
+$h_n = h_0 \binom{2n}{n}/4^n$, the normalisations collapse to
+\[
+  c_{mk}
+  = \frac{T_{mk}}{m!\, k!\,
+    \sqrt{\binom{2m}{m}\binom{2k}{k}}}\,,
+\]
+and the coefficients of $G_m$ are the complex conjugates.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{cl@{\qquad}cl}
+\toprule
+$(m,k)$ & $T_{mk}$ & $(m,k)$ & $T_{mk}$ \\
+\midrule
+$(0,0)$ & $A$                   & $(1,3)$ & $2575A - 1440B$ \\
+$(0,1)$ & $3A - 2B$             & $(1,4)$ & $39411A - 21978B$ \\
+$(0,2)$ & $12B - 23A$           & $(1,5)$ & $394932B - 707389A$ \\
+$(0,3)$ & $138B - 241A$         & $(2,2)$ & $2369A - 1320B$ \\
+$(0,4)$ & $3265A - 1800B$       & $(2,3)$ & $33743A - 18834B$ \\
+$(0,5)$ & $52907A - 29706B$     & $(2,4)$ & $317892B - 569719A$ \\
+$(1,1)$ & $12B - 21A$           & $(2,5)$ & $6190602B - 11092229A$ \\
+$(1,2)$ & $114B - 205A$         & $(3,3)$ & $295572B - 529549A$ \\
+        &                       & $(3,4)$ & $5399634B - 9675553A$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ===================================================================
+\section{The Reverse Expansion}
+%% ===================================================================
+
+Expanding in the other direction — the polynomials in terms of the
+dual functions — is elementary by contrast. Biorthogonality gives
+\[
+  \widehat{P}_m = \sum_k D_{mk} F_k,
+  \qquad
+  D_{mk} = \int_\R \widehat{P}_m\, G_k\, dx
+  = \frac{1}{\sqrt{h_m h_k}}
+    \int_\R P_m(x)\, P_k(x)\, \Gamma(\tfrac14-ix)\, dx,
+\]
+a \emph{one}-Gamma integral. Mellin inversion of
+$\Gamma(s) = \int_0^\infty t^{s-1} e^{-t} dt$ gives
+$\int_\R \Gamma(a+ix)\, t^{-ix} dx = 2\pi\, t^a e^{-t}$, and the same
+substitution of the generating function as in \S4 yields
+\begin{equation}\label{eq:gfrev}
+  \sum_{m,k \ge 0}
+  \Big( \textstyle\int_\R P_m P_k\, \Gamma(\tfrac14-ix)\, dx \Big)
+  w^m u^k
+  = \frac{2\pi\, e^{-1/\zeta}}{\sqrt{(1+iw)(1+iu)}}
+\end{equation}
+(verified to $20$ digits; at $w=u=0$ this is $2\pi/e$). Where the
+forward direction needed the Bessel pair $(A, B)$, the reverse needs
+the single generator $e^{-1}$: one Gamma factor inverts to a pure
+exponential, whose derivative algebra has one state, while three
+Gamma factors produce the Tricomi $U$, whose Bessel algebra has two.
+The two generating functions are exchanged by
+$\zeta \mapsto 1/\zeta$, $(w,u) \mapsto (-w,-u)$ --- the Cayley
+inversion swapping the half-planes.
+
+The same normalisation as in~\eqref{eq:T} again produces integers ---
+now over the \emph{single} generator $2\pi/e$, and provably so, since
+the Taylor coefficients of~\eqref{eq:gfrev} are Gaussian rationals
+times $e^{-1}$ and can be expanded symbolically (no PSLQ needed):
+\[
+  S_{mk} = 2^m m!\, 2^k k!\; \frac{e}{2\pi}
+  \int_\R P_m P_k\, \Gamma(\tfrac14 - ix)\, dx \;\in\; \Z,
+  \qquad
+  D_{mk} = \frac{1}{e}\sqrt{\frac{2}{\pi}}\;
+  \frac{S_{mk}}{m!\, k!\, \sqrt{\binom{2m}{m}\binom{2k}{k}}}
+\]
+(again dropping a factor $i$ when $m+k$ is odd).
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{r|rrrrrr}
+$S_{mk}$ & $k=0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\hline
+$m=0$ & $1$ & $3$ & $5$ & $11$ & $249$ & $-2621$ \\
+$1$ &  & $7$ & $47$ & $399$ & $-2005$ & $263$ \\
+$2$ &  &  & $473$ & $-617$ & $22109$ & $-402065$ \\
+$3$ &  &  &  & $31511$ & $-412557$ & $-3017969$ \\
+$4$ &  &  &  &  & $-1916623$ & $-29235989$ \\
+$5$ &  &  &  &  &  & $-1012892921$ \\
+\end{tabular}
+\end{table}
+
+These integers have a combinatorial interpretation. In the rescaled
+variables $v = 2iw$, $\mu = 2iu$ the generating
+function~\eqref{eq:gfrev} factors as
+\[
+  \bigl(\sigma'(v)\,\tau'(\mu)\bigr)^{1/4}\, e^{\sigma+\tau-\sigma\tau},
+  \qquad
+  \sigma = \frac{v}{1+v/2}, \quad \tau = \frac{\mu}{1+\mu/2}
+\]
+--- a Charlier kernel in Laguerre variables, with the
+Meixner--Pollaczek parameter $\lambda = \tfrac14$ appearing as the
+exponent of the Jacobian prefactor. Reading this as a species:
+
+\begin{proposition}
+$S_{mk} = (-1)^{\lfloor (m+k)/2 \rfloor} \sum_{\text{structures}}
+\operatorname{wt}$, summed over structures on $([m], [k])$ in which
+each of $[m]$, $[k]$ is split into a \emph{defect set} and a forest of
+nonempty \emph{chains} (linear orders), together with a partial
+matching between the $[m]$-chains and the $[k]$-chains; the weights
+are $(-1)^d (2d-1)!!$ for a defect set of size $d$ (the prefactor),
+$(-1)^{\ell-1}\, 2^{\ell+1}$ for a chain of length $\ell$ (the
+substitution), and $-1$ per matched pair of chains (the Charlier
+kernel $e^{\sigma+\tau-\sigma\tau}$).
+\end{proposition}
+
+Equivalently, with Lah numbers
+$L(n,c) = \binom{n-1}{c-1} n!/c!$ counting the chain forests,
+\[
+  S_{mk} = (-1)^{\lfloor \frac{m+k}{2} \rfloor}
+  \sum_{d_1, c_1, d_2, c_2}
+  W_m(d_1, c_1)\, W_k(d_2, c_2)\; C_{c_1 c_2},
+\]
+\[
+  W_n(d, c) = \binom{n}{d} (-1)^{d} (2d-1)!!\;
+  L(n{-}d,\, c)\, (-1)^{n-d-c}\, 2^{n-d+c},
+\]
+where $C_{c_1 c_2} = \sum_j (-1)^j \binom{c_1}{j}\binom{c_2}{j} j!$
+is the signed count of partial matchings (a Charlier polynomial
+value). This reproduces the entire table exactly.
+
+One caution: the coefficients $D_{mk}$ \emph{grow} along the diagonal
+($D_{00} = 0.2935\ldots$, $D_{11} = 1.027\ldots$,
+$D_{22} = 5.785\ldots$), so the reverse expansion is formal —
+$\widehat{P}_m$ does not lie in the closed span of the $F_k$. The
+analytic content lives in the forward direction; the reverse carries
+the simpler arithmetic.
+
+\end{document}

@@ -1,0 +1,1066 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{parskip}
+
+% parskip is reset to 0 inside \parbox/minipage (the coloured boxes);
+% restore it so paragraphs are separated by blank lines everywhere.
+\makeatletter
+\g@addto@macro\@arrayparboxrestore{\setlength{\parskip}{.5\baselineskip}}
+\makeatother
+
+\geometry{margin=2.5cm}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+\theoremstyle{plain}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{exercise}[definition]{Exercise}
+
+\newcommand{\droot}{\mathsf{root}}
+\newcommand{\dsub}{\mathbin{\downarrow}}
+\newcommand{\dshift}{\mathbin{\oplus}}
+
+\title{Introduction to Containers}
+\author{Robin Langer and Claude Code}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Containers and Types}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}
+A \emph{container} is a pair $\psi = (S, P)$ where $S$ is a set of \emph{shapes} and
+\[
+  P : S \to \mathbf{Set}(A)
+\]
+is a family of \emph{positions}, where $\mathbf{Set}(A)$ is the set of all
+subsets of $A$ for some universal set $A$.
+
+For any given shape $s$, think of $P(s) \subseteq A$ as a set of
+``slots'' where you can put data.  We don't actually have any data
+yet.  That will come later when we do extensions of containers.
+\end{definition}%
+}}
+
+\begin{example}\label{ex:list}
+A \emph{list} is described by
+the container $L$ with shapes $S_L = \mathbb{N}$ (the length) and positions
+\[
+  P_L : \mathbb{N} \to \mathbf{Set}(\mathbb{N}), \qquad
+  P_L(n) = \{1, 2, \ldots, n\}.
+\]
+Note that this container represents lists of
+any length.  But it doesn't yet contain any data.  Think of it as
+the type of a list.
+\end{example}
+
+\begin{example}\label{ex:tree}
+Encode a vertex of a binary tree as a word in
+$\{\mathrm{L}, \mathrm{R}\}^*$ --- the directions taken from the
+root.  A finite set $t \subseteq \{\mathrm{L}, \mathrm{R}\}^*$ is a
+\emph{valid tree shape} when it is
+\emph{prefix-closed}.  That is, every prefix $w'$ of a word
+$w \in t$ is also in $t$.  The empty word (the root) belongs to every nonempty
+tree.  Let $\mathrm{Tree}$ be the set of all valid tree shapes, and let
+\[
+  T = (\mathrm{Tree}, Q), \qquad
+  Q : \mathrm{Tree} \to \mathbf{Set}(\{\mathrm{L},\mathrm{R}\}^*),
+  \qquad Q(t) = t,
+\]
+We denote by $V(t)$ the number of vertices of $t$.
+
+If you already have an image in your mind of what a tree looks
+like, imagine that each vertex of the tree is a ``slot'' where we
+could add data.  As before, we don't have any data yet.  This is
+just the type of a tree.
+\end{example}
+
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{remark}\label{rem:dependent-types}
+For any container $(S, P)$ and any $s \in S$ we may associate a
+\emph{dependent type}:
+\[
+  s : S \vdash P(s) : \texttt{Type}.
+\]
+Very few programming languages support dependent types, the exceptions
+being Lean, Agda, Idris, and Coq.
+
+We haven't actually said what a \texttt{Type} is yet.  But we will
+in Section~\ref{sec:extension-types}.
+\end{remark}%
+}}
+
+\begin{example}\label{ex:haskell}
+Haskell does not support dependent types.  In Haskell the list
+and the tree are defined by
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.85\linewidth}
+\ttfamily
+data List a = Nil | Cons a (List a)\\
+data Tree a = Leaf | Node (Tree a) a (Tree a)
+\end{minipage}}
+\end{center}
+A list of \texttt{a}s is either empty, or an element together with
+another list.  A tree is either a leaf, or a node carrying an
+element and two subtrees.  The types are defined recursively.
+
+In Haskell we cannot define a
+list of a specific length or a tree of a specific shape.  The best
+we can do is a run-time check.
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.75\linewidth}
+\ttfamily
+mkListOfLength :: Int -> [a] -> Maybe [a]\\
+mkListOfLength n xs\\
+\hspace*{1.5em}| length xs == n\hspace*{0.5em}= Just xs\\
+\hspace*{1.5em}| otherwise\hspace*{3.5em}= Nothing
+\end{minipage}}
+\end{center}
+\end{example}
+
+\begin{example}\label{rem:c-pointers}
+Recursion in C is
+implemented using pointers.
+A position is an \emph{address}.  A labelling of the positions with
+data is the \emph{memory contents}.
+
+What is the type of a \emph{linked list}?  In C one writes
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.75\linewidth}
+\ttfamily
+typedef struct Node *List;\\[4pt]
+struct Node \{\\
+\hspace*{1.5em}int data;\\
+\hspace*{1.5em}struct Node *next;\\
+\};
+\end{minipage}}
+\end{center}
+The list is given the type of a pointer to its first node.
+In C, every pointer type is either a
+valid address or \texttt{NULL}.  Unfolding it, a node is a
+datum together with either another node or \texttt{NULL}, so a
+linked list is either empty, or a head and a tail.  C cannot express the recursion directly, so it
+smuggles it in with pointers.
+
+Likewise a binary tree.
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.75\linewidth}
+\ttfamily
+typedef struct TNode *Tree;\\[4pt]
+struct TNode \{\\
+\hspace*{1.5em}int data;\\
+\hspace*{1.5em}struct TNode *left;\\
+\hspace*{1.5em}struct TNode *right;\\
+\};
+\end{minipage}}
+\end{center}
+A tree is a pointer to its root, the empty tree is \texttt{NULL},
+and each node now carries two pointers --- one slot for each
+child.
+
+What does C check?  Pointer types are checked at compile time, a
+pointer to one type of struct cannot point to a struct of a
+different type, and within a struct only the declared fields can
+be named.
+
+What does C not check?
+\begin{itemize}
+\item Bounds --- trying to access the 7th element of a list of
+  length 5 (the buffer overflow).
+\item Nullness --- following a pointer that points to
+  \texttt{NULL}.
+\item Dangling pointers --- for example, after removing
+  an element from the end of a list you might forget to point the
+  previous pointer to \texttt{NULL}.
+\end{itemize}
+
+This is ugly, which is the reason why people prefer to
+program in higher level languages.
+\end{example}
+
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{example}\label{ex:lean-dependent}
+One language that does support dependent types is Lean.
+For example, we can define a vector of length \texttt{n} containing
+entries from \texttt{a} as follows:
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.85\linewidth}
+\ttfamily
+inductive Vec (a : Type) : Nat -> Type where\\
+\hspace*{1.5em}| nil\hspace*{1.5em}: Vec a 0\\
+\hspace*{1.5em}| cons : a -> Vec a n -> Vec a (n + 1)
+\end{minipage}}
+\end{center}
+\texttt{Vec a n} is the type of a list of length \texttt{n}.  Note that it
+doesn't actually have any data yet.  It is a type.
+
+Note that \texttt{(Vec a)} is a \emph{type constructor}, of signature
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.85\linewidth}
+\ttfamily
+(Vec a) : Nat -> Type
+\end{minipage}}
+\end{center}
+The type constructor depends on a \emph{value} \texttt{n} of type
+\texttt{Nat}, and returns a \texttt{Type}.
+
+A function
+from values to types is called a \emph{dependent family} --- it is the
+same kind of object as the position family
+$P_L : \mathbb{N} \to \mathbf{Set}(\mathbb{N})$ that we saw for lists.
+
+$P_L(n) = \{1, 2, \ldots, n\}$ is \texttt{Vec a n}.
+
+To construct a vector of length 3 in Lean we write:
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.85\linewidth}
+\ttfamily
+def v : Vec Int 3 := cons 1 (cons 2 (cons 3 nil))
+\end{minipage}}
+\end{center}
+The list now contains data, \texttt{v} is a value of type
+\texttt{Vec Int 3}.
+This is a recursive construction.  The length is tracked in the type at every step.
+The way we put data into containers is different.  We don't need
+recursion, instead we just ``slot it in''.  This is one of the great
+powers of container theory.
+
+\medskip
+\noindent
+Why would anybody do this?  The idea is to catch a vector length mis-match
+at compile time rather than run time.
+
+Dependent types come at a price.  If types contain values, then deciding
+whether two types are equal requires deciding whether two values are
+equal, so the type checker must \emph{execute code} at compile time.
+
+\medskip
+\noindent
+If types contain values, then types contain \emph{computations}.
+For example:
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.85\linewidth}
+\ttfamily
+Vec a (n + m) = Vec a (m + n)
+\end{minipage}}
+\end{center}
+describe vectors of the same length, but we must prove they are
+the same type.  This is extremely tedious and painful.
+\end{example}%
+}}
+
+\section{Sums and products of containers}
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:sum-functions}
+The \emph{categorical sum} of two sets $A$ and $B$ is their
+\emph{disjoint union} $A \sqcup B$.
+\[
+  \mathrm{left} : A \to A \sqcup B,
+  \qquad
+  \mathrm{right} : B \to A \sqcup B.
+\]
+The sum extends to \emph{functions}.  Given $f : A \to C$ and
+$g : B \to D$, their sum
+\[
+  f \sqcup g : A \sqcup B \to C \sqcup D
+\]
+is defined by the unique function
+making the two squares commute.
+\[
+\begin{array}{ccc}
+  A & \xrightarrow{\;\mathrm{left}\;} & A \sqcup B\\[2pt]
+  \big\downarrow{\scriptstyle f} & & \big\downarrow{\scriptstyle f \sqcup g}\\[2pt]
+  C & \xrightarrow{\;\mathrm{left}\;} & C \sqcup D
+\end{array}
+\qquad\qquad
+\begin{array}{ccc}
+  B & \xrightarrow{\;\mathrm{right}\;} & A \sqcup B\\[2pt]
+  \big\downarrow{\scriptstyle g} & & \big\downarrow{\scriptstyle f \sqcup g}\\[2pt]
+  D & \xrightarrow{\;\mathrm{right}\;} & C \sqcup D
+\end{array}
+\]
+\end{definition}%
+}}
+
+\medskip
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:product-functions}
+The \emph{categorical product} of two sets $A$ and $B$ is
+their \emph{cartesian product} $A \times B$.  It comes
+with the two projections
+\[
+  \pi_1 : A \times B \to A,
+  \qquad
+  \pi_2 : A \times B \to B.
+\]
+The product extends to \emph{functions}.  Given $f : A \to C$ and
+$g : B \to D$, their product
+\[
+  f \times g : A \times B \to C \times D
+\]
+is
+the unique function making the two squares commute.
+\[
+\begin{array}{ccc}
+  A \times B & \xrightarrow{\;\pi_1\;} & A\\[2pt]
+  \big\downarrow{\scriptstyle f \times g} & & \big\downarrow{\scriptstyle f}\\[2pt]
+  C \times D & \xrightarrow{\;\pi_1\;} & C
+\end{array}
+\qquad\qquad
+\begin{array}{ccc}
+  A \times B & \xrightarrow{\;\pi_2\;} & B\\[2pt]
+  \big\downarrow{\scriptstyle f \times g} & & \big\downarrow{\scriptstyle g}\\[2pt]
+  C \times D & \xrightarrow{\;\pi_2\;} & D
+\end{array}
+\]
+\end{definition}%
+}}
+
+\medskip
+\noindent
+Since we used universal properties as definitions, sums and products
+can be defined for any category and they are dual.  Both sum and
+product ``lift'' naturally to containers.
+
+\medskip
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:sum}
+Suppose that we have two containers $\psi = (S, P)$ with
+$P : S \to \mathbf{Set}(A)$ and $\varphi = (T, Q)$ with
+$Q : T \to \mathbf{Set}(B)$.  Their \emph{sum}
+$\psi + \varphi$ is the container whose shapes are the disjoint union
+$S \sqcup T$ and whose positions are
+\[
+  (P + Q) : S \sqcup T \to \mathbf{Set}(A \sqcup B), \qquad
+  (P + Q)(s) =
+  \begin{cases}
+    P(s) & \text{if } s \in S,\\
+    Q(s) & \text{if } s \in T.
+  \end{cases}
+\]
+The \emph{product} $\psi \times \varphi$ is the container whose
+shapes are the pairs $S \times T$ and whose positions are the
+disjoint union
+\[
+  (P \times Q) : S \times T \to \mathbf{Set}(A \sqcup B),
+  \qquad
+  (P \times Q)(s, t) = P(s) \sqcup Q(t).
+\]
+\end{definition}%
+}}
+
+\begin{example}\label{ex:list-sum}
+Recall the list container $L = (\mathbb{N}, P_L)$ with
+$P_L : \mathbb{N} \to \mathbf{Set}(\mathbb{N})$,
+$P_L(n) = \{1, 2, \ldots, n\}$.  Note that
+\[
+  \mathbb{N} = \{1\} \cup \{2\} \cup \{3\} \cup \cdots
+\]
+so the shapes decompose as the disjoint union of the singletons
+$S_k = \{k\}$.  Define a family of individual shape containers.  Let
+$P_k : \{k\} \to \mathbf{Set}(\mathbb{N})$ with
+$P_k(k) = \{1, 2, \ldots, k\}$, and set $L_k = (S_k, P_k)$.  Then
+\[
+  L = L_1 + L_2 + L_3 + \cdots
+\]
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+Each $L_k$ is a dependent type --- it is \texttt{Vec a k}, whose
+type depends on the value $k$ --- but the sum $L$ is not.  It is
+the ordinary type \texttt{List a}, which we can have in Haskell.%
+}}
+\end{example}
+
+\begin{example}\label{ex:tree-sum}
+Recall the tree container $T = (\mathrm{Tree}, Q)$ of
+Example~\ref{ex:tree}, with $Q(t) = t$.  Now $\mathrm{Tree}$
+decomposes as
+\[
+  \mathrm{Tree} = \bigcup_{t \,\in\, \mathrm{Tree}} \{t\},
+\]
+and for each $t$ we have the individual shape container
+$T_t = (\{t\}, Q_t)$ with $Q_t(t) = t$.  So
+\[
+  T = \sum_{t \,\in\, \mathrm{Tree}} T_t,
+\]
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+Again each $T_t$ is a dependent type --- the type of trees of valid tree word
+exactly $t$, which depends on the value $t$ --- but the sum $T$ is
+not.  It is the ordinary type \texttt{Tree a}, which we can have in
+Haskell.%
+}}
+\end{example}
+
+Every container is the sum of its individual shape subcontainers.
+$\psi = \sum_{s \in S} (\{s\}, P_s)$.
+
+\section{Container Morphisms}
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:morphism}
+Suppose that we have two containers $\psi = (S, P)$ with
+\[
+  P : S \to \mathbf{Set}(A)
+\]
+and $\varphi = (T, Q)$ with
+\[
+  Q : T \to \mathbf{Set}(A).
+\]
+They must have the same set of possible positions $A$.
+A \emph{morphism} of containers $(u, g) : \psi \to \varphi$ is a map
+from the shapes $S$ to the shapes $T$
+\[
+  u : S \to T
+\]
+together with a family of arrows, one for each shape $s \in S$,
+pointing in the \emph{opposite} direction:
+\[
+  g_s : Q(u(s)) \mapsto P(s).
+\]
+The new positions of $T$ can only come from the old positions of
+$S$.  This is because new data cannot be created.  The arrow points
+backwards to tell you where the data in $t \in T$ came from.
+\end{definition}%
+}}
+
+\begin{example}\label{ex:reverse}
+$\mathrm{reverse}$ is the morphism $L \to L$ of the list container with
+\[
+  u : n \mapsto n
+  \qquad\text{and}\qquad
+  g_n : k \mapsto (n + 1 - k).
+\]
+This says that the new position $k$ came from the old position
+$(n + 1 - k)$.
+\end{example}
+
+\begin{example}\label{ex:dup}
+Let $\mathrm{dup} : L \to L$ be the operation sending the list
+$[a, b, c]$ to $[a, a, b, b, c, c]$.  As a container morphism the
+shape arrow doubles the length,
+\[
+  u : n \mapsto 2n,
+\]
+and the positions arrow sends each new position back to the old
+position it copies its data from,
+\[
+  g_n : (2k - 1) \mapsto k
+  \qquad\text{and}\qquad
+  g_n : 2k \mapsto k.
+\]
+This tells you that both the new positions $3$ and $4$ came from the old
+position $2$.
+\end{example}
+
+\begin{example}\label{ex:tail}
+Let $\mathrm{tail} : L \to L$ be the operation sending the list
+$[a, b, c, d]$ to $[b, c, d]$.  As a container morphism the shape arrow
+decreases the length by one,
+\[
+  u : n \mapsto n - 1,
+\]
+and the positions arrow is
+\[
+  g_n : k \mapsto (k + 1).
+\]
+This says that the new position $k$ came from the old position
+$(k+1)$.
+\end{example}
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{theorem}\label{thm:cont-category}
+Containers and container morphisms form a category $\mathbf{Cont}$.
+The identity morphism on $\psi = (S, P)$ is
+\[
+  \mathrm{id}_\psi = \bigl(\mathrm{id}_S,\ (\mathrm{id}_{P(s)})_{s \in S}\bigr),
+\]
+where for each $s \in S$, the map $\mathrm{id}_{P(s)}$ is the
+identity function.  Composition is given by:
+\[
+  (v, h) \circ (u, g)
+  = \bigl(v \circ u,\ (g_s \circ h_{u(s)})_{s \in S}\bigr).
+\]
+The shape maps compose \emph{forwards},
+\[
+\begin{array}{ccccc}
+  S & \xrightarrow{\;u\;} & T & \xrightarrow{\;v\;} & \tilde{S}
+\end{array}
+\]
+while the position arrows compose \emph{backwards}
+\[
+\begin{array}{ccccc}
+  P(s) & \xleftarrow{\;g_s\;} & Q(u(s))
+       & \xleftarrow{\;h_{u(s)}\;} & \tilde{P}(v(u(s))).
+\end{array}
+\]
+Remember that we can't create new data, so the position arrows tell
+us where the data came from.  The data doesn't live in $T$, it
+lives in $Q(t)$ for some $t \in T$.
+The composite $g_s \circ h_{u(s)}$ only has the right
+type because the arrow on positions points backwards.
+\end{theorem}%
+}}
+
+\medskip
+
+\noindent
+Associativity and the identity laws are inherited from ordinary
+function composition.
+
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{remark}\label{rem:functions-as-morphisms}
+Every container morphism $f : A \to B$ can be thought of as a
+function of type $A \to B$, but not every function of type
+$A \to B$ is a container morphism.
+
+For example, permuting a list is a container morphism but sorting
+a list is not.
+
+For simplicity, suppose our language supports only the primitives
+\texttt{Int} and \texttt{Bool}, together with their basic
+operations.  These are arithmetic, comparison and boolean operations.  None
+of these basic operations is a container morphism.
+
+To get a complete language we must also add
+\emph{pattern matching} (branching) and \emph{recursion}.  Pattern matching is
+case analysis on the constructor of a value.
+\end{remark}%
+}}
+
+\begin{example}\label{ex:product-state}
+Consider \emph{tree sort}.  The type of this map is
+$\mathrm{sort} : L \times T \to L \times T$.
+First we insert the elements from the list into the
+tree (according to some criterion), then we read back the elements
+from the tree to the list (in a certain order).  The state at each step
+is a pair $(L, T)$.  It records what is left to insert, and what has been built so far
+--- a list of length $n$ and a search tree $t$ with $k$ vertices.
+One step of the algorithm
+takes the head of the list and inserts it into the tree:
+\[
+  \mathrm{insert} : L \times T \to L \times T, \qquad
+  (n, t) \;\longmapsto\; (n-1,\; t'),
+\]
+where $t'$ has one vertex more than $t$, and for the read-back phase
+\[
+  \mathrm{read} : L \times T \to L \times T, \qquad
+  (n, t) \;\longmapsto\; (n+1,\; t''),
+\]
+where $t''$ has one less vertex than $t$.
+
+For $n = 3$ the full sort algorithm can be expressed as
+\[
+  \mathrm{read} \circ \mathrm{read} \circ \mathrm{read}
+  \circ \mathrm{insert} \circ \mathrm{insert} \circ \mathrm{insert}.
+\]
+In general, define the iterates recursively.  Set
+\[
+  \mathrm{insert}_1 = \mathrm{insert},
+  \qquad
+  \mathrm{insert}_{n+1} = \mathrm{insert} \circ \mathrm{insert}_n,
+\]
+and likewise
+\[
+  \mathrm{read}_1 = \mathrm{read},
+  \qquad
+  \mathrm{read}_{n+1} = \mathrm{read} \circ \mathrm{read}_n.
+\]
+This allows us to apply insertion sort to a list of any length $n$.
+\[
+  \mathrm{sort}_n = \mathrm{read}_n \circ \mathrm{insert}_n.
+\]
+
+In Haskell:
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.85\linewidth}
+\ttfamily
+insert :: Ord a => ([a], Tree a) -> ([a], Tree a)\\
+insert (x : xs, t) = (xs, ins x t)\\
+\hspace*{1.5em}where\\
+\hspace*{3em}ins x Leaf = Node Leaf x Leaf\\
+\hspace*{3em}ins x (Node l y r)\\
+\hspace*{4.5em}| x <= y\hspace*{1.4em}= Node (ins x l) y r\\
+\hspace*{4.5em}| otherwise = Node l y (ins x r)\\[6pt]
+read :: ([a], Tree a) -> ([a], Tree a)\\
+read (xs, t) = (y : xs, t')\\
+\hspace*{1.5em}where\\
+\hspace*{3em}(y, t') = removeMax t\\
+\hspace*{3em}removeMax (Node l x Leaf) = (x, l)\\
+\hspace*{3em}removeMax (Node l x r)\hspace*{1.1em}= (z, Node l x r')\\
+\hspace*{4.5em}where (z, r') = removeMax r\\[6pt]
+insertN :: Ord a => Int -> ([a], Tree a) -> ([a], Tree a)\\
+insertN 1 = insert\\
+insertN n = insert . insertN (n - 1)\\[6pt]
+readN :: Int -> ([a], Tree a) -> ([a], Tree a)\\
+readN 1 = read\\
+readN n = read . readN (n - 1)\\[6pt]
+sortN :: Ord a => Int -> ([a], Tree a) -> ([a], Tree a)\\
+sortN n = readN n . insertN n
+\end{minipage}}
+\end{center}
+This is NOT a container
+morphism because it uses comparisons, and pattern matching, and
+recursion.
+\end{example}
+
+\newpage
+
+\section{Extension of containers and Types}\label{sec:extension-types}
+
+Now we are ready to put some data into our containers.  In this
+section we will ``bootstrap'' the definition of a type.
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:extension}
+The \emph{extension} of a container $\psi = (S, P)$ with respect to a set
+of labels $X$ (data) is
+\[
+  C_\psi(X) = \sum_{s:S}\bigl(P(s) \to X\bigr)
+            = \bigl\{\langle s, f \rangle : s \in S,\ f : P(s) \to X\bigr\}.
+\]
+The elements of the extension are pairs $\langle s, f \rangle$.  A shape $s$
+together with a labelling $f$ of its positions.  Think of it
+as slotting data into the positions of $P(s)$.
+For example, if $X = \{\mathrm{True}, \mathrm{False}\}$, then $C_L(X)$ is the
+set of lists of type \texttt{Bool} of any length.
+\end{definition}%
+}}
+
+
+You can think of the container as ``pure structure'' and the variable $X$ as
+a set of labels on that structure.  The labels are data that can be
+``slotted in'' to the positions.
+
+
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{remark}
+A container morphism $(u, g) : \psi \to \varphi$ acts on extensions by
+\[
+  \langle s, f \rangle \longmapsto \langle u(s),\; f \circ g_s \rangle.
+\]
+Note again that the arrow $g_s$
+points backwards, otherwise you wouldn't be able to compose it with $f$.  We
+have $f : P(s) \to X$ and $g_s : \hat{P}(u(s)) \mapsto P(s)$, so
+$f \circ g_s : \hat{P}(u(s)) \to X$ is a labelling of the new shape.
+\end{remark}%
+}}
+
+We are going to ``bootstrap'' the definition of $\texttt{Type}$ by
+setting $\texttt{Type}_0 = \{\texttt{Int}, \texttt{Bool}\}$ and then
+defining $\texttt{Type}_{k+1}$ recursively in terms of
+$\texttt{Type}_k$.
+
+You can think of $\texttt{Type}_3$ as types of
+types of types of $\{\texttt{Int}, \texttt{Bool}\}$.
+
+\medskip
+
+Let us define a $2$-indexed container first, we'll work up to the
+general definition later.  Start with a ``struct'' containing three
+\texttt{Int}s and two \texttt{Bool}s.
+\begin{center}
+\colorbox{gray!15}{\begin{minipage}{0.85\linewidth}
+\ttfamily
+struct \{\\
+\hspace*{1.5em}int x, y, z;\\
+\hspace*{1.5em}bool a, b;\\
+\}
+\end{minipage}}
+\end{center}
+As a container this is a single shape $s$ with five slots
+\[
+  P(s) = \{x, y, z, a, b\}.
+\]
+The slots come in two ``types''.  We record the type of each slot
+with a map into the index set $I = \{\texttt{Int}, \texttt{Bool}\}$,
+\[
+  r_s : P(s) \to I,
+\]
+so $r_s(x) = r_s(y) = r_s(z) = \texttt{Int}$ and
+$r_s(a) = r_s(b) = \texttt{Bool}$.
+
+\medskip
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}
+Let $I$ be an index set with two elements.  A \emph{$2$-indexed
+container over $I$} is a container $\phi = (S, P)$ with, for each
+$s \in S$, a map
+\[
+  r_s : P(s) \to I,
+\]
+called the \emph{response map}.
+\end{definition}%
+}}
+
+\medskip
+
+Take $I = \{\texttt{Int}, \texttt{Bool}\}$.  To put data into the
+container we choose one data set for each index.
+\[
+  X_1 = \mathbb{N}
+  \qquad\text{for \texttt{Int}, and}\qquad
+  X_2 = \{\mathrm{True}, \mathrm{False}\}
+  \qquad\text{for \texttt{Bool}.}
+\]
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}
+The \emph{extension} of a $2$-indexed container $\phi = (S, P, r)$
+over $I$ at the data $(X_1, X_2)$ is
+\[
+  C_\phi(X_1, X_2) = \sum_{s \in S} \prod_{p \in P(s)} X_{r_s(p)},
+\]
+where $X_{\texttt{Int}} = X_1$ and $X_{\texttt{Bool}} = X_2$.
+\end{definition}%
+}}
+
+\medskip
+
+Compare this with the plain extension $C_\psi(X)$ of
+Definition~\ref{def:extension}.  There every slot received data from
+the \emph{same} set $X$, and a labelling was a function
+$f : P(s) \to X$.  Here each slot $p$ has its own data type
+$X_{r_s(p)}$.  An \texttt{Int} slot receives a value from $X_1$
+and a \texttt{Bool} slot receives a value from $X_2$.
+
+\medskip
+
+For the struct above,
+\[
+  C_\phi(X_1, X_2)
+  = \mathbb{N}^3 \times \{\mathrm{True}, \mathrm{False}\}^2.
+\]
+An element of the extension slots an actual value into each field.
+We now have data in our containers.
+
+\medskip
+
+Now we give the general definition.  The index set $I$ can be any
+set, the data is a family $X = (X_i)_{i \in I}$ with one set for
+each index, and the shapes are typed as well as the positions.
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}
+Let $I$ be any index set.  An \emph{$I$-indexed container} is a
+container $\phi = (S, P)$ with a map $r : S \to I$ typing the
+shapes and, for each $s \in S$, a response map $r_s : P(s) \to I$
+typing the positions.  Given data $X = (X_i)_{i \in I}$, the
+\emph{extension} of $\phi$ at $i \in I$ is obtained by restricting
+to $S_i = \{\, s \in S \mid r(s) = i \,\}$, the shapes of type $i$:
+\[
+  C_\phi{}_{,i}(X)
+  = \sum_{s \in S_i} \prod_{p \in P(s)} X_{r_s(p)}.
+\]
+Think of $I$ as dividing up the positions into different ``types''.
+If $p$ is of type $i$ then we choose a value from the data set
+$X_i$.
+\end{definition}%
+}}
+
+\medskip
+
+We can bootstrap the definition of $\texttt{Type}$ using indexed
+container extensions.
+\begin{align*}
+  \texttt{Type}_0 &= \{\texttt{Int}, \texttt{Bool}\},\\
+  \texttt{Type}_1 &= \text{indexed container extensions over } \texttt{Type}_0,\\
+  \texttt{Type}_2 &= \text{indexed container extensions over } \texttt{Type}_1,\\
+  &\;\;\vdots\\
+  \texttt{Type}_{k+1} &= \text{indexed container extensions over } \texttt{Type}_k.
+\end{align*}
+
+\medskip
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:type-universe}
+Define, by induction on the \emph{depth} $k$,
+\[
+  \texttt{Type}_0 = T = \{\texttt{Int}, \texttt{Bool}\},
+\]
+and $\texttt{Type}_{k+1}$ to be $\texttt{Type}_k$ together with the
+extensions $C_\phi{}_{,x}$ of indexed containers $\phi$ over
+$\texttt{Type}_k$.  The universe of types is
+\[
+  \texttt{Type} = \bigcup_{k \geq 0} \texttt{Type}_k,
+\]
+and every type has a finite depth.
+\end{definition}%
+}}
+
+\section{Values from types}
+
+We have defined the types.  To get the \emph{values} we perform one
+last container extension.  Take the indexed container over
+$I = \texttt{Type}_0$ with shapes $S = \{\texttt{Int},
+\texttt{Bool}\}$, where each type has a single slot of that type.  The data is $X_{\texttt{Int}} = \mathbb{N}$ and
+$X_{\texttt{Bool}} = \{\mathrm{True}, \mathrm{False}\}$.  The
+extension is
+\[
+  C = \sum_{i \in \texttt{Type}_0} X_i
+    = \mathbb{N} \sqcup \{\mathrm{True}, \mathrm{False}\}
+    = A,
+\]
+the set of values.  An element of the extension is a pair of a type
+and a value of that type.  This final extension turns a type into a
+value.
+
+\medskip
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+Note that $\mathbb{N}$ itself is a container.  Take two
+shapes, $\mathrm{zero}$ and $\mathrm{succ}$, where $\mathrm{zero}$
+has no slots and $\mathrm{succ}$ has exactly one.
+\[
+  S = \{\mathrm{zero}, \mathrm{succ}\}, \qquad
+  P(\mathrm{zero}) = \varnothing, \qquad
+  P(\mathrm{succ}) = \{\ast\}.
+\]
+A natural number is either $\mathrm{zero}$, or $\mathrm{succ}$ with
+another natural number slotted into its single slot.
+\[
+  3 = \mathrm{succ}(\mathrm{succ}(\mathrm{succ}(\mathrm{zero})))
+\]
+The naturals are what you get by slotting this container into
+itself, over and over.
+
+\medskip
+
+Likewise \texttt{Bool} is a container.  Take two shapes,
+$\mathrm{true}$ and $\mathrm{false}$, neither of which has any
+slots.
+\[
+  S = \{\mathrm{true}, \mathrm{false}\},
+  \qquad
+  P(\mathrm{true}) = P(\mathrm{false}) = \varnothing.
+\]
+A boolean is a bare shape with nothing slotted in.  There is no
+recursion this time.  The two shapes have the same (empty) position
+set, so \texttt{Bool} is non-dependent.%
+}}
+
+\section{De-categorization}
+
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{remark}\label{rem:extension-is-sum}
+One can show that for container extensions:
+\[
+  C_{\psi + \varphi}(X) = C_\psi(X) + C_{\varphi}(X),
+  \qquad
+  C_{\psi \times \varphi}(X) = C_\psi(X) \times C_{\varphi}(X).
+\]
+\end{remark}%
+}}
+
+\begin{remark}\label{rem:decategorification}
+Replacing sets by their cardinalities turns a container into a formal
+power series.  This is called \emph{de-categorification}.
+Imagine that $X$ is a set with a single element $x$, so we are just
+counting the pure structure of the container, not the data.
+Concretely, the set of functions $(P(s) \to X)$ can also be written as
+the exponential $X^{P(s)}$, so the extension is
+\[
+  C_\psi(X) = \sum_{s} X^{P(s)}.
+\]
+Now let $a_n$ be the number of shapes with $n$ positions.  Then
+replacing each set by its cardinality and gathering together powers of
+$n$ we get the de-categorification of $\psi$.
+\[
+  f(x) = \sum_n a_n x^n = a_0 + a_1 x + a_2 x^2 + \cdots.
+\]
+
+For the list container there is exactly one shape with $n$ positions, so
+\[
+  f(x) = \sum_n x^n = \frac{1}{1 - x}.
+\]
+For the tree container $T$ the number
+of shapes with $n$ vertices is the Catalan number
+\[
+  C_n = \frac{1}{n+1}\binom{2n}{n},
+\]
+so
+\[
+  f(x) = \sum_n C_n x^n = \frac{1 - \sqrt{1 - 4x}}{2x}
+       = 1 + x + 2x^2 + 5x^3 + 14x^4 + \cdots
+\]
+This satisfies $f(x) = 1 + x f(x)^2$.  A tree is empty, or a root vertex
+with two subtrees.
+\end{remark}
+
+\subsection{Tensor Products}
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:tensor}
+Suppose that we have two containers $\psi = (S, P)$ with
+$P : S \to \mathbf{Set}(A)$ and $\varphi = (\hat{S}, \hat{P})$ with
+$\hat{P} : \hat{S} \to \mathbf{Set}(\hat{A})$.  Their \emph{tensor
+product} $\psi \otimes \varphi$ is the container whose shapes are the
+pairs $S \times \hat{S}$ and whose positions are the pairs
+\[
+  (P \otimes \hat{P}) : S \times \hat{S} \to
+  \mathbf{Set}(A \times \hat{A}), \qquad
+  (P \otimes \hat{P})(s, \hat{s}) = P(s) \times \hat{P}(\hat{s}).
+\]
+A shape of the tensor product is a shape from each container, and its
+``slots'' form a grid.  One slot for every pair of a position of $s$ and a
+position of $\hat{s}$.  The extension is
+\[
+  C_{\psi \otimes \varphi}(X) = \sum_{(s, \hat{s})}
+  \bigl(P(s) \times \hat{P}(\hat{s}) \to X\bigr).
+\]
+Unlike the sum, product and composition, this cannot be expressed in
+terms of $C_\psi(X)$ and $C_{\varphi}(X)$ alone.
+\end{definition}%
+}}
+
+\begin{example}\label{ex:tensor-list-list}
+Let $L$ be the list container with shapes $S_L = \mathbb{N}$ and positions
+$P_L(n) = \{1, \ldots, n\}$.  The tensor product $L \otimes L$ has shapes
+$\mathbb{N} \times \mathbb{N}$ and positions
+\[
+  (P_L \otimes P_L)(m, n) = \{1, \ldots, m\} \times \{1, \ldots, n\}.
+\]
+The extension is
+\[
+  C_{L \otimes L}(X) = \sum_{(m, n)}
+  \bigl(\{1, \ldots, m\} \times \{1, \ldots, n\} \to X\bigr),
+\]
+which is the set of $m \times n$ \emph{matrices} with entries in $X$, of
+any size.  A list tensor a list is a matrix.
+\end{example}
+
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{remark}
+For $L \otimes L$ the de-categorification gives the Lambert series
+\[
+  h(x) = \sum_{j \geq 1} \frac{x^j}{1 - x^j} = \sum_{n \geq 1} d(n)\, x^n,
+\]
+where $d(n)$ is the number of divisors of $n$: a matrix with $6$
+entries can be $1 \times 6$, $2 \times 3$, $3 \times 2$ or $6 \times 1$.
+\end{remark}%
+}}
+
+\begin{example}\label{ex:tensor-list-tree}
+The tensor product $L \otimes T$ has shapes $\mathbb{N} \times
+\mathrm{Tree}$ and positions
+\[
+  (P_L \otimes Q)(n, t) = \{1, \ldots, n\} \times t.
+\]
+A shape is a length $n$ together with a tree $t$, and there is one slot
+for every pair of a list position and a vertex of $t$.  So an element of
+the extension $C_{L \otimes T}(X)$ is a tree in which every vertex holds
+a list of length $n$ --- the \emph{same} length $n$ at every vertex.
+Equivalently, it is a list of $n$ trees that all have the same shape $t$.
+\end{example}
+
+\begin{example}\label{ex:tensor-tree-tree}
+The tensor product $T \otimes T$ has shapes $\mathrm{Tree} \times
+\mathrm{Tree}$ and positions
+\[
+  (Q \otimes Q)(t, t') = t \times t'
+  \subseteq \{\mathrm{L},\mathrm{R}\}^* \times \{\mathrm{L},\mathrm{R}\}^*.
+\]
+A shape is a pair of trees $(t, t')$, and there is one slot for every
+pair of a vertex of $t$ and a vertex of $t'$.  So an element of the
+extension $C_{T \otimes T}(X)$ is a tree $t$ in which every vertex holds
+a copy of the \emph{same} tree shape $t'$, labelled by $X$ --- or
+equivalently a tree of shape $t'$ in which every vertex holds a copy of
+the tree shape $t$.  Whatever tree you replace the vertices with, they
+must all be the same shape.
+\end{example}
+
+\subsection{Composition of containers}
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:composition}
+The \emph{composition} $\psi \circ \varphi$ is the container whose
+shapes are the elements of the extension $C_\psi(\hat{S})$ --- a shape
+$s$ of $\psi$ with a shape of $\varphi$ slotted into each of its
+positions --- and whose positions, for a shape $\langle s, f \rangle$
+with $f : P(s) \to \hat{S}$, are the pairs
+\[
+  (P \circ \hat{P})\langle s, f \rangle
+  = \{\, (p, \hat{p}) \mid p \in P(s),\ \hat{p} \in \hat{P}(f(p)) \,\}
+  \subseteq A \times \hat{A}.
+\]
+\end{definition}%
+}}
+
+\medskip
+
+\noindent
+Let us unpack this definition.  A shape $\langle s, f \rangle$ is a
+shape $s$ of $\psi$ together with a function $f$ that slots a shape of
+$\varphi$ into each position of $s$.  A position of the composite is
+a pair $(p, \hat{p})$.  First pick a position $p \in P(s)$ (an element of
+$A$, since $P(s) \subseteq A$), then look up the inner shape $f(p)$
+sitting at $p$ and pick one of \emph{its} positions
+$\hat{p} \in \hat{P}(f(p))$ (an element of $\hat{A}$).  So a slot of the
+composite is a slot of the outer structure followed by a slot of the
+inner structure found there.
+
+\medskip
+
+\noindent
+For example, $T \circ T$ is the container of trees of trees.  A shape is
+a tree $t$ together with a tree shape for each vertex of $t$.
+Unlike the tensor product $T \otimes T$, the inner trees may all have
+\emph{different} shapes.
+
+\medskip
+
+\noindent\colorbox{gray!15}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{definition}\label{def:composition-extension}
+The extension of the composition is the composite of the two extensions:
+\[
+  C_{\psi \circ \varphi}(X) = C_\psi(C_{\varphi}(X)).
+\]
+\end{definition}%
+}}
+
+\medskip
+
+\noindent
+Let us unpack this definition.  An element of the right-hand side
+$C_\psi(C_{\varphi}(X))$ is a $\psi$-structure whose labels are
+themselves labelled $\varphi$-structures.  A shape $s$ together with a
+labelling $g : P(s) \to C_{\varphi}(X)$ that puts an \emph{entire}
+$\varphi$-structure into each slot of $s$.  This is the same data as
+an element of the left-hand side.  Splitting each inner structure $g(p)$
+into its shape $f(p)$ and its labelling gives the composite shape
+$\langle s, f \rangle$, and the label sitting at the composite position
+$(p, \hat{p})$ is the label at slot $\hat{p}$ of the inner structure at
+slot $p$.
+
+\noindent\colorbox{blue!10}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+\begin{remark}\label{rem:power-series}
+Let $f(x) = \sum_n a_n x^n$ and $g(x) = \sum_n b_n x^n$ be the power
+series of $\psi$ and $\varphi$ as in
+Remark~\ref{rem:decategorification}.  The composition de-categorifies
+to $f(g(x))$: the number of shapes of
+$\psi \circ \varphi$ with $n$ positions in total is
+\[
+  c_n = \sum_{k} a_k \sum_{n_1 + \cdots + n_k = n}
+  b_{n_1} b_{n_2} \cdots b_{n_k},
+\]
+the classical formula for composing power series --- an outer shape with
+$k$ slots, and an inner shape in each slot, sizes summing to $n$.
+\end{remark}%
+}}
+
+\end{document}

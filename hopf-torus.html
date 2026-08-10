@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hopf Torus in SO(3)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0f; color: #e0e0e0; font-family: 'Courier New', monospace; overflow: hidden; }
+  canvas { display: block; }
+  #controls {
+    position: absolute; top: 20px; left: 20px; z-index: 10;
+    background: rgba(10, 10, 20, 0.85); padding: 20px; border-radius: 8px;
+    border: 1px solid rgba(100, 140, 255, 0.3); max-width: 340px;
+  }
+  #controls h2 { font-size: 14px; color: #8cacff; margin-bottom: 12px; letter-spacing: 1px; }
+  .slider-group { margin-bottom: 14px; }
+  .slider-group label { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; }
+  .slider-group input[type=range] { width: 100%; accent-color: #5a8aff; }
+  .slider-group .value { float: right; color: #5a8aff; font-size: 11px; }
+  #info {
+    position: absolute; bottom: 20px; left: 20px; z-index: 10;
+    background: rgba(10, 10, 20, 0.85); padding: 16px; border-radius: 8px;
+    border: 1px solid rgba(100, 140, 255, 0.2); font-size: 11px;
+    line-height: 1.6; max-width: 420px;
+  }
+  #info .math { color: #8cacff; }
+  #ratio-display {
+    position: absolute; top: 80px; right: 20px; z-index: 10;
+    background: rgba(10, 10, 20, 0.85); padding: 16px 20px; border-radius: 8px;
+    border: 1px solid rgba(100, 140, 255, 0.3);
+    font-size: 28px; color: #8cacff; text-align: center;
+  }
+  #ratio-display .label { font-size: 11px; color: #888; }
+  #mode-toggle {
+    position: absolute; top: 20px; right: 20px; z-index: 10;
+    background: rgba(10, 10, 20, 0.85); padding: 12px 16px; border-radius: 8px;
+    border: 1px solid rgba(100, 140, 255, 0.3); cursor: pointer;
+    color: #8cacff; font-family: 'Courier New', monospace; font-size: 12px;
+  }
+  #mode-toggle:hover { background: rgba(30, 30, 60, 0.9); }
+  .checkbox-group { margin-bottom: 10px; }
+  .checkbox-group label { font-size: 11px; color: #aaa; cursor: pointer; }
+  .checkbox-group input { accent-color: #5a8aff; margin-right: 6px; }
+</style>
+</head>
+<body>
+
+<div id="controls">
+  <h2>HOPF TORUS ⊂ SO(3)</h2>
+
+  <div class="slider-group">
+    <label>Colatitude α (circle on S²) <span class="value" id="alpha-val">π/6</span></label>
+    <input type="range" id="alpha" min="0.05" max="1.5" step="0.01" value="0.65">
+  </div>
+
+  <div class="slider-group">
+    <label>Stereographic projection pole <span class="value" id="pole-val">w = −1</span></label>
+    <input type="range" id="pole" min="0" max="3.14" step="0.01" value="3.14">
+  </div>
+
+  <div class="slider-group">
+    <label>Fiber highlight (isolate one S¹) <span class="value" id="fiber-val">all</span></label>
+    <input type="range" id="fiber" min="-1" max="100" step="1" value="-1">
+  </div>
+
+  <div class="checkbox-group">
+    <label><input type="checkbox" id="show-base" checked> Show base circle on S²</label>
+  </div>
+  <div class="checkbox-group">
+    <label><input type="checkbox" id="show-fibers"> Color by Hopf fiber</label>
+  </div>
+  <div class="checkbox-group">
+    <label><input type="checkbox" id="so3-mode"> SO(3) = S³/{±1} (identify antipodal)</label>
+  </div>
+</div>
+
+<div id="mode-toggle" onclick="toggleRotation()">
+  ⟳ Auto-rotate: ON
+</div>
+
+<div id="ratio-display">
+  <div class="label">hole / donut (R/r)</div>
+  <span id="ratio-val">3.2</span>
+</div>
+
+<div id="info">
+  <strong>Hopf fibration:</strong> <span class="math">π: S³ → S²</span>, fiber = S¹<br>
+  Preimage of a circle γ ⊂ S² is a torus <span class="math">T² = π⁻¹(γ) ⊂ S³</span><br>
+  <br>
+  <strong>Small α</strong> → thin torus (hole ≫ tube) — <em>your "big hole" donut</em><br>
+  <strong>α = π/2</strong> → Clifford torus (equal radii, flat metric)<br>
+  <br>
+  <span class="math">SO(3) ≅ S³/{±1}</span>: each Hopf fiber is antipodal-invariant,<br>
+  so the torus descends to a torus of <em>rotations</em> in SO(3).
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// --- Setup ---
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(3, 4, 5);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+document.body.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+// Lights
+scene.add(new THREE.AmbientLight(0x334466, 0.8));
+const dirLight = new THREE.DirectionalLight(0x8cacff, 1.2);
+dirLight.position.set(5, 8, 5);
+scene.add(dirLight);
+const dirLight2 = new THREE.DirectionalLight(0xff6644, 0.4);
+dirLight2.position.set(-5, -3, -5);
+scene.add(dirLight2);
+
+// --- Axis helper (subtle) ---
+const axisHelper = new THREE.AxesHelper(1.5);
+axisHelper.material.opacity = 0.3;
+axisHelper.material.transparent = true;
+scene.add(axisHelper);
+
+// --- Hopf torus computation ---
+// Circle on S² at colatitude α from north pole:
+//   γ(t) = (sin α cos t, sin α sin t, cos α)
+//
+// Preimage in S³ (as C²):
+//   z₁ = cos(α/2) e^{is}
+//   z₂ = sin(α/2) e^{i(s−t)}
+//
+// where t ∈ [0,2π) traces the base circle, s ∈ [0,2π) traces the fiber.
+//
+// Stereographic projection S³ → R³ from pole p = (0,0,0,−1):
+//   (X, Y, Z) = (x₁, y₁, x₂) / (1 + y₂)
+
+const N_T = 200;  // base circle resolution
+const N_S = 100;  // fiber resolution
+
+function hopfTorusPoint(alpha, t, s) {
+  const ca2 = Math.cos(alpha / 2);
+  const sa2 = Math.sin(alpha / 2);
+
+  // S³ coordinates (x₁, y₁, x₂, y₂) from (Re z₁, Im z₁, Re z₂, Im z₂)
+  const x1 = ca2 * Math.cos(s);
+  const y1 = ca2 * Math.sin(s);
+  const x2 = sa2 * Math.cos(s - t);
+  const y2 = sa2 * Math.sin(s - t);
+
+  return [x1, y1, x2, y2];
+}
+
+function stereoProject(x1, y1, x2, y2, poleAngle) {
+  // Stereographic projection from a pole on S³
+  // Default pole is (0,0,0,-1) when poleAngle = π
+  // We rotate the pole to avoid projecting through the torus
+  const cp = Math.cos(poleAngle);
+  const sp = Math.sin(poleAngle);
+
+  // Rotate in the (x2, y2) plane by poleAngle
+  const y2r = y2 * cp - x2 * sp;
+  const x2r = y2 * sp + x2 * cp;
+
+  const denom = 1 + y2r;
+  if (Math.abs(denom) < 0.01) return null; // too close to pole
+
+  return new THREE.Vector3(x1 / denom, y1 / denom, x2r / denom);
+}
+
+// --- Build torus mesh ---
+let torusMesh = null;
+let fiberLines = null;
+let baseCircleLine = null;
+let autoRotate = true;
+
+function hslToRgb(h, s, l) {
+  h = h % 1;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h * 6) % 2 - 1));
+  const m = l - c / 2;
+  let r, g, b;
+  if (h < 1/6) { r = c; g = x; b = 0; }
+  else if (h < 2/6) { r = x; g = c; b = 0; }
+  else if (h < 3/6) { r = 0; g = c; b = x; }
+  else if (h < 4/6) { r = 0; g = x; b = c; }
+  else if (h < 5/6) { r = x; g = 0; b = c; }
+  else { r = c; g = 0; b = x; }
+  return new THREE.Color(r + m, g + m, b + m);
+}
+
+function buildTorus() {
+  const alpha = parseFloat(document.getElementById('alpha').value);
+  const poleAngle = parseFloat(document.getElementById('pole').value);
+  const fiberHighlight = parseInt(document.getElementById('fiber').value);
+  const colorByFiber = document.getElementById('show-fibers').checked;
+  const showBase = document.getElementById('show-base').checked;
+  const so3Mode = document.getElementById('so3-mode').checked;
+
+  // Remove old objects
+  if (torusMesh) { scene.remove(torusMesh); torusMesh.geometry.dispose(); torusMesh.material.dispose(); }
+  if (fiberLines) { scene.remove(fiberLines); }
+  if (baseCircleLine) { scene.remove(baseCircleLine); baseCircleLine.geometry.dispose(); }
+
+  // Build geometry using BufferGeometry for the torus surface
+  const positions = [];
+  const colors = [];
+  const indices = [];
+  const normals = [];
+
+  const nT = N_T;
+  const nS = N_S;
+  const points = []; // 2D array for index building
+
+  for (let i = 0; i <= nT; i++) {
+    const t = (i / nT) * Math.PI * 2;
+    const row = [];
+    for (let j = 0; j <= nS; j++) {
+      const s = (j / nS) * Math.PI * 2;
+      const [x1, y1, x2, y2] = hopfTorusPoint(alpha, t, s);
+      let pt = stereoProject(x1, y1, x2, y2, poleAngle);
+
+      if (!pt) pt = new THREE.Vector3(0, 0, 0);
+
+      // Clamp to avoid extreme stereographic distortion
+      const maxR = 15;
+      if (pt.length() > maxR) pt.multiplyScalar(maxR / pt.length());
+
+      // Scale up so tube thickness is visible
+      const scale = 2.5;
+      positions.push(pt.x * scale, pt.y * scale, pt.z * scale);
+      row.push(positions.length / 3 - 1);
+
+      // Color
+      if (fiberHighlight >= 0) {
+        const dist = Math.abs(i - fiberHighlight * nT / 100);
+        const wrap = Math.min(dist, nT - dist);
+        const brightness = wrap < 3 ? 1.0 : 0.15;
+        const col = hslToRgb(j / nS, 0.8, brightness * 0.5);
+        colors.push(col.r, col.g, col.b);
+      } else if (colorByFiber) {
+        const col = hslToRgb(i / nT, 0.85, 0.45);
+        colors.push(col.r, col.g, col.b);
+      } else {
+        // Default: color by position on base circle (t) blended with fiber (s)
+        const hue = (i / nT * 0.7 + j / nS * 0.3) % 1.0;
+        const col = hslToRgb(hue, 0.6, 0.45);
+        colors.push(col.r, col.g, col.b);
+      }
+    }
+    points.push(row);
+  }
+
+  // Build faces
+  for (let i = 0; i < nT; i++) {
+    for (let j = 0; j < nS; j++) {
+      const a = points[i][j];
+      const b = points[i + 1][j];
+      const c = points[i + 1][j + 1];
+      const d = points[i][j + 1];
+      indices.push(a, b, d);
+      indices.push(b, c, d);
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+
+  const material = new THREE.MeshPhongMaterial({
+    vertexColors: true,
+    side: THREE.DoubleSide,
+    shininess: 60,
+    transparent: false,
+  });
+
+  torusMesh = new THREE.Mesh(geometry, material);
+  scene.add(torusMesh);
+
+  // SO(3) mode: add antipodal copy
+  if (so3Mode) {
+    const positions2 = [];
+    const colors2 = [];
+
+    for (let i = 0; i <= nT; i++) {
+      const t = (i / nT) * Math.PI * 2;
+      for (let j = 0; j <= nS; j++) {
+        const s = (j / nS) * Math.PI * 2;
+        const [x1, y1, x2, y2] = hopfTorusPoint(alpha, t, s);
+        // Antipodal point
+        let pt = stereoProject(-x1, -y1, -x2, -y2, poleAngle);
+        if (!pt) pt = new THREE.Vector3(0, 0, 0);
+        const maxR = 15;
+        if (pt.length() > maxR) pt.multiplyScalar(maxR / pt.length());
+        const scale = 2.5;
+        positions2.push(pt.x * scale, pt.y * scale, pt.z * scale);
+
+        // Same color but desaturated to distinguish
+        const hue = (i / nT * 0.7 + j / nS * 0.3) % 1.0;
+        const col = hslToRgb(hue, 0.3, 0.35);
+        colors2.push(col.r, col.g, col.b);
+      }
+    }
+
+    const geom2 = new THREE.BufferGeometry();
+    geom2.setAttribute('position', new THREE.Float32BufferAttribute(positions2, 3));
+    geom2.setAttribute('color', new THREE.Float32BufferAttribute(colors2, 3));
+    geom2.setIndex(indices); // same topology
+    geom2.computeVertexNormals();
+
+    const mat2 = new THREE.MeshPhongMaterial({
+      vertexColors: true, side: THREE.DoubleSide,
+      shininess: 20, transparent: true, opacity: 0.45,
+    });
+
+    const mesh2 = new THREE.Mesh(geom2, mat2);
+    torusMesh.add(mesh2); // child so it's removed together
+  }
+
+  // Draw a few Hopf fibers as bright lines
+  if (colorByFiber || fiberHighlight >= 0) {
+    fiberLines = new THREE.Group();
+    const nFibers = fiberHighlight >= 0 ? 1 : 12;
+    for (let f = 0; f < nFibers; f++) {
+      const ti = fiberHighlight >= 0
+        ? (fiberHighlight / 100) * nT
+        : f * nT / nFibers;
+      const t = (ti / nT) * Math.PI * 2;
+      const linePoints = [];
+      for (let j = 0; j <= nS; j++) {
+        const s = (j / nS) * Math.PI * 2;
+        const [x1, y1, x2, y2] = hopfTorusPoint(alpha, t, s);
+        let pt = stereoProject(x1, y1, x2, y2, poleAngle);
+        if (!pt) continue;
+        const maxR = 15;
+        if (pt.length() > maxR) pt.multiplyScalar(maxR / pt.length());
+        linePoints.push(pt);
+      }
+      const lineGeom = new THREE.BufferGeometry().setFromPoints(linePoints);
+      const col = hslToRgb(ti / nT, 1.0, 0.6);
+      const lineMat = new THREE.LineBasicMaterial({ color: col, linewidth: 2 });
+      fiberLines.add(new THREE.Line(lineGeom, lineMat));
+    }
+    scene.add(fiberLines);
+  }
+
+  // Base circle on S² (scaled and offset for visibility)
+  if (showBase) {
+    const basePoints = [];
+    for (let i = 0; i <= 100; i++) {
+      const t = (i / 100) * Math.PI * 2;
+      basePoints.push(new THREE.Vector3(
+        Math.sin(alpha) * Math.cos(t) * 1.5 + 5,
+        Math.cos(alpha) * 1.5 + 1,
+        Math.sin(alpha) * Math.sin(t) * 1.5
+      ));
+    }
+    const baseGeom = new THREE.BufferGeometry().setFromPoints(basePoints);
+    const baseMat = new THREE.LineBasicMaterial({ color: 0xffaa44, linewidth: 2 });
+    baseCircleLine = new THREE.Line(baseGeom, baseMat);
+    scene.add(baseCircleLine);
+
+    // Add a faint S² wireframe at the same location
+    const sphereGeom = new THREE.SphereGeometry(1.5, 24, 16);
+    const sphereMat = new THREE.MeshBasicMaterial({
+      color: 0x334466, wireframe: true, transparent: true, opacity: 0.15
+    });
+    const sphereMesh = new THREE.Mesh(sphereGeom, sphereMat);
+    sphereMesh.position.set(5, 1, 0);
+    baseCircleLine.add(sphereMesh);
+  }
+
+  // Update display values
+  const ratio = Math.cos(alpha/2) / Math.sin(alpha/2);
+  document.getElementById('alpha-val').textContent =
+    (alpha * 180 / Math.PI).toFixed(0) + '° → R/r = ' + ratio.toFixed(1);
+
+  document.getElementById('pole-val').textContent = poleAngle.toFixed(2);
+  document.getElementById('fiber-val').textContent =
+    fiberHighlight < 0 ? 'all' : fiberHighlight + '%';
+
+  // Big ratio display
+  document.getElementById('ratio-val').textContent = ratio.toFixed(1);
+  const ratioEl = document.getElementById('ratio-val');
+  ratioEl.style.color = ratio > 1 ? '#5aff8a' : '#ff5a5a';
+}
+
+// --- Event listeners ---
+['alpha', 'pole', 'fiber'].forEach(id => {
+  document.getElementById(id).addEventListener('input', buildTorus);
+});
+['show-base', 'show-fibers', 'so3-mode'].forEach(id => {
+  document.getElementById(id).addEventListener('change', buildTorus);
+});
+
+window.toggleRotation = function() {
+  autoRotate = !autoRotate;
+  document.getElementById('mode-toggle').textContent =
+    '⟳ Auto-rotate: ' + (autoRotate ? 'ON' : 'OFF');
+};
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// --- Animate ---
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.005;
+
+  if (autoRotate && torusMesh) {
+    torusMesh.rotation.y = time * 0.3;
+    torusMesh.rotation.x = Math.sin(time * 0.2) * 0.1;
+    if (fiberLines) {
+      fiberLines.rotation.y = time * 0.3;
+      fiberLines.rotation.x = Math.sin(time * 0.2) * 0.1;
+    }
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+buildTorus();
+animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\emergencystretch=1.5em
+
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}[proposition]{Theorem}
+\newtheorem{corollary}[proposition]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[proposition]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\T}{\mathcal{T}}
+
+\title{Log-Hermite Functions, the Mellin Transform,\\ and the Local Riemann Hypothesis}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Mellin transform is the Fourier transform of the multiplicative group $\R_+$. Transporting the Hermite functions along the isomorphism $x = e^t$ yields the \emph{log-Hermite functions}, an orthonormal basis of $L^2(\R_+)$ diagonalizing a canonical Mellin-type involution with eigenvalues $(-i)^n$. We record the dictionary, note that orthogonality survives the transport while polynomial completeness does not (the log-normal weight is moment-indeterminate; its orthogonal polynomials are Stieltjes--Wigert), and trace the connection to the Riemann zeta function: the functional equation of $\xi$ is the Fourier-invariance of the Gaussian, and the Mellin transforms of the higher Hermite functions satisfy a provable ``local Riemann Hypothesis'' (Bump--Ng). We compute these Mellin transforms explicitly for $n \le 6$ and exhibit their zeros on the critical line.
+\end{abstract}
+
+\section{The dictionary: Mellin is Fourier on $\R_+$}
+
+Let $\psi_n(t) = c_n H_n(t)\,e^{-t^2/2}$, $c_n = (2^n n! \sqrt{\pi})^{-1/2}$, be the Hermite functions: an orthonormal basis of $L^2(\R)$ satisfying $\widehat{\psi_n} = (-i)^n \psi_n$.
+
+The substitution $x = e^t$ is an isomorphism $(\R_+,\times) \cong (\R,+)$ and induces a unitary
+\begin{equation}
+U : L^2(\R_+, dx) \to L^2(\R, dt), \qquad (Uf)(t) = e^{t/2} f(e^t),
+\end{equation}
+the factor $e^{t/2}$ compensating the Jacobian. Under $U$ the Mellin transform on the critical line becomes the Fourier transform:
+\begin{equation}
+\M f\bigl(\tfrac12 + i\tau\bigr) = \int_0^\infty f(x)\, x^{-1/2 + i\tau}\, dx
+= \int_\R (Uf)(t)\, e^{i\tau t}\, dt.
+\label{eq:mellin-fourier}
+\end{equation}
+The line $\operatorname{Re} s = \tfrac12$ is thus the line of Mellin--Plancherel unitarity: it is Parseval's theorem read through $U$.
+
+\section{Log-Hermite functions}
+
+Define the \emph{log-Hermite functions}
+\begin{equation}
+\varphi_n(x) = x^{-1/2}\, \psi_n(\log x), \qquad x \in \R_+,
+\end{equation}
+so that $U\varphi_n = \psi_n$. Immediately:
+\begin{itemize}
+\item $\{\varphi_n\}_{n \ge 0}$ is an orthonormal basis of $L^2(\R_+, dx)$;
+\item by \eqref{eq:mellin-fourier} and $\widehat{\psi_n} = (-i)^n\psi_n$,
+\begin{equation}
+\M\varphi_n\bigl(\tfrac12 + i\tau\bigr) = \sqrt{2\pi}\; i^n\, \psi_n(\tau):
+\end{equation}
+the Mellin transform of a log-Hermite function is a plain Hermite function on the critical line;
+\item the harmonic oscillator $-\frac{d^2}{dt^2} + t^2$ transports to
+$-(x\frac{d}{dx})^2 + (\log x)^2 + \frac14$ with eigenvalues $2n+1$; the Euler operator $x\frac{d}{dx}$ generates the dilations of $\R_+$ exactly as $\frac{d}{dt}$ generates the translations of $\R$.
+\end{itemize}
+
+\begin{remark}[Eigenvectors, correctly stated]
+The equation ``$\M\varphi_n = \lambda\varphi_n$'' is ill-typed: $\M$ maps $L^2(\R_+)$ to $L^2$ of the critical line, a different space. To speak of eigenvectors one must identify the two spaces; the canonical choice $s = \tfrac12 + i\log x$ yields the unitary involution
+\begin{equation}
+(\T f)(x) = (2\pi)^{-1/2} \int_0^\infty (xy)^{-1/2}\, e^{\,i \log x \log y}\, f(y)\, dy,
+\end{equation}
+which is $U^{-1} \F U$, satisfies $\T^4 = I$, and has
+\begin{equation}
+\T \varphi_n = (-i)^n \varphi_n.
+\end{equation}
+The Fourier kernel $e^{ixy}$ has become $e^{i\log x \log y}$, as it must. The distinction is invisible in the Fourier case only because $L^2(\R)$ and its frequency space are silently identified.
+\end{remark}
+
+\begin{remark}[What does not transport]
+The weight $e^{-t^2}$ becomes the log-normal density $e^{-(\log x)^2}/x$ on $\R_+$. This weight is moment-indeterminate (Stieltjes' original example). Its orthogonal polynomials are the Stieltjes--Wigert polynomials, a $q$-analogue of Hermite, and polynomials are \emph{not} dense in $L^2$ of the log-normal weight. Orthogonality survives exponentiation; completeness of polynomials does not. The log-Hermite \emph{functions} remain a complete basis regardless.
+\end{remark}
+
+\section{Connection to the Riemann zeta function}
+
+\subsection{$\zeta$ lives on Mellin's unitarity line}
+With $\theta(x) = \sum_{n \in \mathbb{Z}} e^{-\pi n^2 x}$,
+\begin{equation}
+\pi^{-s/2}\, \Gamma\bigl(\tfrac{s}{2}\bigr)\, \zeta(s)
+= \int_0^\infty x^{s/2}\, \frac{\theta(x) - 1}{2}\, \frac{dx}{x}.
+\end{equation}
+The completed zeta function is the Mellin transform of a sum of Gaussians, and the critical line of the Riemann Hypothesis is the Mellin unitarity line of \S1.
+
+\subsection{The functional equation is the Gaussian's eigenfunction property}
+Poisson summation applied to $e^{-\pi t^2}$ (which is fixed by $\F$) gives $\theta(1/x) = \sqrt{x}\,\theta(x)$, whence $\xi(s) = \xi(1-s)$. The chain is
+\[
+\psi_0 \text{ Fourier-fixed} \;\Longrightarrow\; \theta \text{ modular} \;\Longrightarrow\; \xi(s) = \xi(1-s),
+\]
+and $s \mapsto 1-s$ is reflection across the unitarity line.
+
+\subsection{The local Riemann Hypothesis}
+What do the higher $\psi_n$ give? Bump and Ng showed that $\M\psi_n(s) = \int_0^\infty \psi_n(x)\, x^{s-1} dx$ factors as a zero-free $\Gamma$-factor times a polynomial $P_n(s)$ satisfying a functional equation under $s \mapsto 1-s$, and that \emph{all zeros of $P_n$ lie on $\operatorname{Re} s = \tfrac12$}. This is the local Riemann Hypothesis (Bump--Ng; Bump--Choi--Kurlberg--Vaaler): provable for each Hermite function, open for the arithmetic sum $\theta - 1$.
+
+\section{Explicit computation for $n \le 6$}
+
+Applying $\int_0^\infty x^{k+s-1} e^{-x^2/2} dx = 2^{(s+k)/2 - 1}\, \Gamma\bigl(\frac{s+k}{2}\bigr)$ monomial by monomial to $H_n$ and factoring out $\Gamma\bigl(\frac{s + \epsilon_n}{2}\bigr)$ ($\epsilon_n = n \bmod 2$):
+\begin{equation}
+\M\psi_n(s) = c_n\, 2^{(s+\epsilon_n)/2 - 1}\, \Gamma\Bigl(\frac{s+\epsilon_n}{2}\Bigr)\, P_n(s).
+\end{equation}
+
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+$n$ & $P_n(s)$ & $P_n$ at $s = \frac12 + i\tau$ & zeros ($\tau$) \\
+\midrule
+$0$ & $1$ & $1$ & --- \\
+$1$ & $2\sqrt{2}$ & $2\sqrt{2}$ & --- \\
+$2$ & $2(2s-1)$ & $4i\tau$ & $0$ \\
+$3$ & $4\sqrt{2}(2s-1)$ & $8\sqrt{2}\, i\tau$ & $0$ \\
+$4$ & $4(4s^2 - 4s + 3)$ & $4(2 - 4\tau^2)$ & $\pm 1/\sqrt{2}$ \\
+$5$ & $8\sqrt{2}(4s^2 - 4s + 7)$ & $8\sqrt{2}(6 - 4\tau^2)$ & $\pm\sqrt{3/2}$ \\
+$6$ & $8(2s-1)(4s^2 - 4s + 15)$ & $16i\tau(14 - 4\tau^2)$ & $0,\ \pm\sqrt{7/2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Since $4s^2 - 4s = 4(s - \tfrac12)^2 - 1 = -4\tau^2 - 1$ on the critical line, every $P_n(\tfrac12 + i\tau)$ is (up to a factor $i^{\epsilon_n}$) a polynomial in $\tau$ with real coefficients, and its roots are real: all zeros lie on the line.
+
+The symmetry ($P_n$ real in $\tau$) follows cheaply from $\widehat{\psi_n} = (-i)^n\psi_n$ and reality of $\psi_n$. The reality of the \emph{roots} is the theorem: Bump--Ng prove it via a three-term recurrence, placing the $P_n$ in orthogonal-polynomial territory where real interlacing zeros are the spectrum of a self-adjoint Jacobi matrix---a working miniature of the Hilbert--P\'olya mechanism. Indeed the zeros spread and interlace with $n$: $\{0\} \subset \{\pm 0.707\} $, $\{\pm 1.225\} \subset \{0, \pm 1.871\}$.
+
+\section{Discussion}
+
+The pattern behind $\zeta$: take $f$ with clean Fourier behavior, sum over a lattice, apply Mellin. The eigenfunction property gives the functional equation for free; the open question is always whether the zeros stay on the unitarity line. For a single Hermite function they provably do. For $\theta - 1$, dilation $x \mapsto nx$ destroys the Hermite eigenstructure---Mellin turns dilations into the factors $n^{-s}$ whose interference is the arithmetic difficulty.
+
+Two open threads. First, since $\M$ is linear, the Mellin transform of any finite combination $\sum_m a_m \psi_m$ is a $\Gamma$-factor times a polynomial; which combinations preserve the local Riemann Hypothesis? The Hermite matching matrix $(D_{mk})$ of our companion paper is a distinguished change of basis between exactly such families. Second, the Stieltjes--Wigert polynomials suggest a $q$-deformation of the matching matrix, with cross- and self-pair weights becoming $q$-numbers.
+
+\end{document}

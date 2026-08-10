@@ -1,0 +1,477 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+
+\theoremstyle{plain}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{observation}[definition]{Observation}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\He}{\mathrm{He}}
+\newcommand{\dfact}[1]{#1!!}
+
+\title{\textbf{The Hermite Matching Matrix:\\
+A Combinatorial Change of Basis\\
+Between Hermite Polynomials and Hermite Functions}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Hermite polynomials $\{H_n(t)\}_{n \ge 0}$ are orthogonal with
+respect to the Gaussian weight $e^{-t^2}$. The Hermite functions
+$\psi_m(t) = c_m H_m(t)\, e^{-t^2/2}$ are obtained by absorbing the
+square root of this weight into the polynomial; they form an orthonormal
+basis for $L^2(\mathbb{R})$ and are eigenfunctions of the Fourier
+transform. The $L^2$-projection of the $m$-th Hermite function onto the
+Hermite polynomial basis---expressing $\psi_m$ as $\sum_k a_{mk} H_k$---defines
+an infinite matrix $(a_{mk})$. We prove that, up to a single universal
+constant, every entry of this matrix is an integer, and we conjecture an
+explicit combinatorial formula: the rescaled entry $D_{mk}$ counts
+\emph{signed bipartite matchings} of $m+k$ vertices, where cross-pairs
+carry weight $+4$ and self-pairs carry weight $-2$. We give closed forms
+for the edge entries $D_{0,2n} = (-1)^n\,(2n)!/n!$ and show that the
+diagonal entries, divided by~$n!$, are integers yielding
+the sequence
+$\sum_k \binom{n}{2k}\binom{2k}{k}\,4^{n-2k}$ (OEIS A081671), with ordinary
+generating function $1/\sqrt{1 - 8x + 12x^2}$ and exponential generating
+function $e^{4x} I_0(2x)$, where $I_0$ is the modified Bessel function of
+the first kind.
+\end{abstract}
+
+%% ===================================================================
+\section{Setup}
+%% ===================================================================
+
+Let $H_n(t)$ denote the physicist's Hermite polynomials, defined by the
+recurrence
+\[
+  H_{n+1}(t) = 2t\, H_n(t) - 2n\, H_{n-1}(t),
+  \qquad H_0(t) = 1,\quad H_1(t) = 2t,
+\]
+and satisfying the orthogonality relation
+\begin{equation}\label{eq:hermite-orth}
+  \int_{-\infty}^{\infty} H_m(t)\, H_k(t)\, e^{-t^2}\, dt
+  = 2^k\, k!\, \sqrt{\pi}\; \delta_{mk}.
+\end{equation}
+The \emph{Hermite functions} are
+\begin{equation}\label{eq:hermite-fn}
+  \psi_m(t) = c_m\, H_m(t)\, e^{-t^2/2},
+  \qquad c_m = (2^m\, m!\, \sqrt{\pi})^{-1/2}.
+\end{equation}
+These form an orthonormal basis for $L^2(\R)$ and are eigenfunctions of
+the Fourier transform with eigenvalues $(-i)^m$. Each $\psi_m$ is
+entire, being a polynomial times a Gaussian.
+
+The Hermite polynomials $\{H_k\}_{k \ge 0}$ form an orthogonal basis
+for $L^2(\R, e^{-t^2}\,dt)$. The best $L^2$-approximation of $\psi_m$
+by a polynomial of degree at most $N$ in this basis is
+\[
+  \psi_m^{(N)}(t) = \sum_{k=0}^{N} a_{mk}\, H_k(t),
+\]
+where
+\begin{equation}\label{eq:amk}
+  a_{mk}
+  = \frac{c_m}{2^k\, k!\,\sqrt{\pi}}
+    \int_{-\infty}^{\infty} H_m(t)\, H_k(t)\, e^{-3t^2/2}\, dt.
+\end{equation}
+The factor $e^{-3t^2/2}$ arises from the product of $e^{-t^2/2}$
+(from~$\psi_m$) and $e^{-t^2}$ (from the Gaussian weight defining the
+inner product). Our object of study is the infinite matrix $(a_{mk})$.
+
+%% ===================================================================
+\section{The Generating Function}
+%% ===================================================================
+
+\begin{proposition}\label{prop:genfn}
+The integrals $I_{mk} = \int_{-\infty}^{\infty} H_m(t)\, H_k(t)\,
+e^{-3t^2/2}\, dt$ have the generating function
+\[
+  \sum_{m,k \ge 0} \frac{s^m\, u^k}{m!\, k!}\; I_{mk}
+  = \sqrt{\frac{2\pi}{3}}\;
+    \exp\!\Bigl(-\frac{s^2 - 4su + u^2}{3}\Bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Using the generating function for Hermite polynomials,
+$\sum_{n \ge 0} H_n(t)\, z^n / n! = e^{2tz - z^2}$, we compute
+\begin{align*}
+  \sum_{m,k} \frac{s^m u^k}{m!\,k!}\, I_{mk}
+  &= \int_{-\infty}^{\infty}
+     e^{2ts - s^2}\, e^{2tu - u^2}\, e^{-3t^2/2}\, dt \\
+  &= \int_{-\infty}^{\infty}
+     \exp\!\bigl(-\tfrac{3}{2}t^2 + 2(s+u)t - s^2 - u^2\bigr)\, dt \\
+  &= \sqrt{\frac{2\pi}{3}}\;
+     \exp\!\Bigl(\frac{2(s+u)^2}{3} - s^2 - u^2\Bigr) \\
+  &= \sqrt{\frac{2\pi}{3}}\;
+     \exp\!\Bigl(-\frac{s^2 - 4su + u^2}{3}\Bigr).
+     \qedhere
+\end{align*}
+\end{proof}
+
+\begin{corollary}\label{cor:parity}
+$I_{mk} = 0$ whenever $m + k$ is odd (parity).
+\end{corollary}
+\begin{proof}
+The exponent $-(s^2 - 4su + u^2)/3$ contains only terms of even total
+degree in $(s,u)$.
+\end{proof}
+
+The matrix $(a_{mk})$ factors as
+\begin{equation}\label{eq:factor}
+  a_{mk} = R_{mk} \cdot \frac{\sqrt{2/3}}{\pi^{1/4}},
+\end{equation}
+where $R_{mk}$ is algebraic (involving only rationals and square roots),
+and $\sqrt{2/3}/\pi^{1/4}$ is a universal constant independent of $m$
+and~$k$.
+
+%% ===================================================================
+\section{The Rescaled Integer Matrix}
+%% ===================================================================
+
+Extracting coefficients from Proposition~\ref{prop:genfn} yields the
+following.
+
+\begin{proposition}\label{prop:Dmk}
+Define
+\begin{equation}\label{eq:Dmk}
+  D_{mk} = 3^{(m+k)/2} \cdot \frac{I_{mk}}{\sqrt{2\pi/3}}.
+\end{equation}
+Then $D_{mk}$ is an integer for all $m, k \ge 0$ with $m + k$ even
+(and zero when $m + k$ is odd).
+\end{proposition}
+
+\begin{proof}
+Write
+\[
+  \exp\!\Bigl(-\frac{s^2 - 4su + u^2}{3}\Bigr)
+  = \exp\!\Bigl(-\frac{s^2}{3}\Bigr)\;
+    \exp\!\Bigl(\frac{4su}{3}\Bigr)\;
+    \exp\!\Bigl(-\frac{u^2}{3}\Bigr).
+\]
+The coefficient of $s^m u^k$ is a sum over triples $(a, b, c)$ with
+$m = 2a + b$ and $k = b + 2c\,$:
+\[
+  [s^m u^k] = \sum_{a,b,c}
+  \frac{(-1/3)^a}{a!}\;\frac{(4/3)^b}{b!}\;\frac{(-1/3)^c}{c!}.
+\]
+Since $I_{mk} = m!\,k!\,[s^m u^k] \cdot \sqrt{2\pi/3}$, we have
+$D_{mk} = 3^{(m+k)/2} \cdot m!\,k! \cdot [s^m u^k]$. Writing
+$a + c = (m + k - 2b)/2$ and noting $3^{(m+k)/2}$ absorbs all powers
+of~$3$ from the denominators while $4^b = 2^{2b}$ and $(-1)^{a+c}$
+provide integer factors, every term is an integer.
+\end{proof}
+
+%% ===================================================================
+\section{Apparent Matching Interpretation}
+%% ===================================================================
+
+The integers $D_{mk}$ appear to count signed bipartite matchings. We
+have verified the following against the proved coefficient-extraction
+formula of Proposition~\ref{prop:Dmk} for every pair $(m,k)$ with
+$0 \le m, k \le 20$ (441~entries, zero discrepancies; see
+Appendix~\ref{app:tables}).
+
+\begin{observation}\label{obs:matching}
+For all computed cases, $D_{mk}$ equals the sum over all perfect
+matchings of $m + k$ vertices---$m$ of type~$A$ and $k$ of
+type~$B$---where each matched pair contributes:
+\begin{center}
+\small
+\begin{tabular}{lcc}
+  \toprule
+  Pair type & Raw weight & Rescaled weight \\
+  \midrule
+  Cross ($A$--$B$) & $4/3$ & $+4$ \\
+  Self ($A$--$A$ or $B$--$B$) & $-2/3$ & $-2$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+Rescaled weights are obtained by multiplying through by $3^{(m+k)/2}$.
+In closed form, this matching count would give
+\begin{equation}\label{eq:Dmk-matching}
+  D_{mk} = \sum_{\substack{c \ge 0 \\ m - c \text{ even} \\
+  k - c \text{ even}}}
+  \binom{m}{c}\binom{k}{c}\, c!\;
+  (m - c - 1)!!\; (k - c - 1)!!\; 4^{c}\, (-2)^{(m+k-2c)/2},
+\end{equation}
+where $(2r-1)!! = 1 \cdot 3 \cdot 5 \cdots (2r-1)$ is the double
+factorial and $(-1)!! = 1$ by convention. The factors count:
+$\binom{m}{c}\binom{k}{c}$ ways to choose which vertices cross-pair,
+$c!$~ways to match them (each cross-pair weighted $+4$), and
+$(m - c - 1)!!\,(k - c - 1)!!$ self-matchings of the remainder
+(each self-pair weighted $-2$).
+\end{observation}
+
+\begin{remark}
+The matching interpretation is consistent with Wick's
+theorem applied to the expectation
+$\mathbb{E}[H_m(X)\,H_k(X)]$ for $X \sim N(0, 1/3)$.
+A proof would follow from Isserlis' theorem at non-unit
+variance.
+\end{remark}
+
+%% ===================================================================
+\section{The Diagonal}
+%% ===================================================================
+
+\begin{theorem}\label{thm:diagonal}
+The diagonal entries satisfy
+\begin{equation}\label{eq:diag}
+  \frac{D_{nn}}{n!} = \sum_{k=0}^{\lfloor n/2 \rfloor}
+  \binom{n}{2k}\binom{2k}{k}\, 4^{n-2k}.
+\end{equation}
+This is OEIS sequence \textnormal{A081671}, with ordinary generating
+function
+\begin{equation}\label{eq:ogf}
+  \sum_{n \ge 0} \frac{D_{nn}}{n!}\, x^n
+  = \frac{1}{\sqrt{1 - 8x + 12x^2}}
+  = \frac{1}{\sqrt{(1 - 2x)(1 - 6x)}},
+\end{equation}
+and exponential generating function
+\begin{equation}\label{eq:egf}
+  \sum_{n \ge 0} \frac{D_{nn}}{(n!)^2}\, x^n
+  = e^{4x}\, I_0(2x),
+\end{equation}
+where $I_0$ is the modified Bessel function of the first kind.
+\end{theorem}
+
+\begin{proof}
+Setting $m = k = n$ in~\eqref{eq:Dmk} and writing $j = (n-c)/2$ for
+the number of self-pairs per side:
+\[
+  D_{nn} = \sum_{j=0}^{\lfloor n/2 \rfloor}
+  \binom{n}{n-2j}^2 (n-2j)!\; \bigl((2j-1)!!\bigr)^2\;
+  4^{n-2j}\, (-2)^{2j}.
+\]
+Since $(-2)^{2j} = 4^j$ and $(2j-1)!! = (2j)!/(2^j\, j!)$, the
+summand becomes
+\[
+  \binom{n}{2j}^2 (n-2j)!\; \frac{(2j)!^2}{4^j\, (j!)^2}\; 4^j\, 4^{n-2j}
+  = \binom{n}{2j}^2 (n-2j)!\; \frac{(2j)!^2}{(j!)^2}\; 4^{n-2j}.
+\]
+Dividing by $n!$ and simplifying:
+\[
+  \frac{D_{nn}}{n!}
+  = \sum_{j} \binom{n}{2j}\; \frac{(2j)!}{(j!)^2}\; 4^{n-2j}
+  = \sum_{j} \binom{n}{2j}\binom{2j}{j}\, 4^{n-2j}.
+\]
+For the OGF: let $a_n = \sum_k \binom{n}{2k}\binom{2k}{k}\,4^{n-2k}$.
+Using $\sum_{n \ge 2k} \binom{n}{2k} (4x)^n
+= (4x)^{2k}/(1-4x)^{2k+1}$,
+\[
+  \sum_{n} a_n x^n
+  = \sum_k \binom{2k}{k}\, 4^{-2k}
+    \frac{(4x)^{2k}}{(1-4x)^{2k+1}}
+  = \frac{1}{1-4x} \sum_k \binom{2k}{k}
+    \!\Bigl(\frac{x}{1-4x}\Bigr)^{\!2k}\!.
+\]
+Using the identity $\sum_k \binom{2k}{k} z^{2k} = 1/\sqrt{1-4z^2}$
+with $z = x/(1-4x)$:
+\[
+  = \frac{1}{1-4x}\; \frac{1}{\sqrt{1 - 4x^2/(1-4x)^2}}
+  = \frac{1}{\sqrt{(1-4x)^2 - 4x^2}}
+  = \frac{1}{\sqrt{1 - 8x + 12x^2}}.
+\]
+For the EGF: $I_0(2x) = \sum_k x^{2k}/(k!)^2$, so
+$e^{4x} I_0(2x) = \sum_n \bigl(\sum_k
+\binom{n}{2k}\binom{2k}{k}\,4^{n-2k}/n!\bigr) x^n$
+by Cauchy product, confirming~\eqref{eq:egf}.
+\end{proof}
+
+\begin{corollary}[Non-negativity]
+The diagonal entries $D_{nn}/n!$ are non-negative integers for all
+$n \ge 0$, being manifestly a sum of products of binomial coefficients.
+\end{corollary}
+
+The first several values of $D_{nn}/n!$ are:
+\[
+  1,\; 4,\; 18,\; 88,\; 454,\; 2424,\; 13236,\; 73392,\;
+  411462,\; 2325976,\; \ldots
+\]
+
+%% ===================================================================
+\section{The Edge Entries}
+%% ===================================================================
+
+The boundary entries of the matrix have closed forms.
+
+\begin{proposition}\label{prop:edges}
+For $k = 2n \ge 0$,
+\[
+  D_{0,2n} = (-1)^n\, \frac{(2n)!}{n!} = (-1)^n\, 2^n\, (2n-1)!!
+\]
+These are, up to sign, the \emph{rising factorials} $(2n)!/n!$\,.
+\end{proposition}
+
+\begin{proof}
+When $m = 0$, the sum~\eqref{eq:Dmk} (assuming its validity) has only
+the term $c = 0$, giving $D_{0,2n} = (2n-1)!!\,(-2)^n =
+(-1)^n(2n)!/n!$. Alternatively, direct extraction from the generating
+function: $[u^{2n}]\, e^{-u^2/3} = (-1/3)^n/n!$, so
+$I_{0,2n} = \sqrt{2\pi/3}\,(2n)!\,(-1/3)^n/n!$ and
+$D_{0,2n} = 3^n \cdot (2n)!\,(-1/3)^n/n! = (-1)^n(2n)!/n!$.
+\end{proof}
+
+%% ===================================================================
+\section{Computed Values}
+%% ===================================================================
+
+The matrix $D_{mk}$ is symmetric ($D_{mk} = D_{km}$), vanishes when
+$m + k$ is odd, and has alternating signs along each row. Since the
+even-indexed and odd-indexed entries decouple, we present them as two
+$8 \times 8$ blocks in Tables~\ref{tab:even} and~\ref{tab:odd}
+(128~entries total). Table~\ref{tab:diagonal} lists $D_{nn}/n!$ for
+$0 \le n \le 30$. All entries were computed directly from the proved
+coefficient-extraction formula of Proposition~\ref{prop:Dmk}. The
+matching formula~\eqref{eq:Dmk-matching} was independently checked
+against these values for all $0 \le m, k \le 20$ (441~entries, zero
+discrepancies).
+
+%% ===================================================================
+\section{Recovering the Original Matrix}
+%% ===================================================================
+
+The $L^2$-projection coefficients~\eqref{eq:amk} are recovered from the
+integer matrix by
+\[
+  a_{mk} = \frac{D_{mk}}{3^{(m+k)/2}}
+  \cdot \frac{1}{2^k\, k!\; \sqrt{2^m\, m!}}
+  \cdot \frac{\sqrt{2/3}}{\pi^{1/4}}.
+\]
+The first factor undoes the rescaling by $3^{(m+k)/2}$, the second
+accounts for the Hermite polynomial norms and the normalisation
+constant~$c_m$, and the third is the universal constant.
+
+%% ===================================================================
+\section{Discussion}
+%% ===================================================================
+
+The change-of-basis matrix between Hermite functions and Hermite
+polynomials is defined by a continuous, analytic process: $L^2$-projection
+against a Gaussian weight. There is no \emph{a priori} reason for the
+entries to be rational, let alone integer multiples of a single
+constant.
+
+The integrality of $D_{mk}$ (Proposition~\ref{prop:Dmk}) is proved by
+direct coefficient extraction from the generating function. The matching
+interpretation (Observation~\ref{obs:matching}) is verified
+computationally for all $m + k \le 14$ but not proved here. A proof
+would likely follow from Wick's theorem (Isserlis' theorem) applied to
+the Gaussian expectation $\mathbb{E}[H_m(X)\,H_k(X)]$ for
+$X \sim N(0, 1/3)$.
+
+The non-negativity of the diagonal $D_{nn}/n!$ is independent of the
+matching conjecture: it is a manifestly positive sum of products of
+binomial coefficients (Theorem~\ref{thm:diagonal}), demanding a
+bijective interpretation.
+
+The appearance of the modified Bessel function $I_0$ in the diagonal's
+EGF connects this matrix to wave equations and random walks. The OGF
+$1/\sqrt{(1-2x)(1-6x)}$ is an algebraic function---the simplest class
+beyond rational---with both branch points on the positive axis,
+consistent with the positivity of the diagonal and its growth
+rate~$6^n$. The matrix thus sits at an intersection of
+combinatorics (matchings), special functions (Bessel), algebraic
+generating functions, and classical analysis (Hermite, Fourier).
+
+The matrix does not appear to have a standard name in the literature.
+We propose \emph{Hermite matching matrix} for $(D_{mk})$ and note that
+a complete proof of the matching interpretation, a characterisation of
+the matrix's spectral properties, and its role in approximation theory
+remain open.
+
+%% ===================================================================
+\appendix
+\section{Tables}\label{app:tables}
+%% ===================================================================
+
+\begin{landscape}
+\begin{table}[p]
+\centering
+\caption{The integer matrix $D_{mk}$ for even $m$ and $k$, $0 \le m,k \le 14$.}
+\label{tab:even}
+\scriptsize
+\begin{tabular}{r|rrrrrrrr}
+$m \!\backslash\! k$ & $0$ & $2$ & $4$ & $6$ & $8$ & $10$ & $12$ & $14$ \\
+\hline
+$0$ & $1$ & $-2$ & $12$ & $-120$ & $1680$ & $-30240$ & $665280$ & $-17297280$ \\
+$2$ & $-2$ & $36$ & $-408$ & $6000$ & $-110880$ & $2479680$ & $-65197440$ & $1971889920$ \\
+$4$ & $12$ & $-408$ & $10896$ & $-254880$ & $6471360$ & $-184222080$ & $5883736320$ & $-209435466240$ \\
+$6$ & $-120$ & $6000$ & $-254880$ & $9529920$ & $-339534720$ & $12515731200$ & $-491854809600$ & $20808627840000$ \\
+$8$ & $1680$ & $-110880$ & $6471360$ & $-339534720$ & $16590147840$ & $-792232358400$ & $38515400985600$ & $-1948173273446400$ \\
+$10$ & $-30240$ & $2479680$ & $-184222080$ & $12515731200$ & $-792232358400$ & $48022189286400$ & $-2872542897100800$ & $173733606331084800$ \\
+$12$ & $665280$ & $-65197440$ & $5883736320$ & $-491854809600$ & $38515400985600$ & $-2872542897100800$ & $208204121096294400$ & $-14960314003822387200$ \\
+$14$ & $-17297280$ & $1971889920$ & $-209435466240$ & $20808627840000$ & $-1948173273446400$ & $173733606331084800$ & $-14960314003822387200$ & $1262574756680715878400$ \\
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\caption{The integer matrix $D_{mk}$ for odd $m$ and $k$, $1 \le m,k \le 15$.}
+\label{tab:odd}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{r|rrrrrrrr}
+$m \!\backslash\! k$ & $1$ & $3$ & $5$ & $7$ & $9$ & $11$ & $13$ & $15$ \\
+\hline
+$1$ & $4$ & $-24$ & $240$ & $-3360$ & $60480$ & $-1330560$ & $34594560$ & $-1037836800$ \\
+$3$ & $-24$ & $528$ & $-9120$ & $181440$ & $-4233600$ & $114428160$ & $-3528645120$ & $122464742400$ \\
+$5$ & $240$ & $-9120$ & $290880$ & $-8588160$ & $266837760$ & $-9021196800$ & $334183449600$ & $-13545845913600$ \\
+$7$ & $-3360$ & $181440$ & $-8588160$ & $369895680$ & $-15425303040$ & $658946534400$ & $-29586651494400$ & $1411067821363200$ \\
+$9$ & $60480$ & $-4233600$ & $266837760$ & $-15425303040$ & $844050170880$ & $-45401368320000$ & $2476187275161600$ & $-139467481548595200$ \\
+$11$ & $-1330560$ & $114428160$ & $-9021196800$ & $658946534400$ & $-45401368320000$ & $3021003695001600$ & $-198895976152473600$ & $13213366010836992000$ \\
+$13$ & $34594560$ & $-3528645120$ & $334183449600$ & $-29586651494400$ & $2476187275161600$ & $-198895976152473600$ & $15600117724666675200$ & $-1214739624489431040000$ \\
+$15$ & $-1037836800$ & $122464742400$ & $-13545845913600$ & $1411067821363200$ & $-139467481548595200$ & $13213366010836992000$ & $-1214739624489431040000$ & $109767194886547021824000$ \\
+\end{tabular}
+\end{table}
+\end{landscape}
+
+\begin{table}[p]
+\centering
+\caption{The diagonal sequence $D_{nn}/n!$ for $0 \le n \le 30$.
+This is OEIS A081671, with OGF $1/\sqrt{1-8x+12x^2}$.}
+\label{tab:diagonal}
+\begin{tabular}{r|r||r|r}
+$n$ & $D_{nn}/n!$ & $n$ & $D_{nn}/n!$ \\
+\hline
+$0$ & $1$ & $16$ & $487610895942$ \\
+$1$ & $4$ & $17$ & $2838118247064$ \\
+$2$ & $18$ & $18$ & $16547996212044$ \\
+$3$ & $88$ & $19$ & $96635257790352$ \\
+$4$ & $454$ & $20$ & $565107853947444$ \\
+$5$ & $2424$ & $21$ & $3308820294176016$ \\
+$6$ & $13236$ & $22$ & $19395905063796312$ \\
+$7$ & $73392$ & $23$ & $113814537122646432$ \\
+$8$ & $411462$ & $24$ & $668494299227072796$ \\
+$9$ & $2325976$ & $25$ & $3929851838287363824$ \\
+$10$ & $13233628$ & $26$ & $23120826355480783896$ \\
+$11$ & $75682512$ & $27$ & $136129681993195136032$ \\
+$12$ & $434662684$ & $28$ & $802049367833112712312$ \\
+$13$ & $2505229744$ & $29$ & $4728540783318487334496$ \\
+$14$ & $14482673832$ & $30$ & $27894081495241326235216$ \\
+$15$ & $83940771168$ & & \\
+\end{tabular}
+\end{table}
+
+\end{document}

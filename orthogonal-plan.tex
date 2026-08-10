@@ -1,0 +1,242 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+
+\title{\textbf{Kernels and Dual Bases to Explore:\\ a Plan}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+%% ===================================================================
+\section{The Program}
+%% ===================================================================
+
+The primitive object is a kernel $W$ on a set $X$ together with the
+\emph{bilinear} pairing $\langle f,g\rangle = \int_X fg$. From it:
+\begin{enumerate}
+  \item \emph{polynomials} $P_n$ with
+        $\int_X P_m P_n\, W = h_n \delta_{mn}$.
+        Positivity of $W$ is \textbf{not} required --- only nonvanishing
+        of the Hankel determinants of the moments $\int x^n W$. Signed
+        and complex kernels are admitted.
+  \item an analytic \emph{split} $W = w_+ w_-$ and the dual bases
+        $F_n = w_+ \hat P_n$, $G_n = w_- \hat P_n$, biorthonormal:
+        $\int F_m G_n = \delta_{mn}$.
+  \item the \emph{matching matrix}
+        $c_{mk} = \int_X \hat P_m \hat P_k\, w_+ W$,
+        expanding one basis in the polynomials.
+\end{enumerate}
+The \emph{orthogonal} case is the self-dual specialisation: $w_+ = w_-
+= \sqrt{W}$, $G_n = \overline{F_n} = \Phi_n$, and the pairing becomes
+the $L^2$ inner product. Hermite (Gaussian) is exactly self-dual; MP
+taught us the split $\Gamma(\tfrac14+ix)\cdot\Gamma(\tfrac14-ix)$ beats
+the symmetric root $\sqrt{W}$ --- the arithmetic lives in the dual
+pair, not the orthogonal functions. So the plan admits any kernel with
+a good split, whether or not a positive orthogonal theory exists.
+
+For each new kernel the questions are always: decay rate of $c_{0k}$,
+integrality (over which ring), generating function, and zeros of the
+truncated approximants.
+
+\subsection*{What the first two instances taught}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & Hermite & Meixner--Pollaczek ($\lambda=\tfrac14$) \\
+\midrule
+kernel $W$      & $e^{-x^2}$ (entire) & $\Gamma(\tfrac14+ix)\Gamma(\tfrac14-ix)$ (poles at $\pm i\tfrac14$) \\
+decay $b_{0k}$  & geometric $3^{-k/2}$ & power law $k^{-\alpha}$, $\alpha\approx\tfrac34$ \\
+integrality     & $\Z$, directly & none for $\sqrt{W}$; dual pair $\Rightarrow \Z A \oplus \Z B$ \\
+generators      & $1$ & $A,B = \sqrt{2e}\,K_0(\tfrac12),\,\sqrt{2e}\,K_1(\tfrac12)$ \\
+GF              & $e^{(\text{quadratic})}$ & $e^{\zeta/2}K_0(\zeta/2)$, $\zeta$ = product of Cayley transforms \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+\textbf{Moral: the family name is irrelevant; the analytic class of the
+kernel decides everything.} The plan below is therefore organised by
+strata of weight analyticity, with one canonical representative each.
+
+%% ===================================================================
+\section{The Strata}
+%% ===================================================================
+
+\subsection{Entire kernels \hfill \normalfont\emph{done}}
+
+$W = e^{-x^2}$ on $\R$, Hermite $H_n$. Geometric decay, integer
+matching matrix, closed GF. The base case.
+
+\subsection{One pair of $\Gamma$'s \hfill \normalfont\emph{done ($\lambda=\tfrac14$)}}
+
+$W = |\Gamma(\lambda+ix)|^2$ on $\R$, Meixner--Pollaczek
+$P_n^{(\lambda)}(x;\tfrac\pi2)$. Bump--Ng: for $\lambda=\tfrac14$ the
+functions are Mellin transforms of even Hermite functions --- the
+$\Gamma(s/2)$ factor of $\xi$. Dual pair restores arithmetic; decay
+stays slow (pole at finite distance).
+
+\paragraph{2a. The other parameter, $\lambda=\tfrac34$.}
+Same machinery, kernel $|\Gamma(\tfrac34+ix)|^2$ = Mellin side of
+\emph{odd} Hermite functions = gamma factor $\Gamma(\frac{s+1}{2})$ of
+odd Dirichlet $L$-functions. It has already knocked twice: the spurious
+zeros of $F_0^{(N)}$ converge onto the line $\operatorname{Im} x =
+-\tfrac12$ (the $\lambda=\tfrac34$ line), and the joint weight
+collapses:
+\[
+  |\Gamma(\tfrac14+ix)|^2\,|\Gamma(\tfrac34+ix)|^2
+  \;=\; \frac{2\pi^2}{\cosh 2\pi x}.
+\]
+
+\paragraph{2b. The joint $\tfrac14\otimes\tfrac34$ matrix.}
+Cross matching coefficients
+$\int \hat P^{(1/4)}_m \hat P^{(3/4)}_k\, \frac{dx}{\cosh 2\pi x}$
+(and variants): an \emph{elementary} kernel, $\operatorname{sech}$ =
+its own Fourier transform, poles at $\pm\tfrac{i}{4}$. Every integral
+is cheap; this is the fastest route to a genuinely new table.
+Expect: two-family checkerboard, and a chance of closed forms
+(the $\operatorname{sech}$ moment integrals are classical --- Euler
+numbers).
+
+\subsection{Two pairs of $\Gamma$'s: continuous Hahn \hfill \normalfont\emph{next}}
+
+$W = |\Gamma(a+ix)\Gamma(b+ix)|^2$ on $\R$, continuous Hahn
+$p_n(x;a,b)$. These are the Mellin transforms of \emph{Laguerre}
+functions --- the half-line theory pushed through Bump--Ng. Matching
+integrals now have $3$ or $4$ whole $\Gamma$-pairs: genuine Barnes
+integrals. The Kummer-$U$ lemma that cracked the MP dual table sits
+one step \emph{below} Barnes' first lemma; here Barnes' lemmas apply
+natively. Prediction: exact closed forms return, integrality over a
+ring generated by hypergeometric constants at fixed argument.
+
+\subsection{Four $\Gamma$'s: Wilson \hfill \normalfont\emph{after Hahn}}
+
+$W = \bigl|\frac{\prod_{j} \Gamma(a_j+ix)}{\Gamma(2ix)}\bigr|^2$,
+Wilson polynomials $W_n(x^2;a,b,c,d)$ --- top of the Askey scheme,
+orthogonality \emph{is} a Barnes-type integral (de~Branges, Wilson).
+Everything below is a degeneration; if a uniform statement about
+matching matrices exists, it lives here. High risk, high yield;
+do after continuous Hahn calibrates expectations.
+
+\subsection{Half-line: Laguerre \hfill \normalfont\emph{control}}
+
+$W = x^\alpha e^{-x}$ on $(0,\infty)$, Laguerre $L_n^{(\alpha)}$.
+Kernel entire in the bulk but with a branch point at the endpoint $0$
+(for $\alpha \notin 2\Z$). Interpolates the Hermite and Jacobi
+behaviours: expect geometric decay from $e^{-x}$, corrections from the
+endpoint. Also the Mellin \emph{preimage} of stratum 2.3 --- compute
+both sides and watch the transform carry structure across.
+
+\subsection{Compact interval: Jacobi \hfill \normalfont\emph{control}}
+
+$W = (1-x)^\alpha(1+x)^\beta$ on $[-1,1]$, Jacobi $P_n^{(\alpha,\beta)}$.
+No $\xi$ connection; included as the pure-endpoint-singularity control.
+Chebyshev ($\alpha=\beta=\mp\tfrac12$) is the degenerate corner where
+$W^{3/2}$ is again a Chebyshev weight --- the matching matrix should be
+computable in closed form by hand, a useful sanity anchor.
+
+\subsection{Discrete kernels: Charlier, Meixner, Krawtchouk \hfill \normalfont\emph{control / combinatorial}}
+
+$W(x) = e^{-a}a^x/x!$ on $\N$ (Charlier $C_n(x;a)$);
+$\beta^{(x)}c^x/x!$ (Meixner); $\binom{N}{x}p^xq^{N-x}$ (Krawtchouk).
+Matching matrices are \emph{sums}; integrality is automatic, so the
+question inverts: which phenomena (checkerboard, phase law,
+two-generator structure) survive, and which were artifacts of the
+contour? Motivated from inside: the MP dual GF factors through a
+\emph{Charlier kernel} $e^{\sigma+\tau-\sigma\tau}$
+(meixner-pollaczek-simple.tex \S6) --- the discrete family is already
+embedded in the continuous answer. The conjectured $2$-state automaton
+($K_0 \leftrightarrow K_1$) should be \emph{provable} here first.
+
+\subsection{Genuinely dual: no orthogonal counterpart \hfill \normalfont\emph{new territory}}
+
+Once the pairing is bilinear, the kernel need not be symmetric,
+positive, or even real. Three sub-cases, in increasing wildness:
+
+\paragraph{7a. Unbalanced $\Gamma$ split.}
+$W = \Gamma(a+ix)\,\Gamma(b-ix)$ with $a \ne b$. Not of the form
+$|\cdot|^2$: no positive weight, no orthogonal functions --- but the
+moments exist (the $3$-$\Gamma$ lemma \emph{is} the moment generating
+identity, and it never needed $a=b$), the Hankel determinants can be
+checked, and the whole dual machinery runs verbatim. The natural first
+instance: $a=\tfrac14$, $b=\tfrac34$ --- pairing the $\Gamma(s/2)$ and
+$\Gamma(\frac{s+1}{2})$ worlds inside one bilinear form, the dual-basis
+shadow of the joint $\operatorname{sech}$ matrix of 2b.
+
+\paragraph{7b. Classical biorthogonal systems.}
+Systems born biorthogonal: Konhauser pairs (polynomials in $x$ against
+polynomials in $x^k$, Laguerre weight); Cauchy biorthogonal polynomials
+(kernel $\frac{1}{x+y}$, two measures); Laurent biorthogonal
+polynomials (Toda / continued fractions); Wilson's biorthogonal
+\emph{rational} functions ($\mathstrut_{9}F_8$ level, above the Askey
+scheme). These test whether our phenomena need the polynomial--times--%
+split form at all, or survive in genuinely two-variable pairings.
+
+\paragraph{7c. $\zeta$-adapted kernels.}
+The endgame. Nothing now forbids kernels built from the object of
+interest itself: the zeta-basis pairing
+$\langle F_1,F_2\rangle_\zeta = \int F_1 \overline{F_2}\,|\zeta|^{-2}$
+already lives here, and one can attempt splits
+$W = \xi(\tfrac12+ix)\cdot(\cdots)$ where positivity fails on every
+zero but Hankel nonvanishing may hold. Dual bases are the only
+framework in which such kernels are legal.
+
+\subsection{$q$-kernels \hfill \normalfont\emph{horizon}}
+
+Askey--Wilson $|(e^{2i\theta};q)_\infty / \prod_j (a_j e^{i\theta};q)_\infty|^2$.
+Natural boundary at $|q|=1$ --- a genuinely new analytic class (kernel
+not continuable at all). Park here until the classical column is done;
+coordinate with Rick's Hopf-algebra work if it comes alive.
+
+%% ===================================================================
+\section{Summary Table}
+%% ===================================================================
+
+\begin{center}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+kernel $W$ & polynomials & analytic class & status \\
+\midrule
+$e^{-x^2}$                         & Hermite            & entire                & done \\
+$|\Gamma(\tfrac14+ix)|^2$          & MP $\lambda=\tfrac14$ & poles, finite dist. & done \\
+$|\Gamma(\tfrac34+ix)|^2$          & MP $\lambda=\tfrac34$ & poles, finite dist. & \textbf{1} \\
+$\operatorname{sech} 2\pi x$ (joint) & MP $\tfrac14 \times \tfrac34$ & elementary, poles & \textbf{1} \\
+$|\Gamma(a+ix)\Gamma(b+ix)|^2$     & continuous Hahn    & Barnes, $2$ pairs     & \textbf{2} \\
+$e^{-a}a^x/x!$ on $\N$             & Charlier           & discrete              & \textbf{3} \\
+$x^\alpha e^{-x}$ on $(0,\infty)$  & Laguerre           & entire + endpoint     & 4 \\
+$\Gamma(\tfrac14+ix)\Gamma(\tfrac34-ix)$ & dual only (7a) & unbalanced, signed  & \textbf{2} \\
+$|{\prod_j\Gamma(a_j+ix)}/{\Gamma(2ix)}|^2$ & Wilson    & Barnes, $4$ pairs     & 5 \\
+$(1-x)^\alpha(1+x)^\beta$          & Jacobi             & endpoints only        & 6 \\
+Konhauser / Cauchy / rational      & born biorthogonal  & two-variable pairing  & 7 \\
+$\xi$-built kernels                & dual only (7c)     & zeros on the contour  & endgame \\
+Askey--Wilson                      & $q$-world          & natural boundary      & horizon \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\noindent
+\textbf{Order of work.}
+(1) $\lambda=\tfrac34$ and the joint $\operatorname{sech}$ matrix ---
+verbatim port of existing code, elementary integrals, new arithmetic
+likely.
+(2) The unbalanced split $\Gamma(\tfrac14+ix)\Gamma(\tfrac34-ix)$ ---
+first kernel with \emph{no} orthogonal theory; the $3$-$\Gamma$ lemma
+already covers its moments.
+(3) Continuous Hahn --- does Barnes restore closed forms?
+(4) Charlier --- prove the $2$-state combinatorial model where sums
+replace contours.
+Then Laguerre/Wilson, Jacobi--Chebyshev as the by-hand anchor, the
+born-biorthogonal systems, and finally $\xi$-built kernels.
+
+\end{document}

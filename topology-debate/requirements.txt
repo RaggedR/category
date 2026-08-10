@@ -1,0 +1,6 @@
+anthropic>=0.74
+langgraph>=1.1
+sentence-transformers
+chromadb
+openai
+numpy

@@ -1,0 +1,945 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[most]{tcolorbox}
+\usepackage{float}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\G}{\Gamma}
+
+\title{\textbf{Approximating Orthogonal Functions\\ with Orthogonal Polynomials}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We can always approximate a function by a polynomial, and the
+approximation gets better as the degree of the polynomial goes up.
+The Hermite functions --- the eigenfunctions of the Fourier
+transform --- can be approximated by Hermite polynomials. The
+approximation coefficients form a triangular matrix with integer
+entries $D_{mk}$, which we conjecture to count weighted bicolour
+matchings. We extend this construction to the Meixner--Pollaczek
+polynomials at $\lambda = \tfrac14$ and $\tfrac34$. In this case
+there are constants $A$ and $B$ such that every coefficient in the
+approximation matrix is of the form $sA + tB$ where $s$ and $t$ are
+integers. On the critical line, the Mellin transform carries the
+Hermite functions unitarily onto these two families.
+\end{abstract}
+
+%% ===================================================================
+\section{The Construction}
+%% ===================================================================
+
+\begin{tcolorbox}[breakable, colback=black!5, colframe=black!5,
+  boxrule=0pt, sharp corners]
+Each family follows the same pattern, in three steps.
+
+\textbf{Step 1: the polynomials.} Fix a kernel $W \ge 0$ on a set $X$.
+It defines an inner product on polynomials,
+\[
+  \langle f, g \rangle_W = \int_X f\,g\;W.
+\]
+
+Gram--Schmidt produces the orthogonal polynomials $P_n$:
+\[
+  \langle P_m, P_n \rangle_W = h_n \delta_{mn}.
+\]
+
+Normalise:
+\[
+  \widehat P_n = P_n/\sqrt{h_n}.
+\]
+
+\medskip
+\textbf{Step 2: the functions.} Multiplying by $\sqrt W$ turns them
+into the \emph{associated functions}
+\[
+  \Phi_n = \widehat P_n\, \sqrt W .
+\]
+
+These are orthonormal for the plain inner product:
+\[
+  \int_X \Phi_m\, \Phi_n = \delta_{mn}.
+\]
+
+When $\sqrt W$ is not analytic, we instead split $W = w_+ w_-$
+analytically and take the \emph{dual pair of functions}
+\[
+  F_n = w_+\, \widehat P_n, \qquad G_n = w_-\, \widehat P_n,
+  \qquad \int_X F_m\, G_n = \delta_{mn}.
+\]
+
+\textbf{Step 3: the coefficients.} We seek \emph{polynomial
+approximations of the functions}. The best degree-$N$ approximation
+of $\Phi_m$ in $L^2(W)$ is given by
+\[
+  \sum_{k \le N} b_{mk}\, \widehat P_k .
+\]
+
+The coefficients give a \textbf{triangular matrix}.
+
+\medskip
+The coefficients are given by
+\[
+  b_{mk} = \langle \Phi_m, \widehat P_k \rangle_W
+         = \int_X \bigl(\widehat P_m \sqrt W\bigr)\, \widehat P_k\; W
+         = \int_X \widehat P_m\, \widehat P_k\; W^{3/2}.
+\]
+
+In the dual case there are two coefficient matrices, one for each
+function of the pair:
+\[
+  c^+_{mk} = \langle F_m, \widehat P_k \rangle_W
+         = \int_X \widehat P_m\, \widehat P_k\; w_+ W
+  \qquad (w_+ W = w_+^2\, w_-),
+\]
+\[
+  c^-_{mk} = \langle G_m, \widehat P_k \rangle_W
+         = \int_X \widehat P_m\, \widehat P_k\; w_- W
+  \qquad (w_- W = w_-^2\, w_+).
+\]
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Families of Orthogonal Polynomials}
+%% ===================================================================
+
+%% -------------------------------------------------------------------
+\subsection{Hermite}
+
+In the Hermite polynomial case the kernel is given by
+$W = e^{-x^2}$ on $\R$, with $h_n = 2^n n! \sqrt\pi$.
+The Hermite functions are given by $\Phi_n = \widehat H_n e^{-x^2/2}$.
+We are interested in the coefficients of the polynomial approximation
+of the Hermite function by the Hermite polynomials
+\[
+  b_{mk} = \int \widehat H_m \widehat H_k\, e^{-3x^2/2} dx .
+\]
+With $b_{00} = \sqrt{2/3}$, define the rescaled integers
+\[
+  D_{mk} \;=\; \frac{b_{mk}}{b_{00}}\;
+  \sqrt{2^m m!\; 2^k k!}\;\; 3^{(m+k)/2} \;\in\; \Z .
+\]
+$D_{mk} = 0$ for $m+k$ odd. The even entries ($m \le k \le 7$):
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrr}
+$D_{mk}$ & $k=m$ & $m{+}2$ & $m{+}4$ & $m{+}6$ \\
+\hline
+$m=0$ & $1$      & $-2$      & $12$      & $-120$ \\
+$1$   & $4$      & $-24$     & $240$     & $-3360$ \\
+$2$   & $36$     & $-408$    & $6000$    &  \\
+$3$   & $528$    & $-9120$   & $181440$  &  \\
+$4$   & $10896$  & $-254880$ &           &  \\
+$5$   & $290880$ & $-8588160$&           &  \\
+$6$   & $9529920$&           &           &  \\
+$7$   & $369895680$ &        &           &  \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Hermite integrality]\label{thm:hermite-int}
+$D_{mk} \in \Z$, vanishing for $m+k$ odd. Explicitly, with
+$b = \tfrac{m-a}{2}$, $c = \tfrac{k-a}{2}$,
+\[
+  D_{mk} \;=\; \sum_{a}\; 4^a\, (-2)^{b+c}\, a!\;
+  \frac{m!}{a!\, b!\, 2^b}\; \frac{k!}{a!\, c!\, 2^c}\,,
+\]
+and each factor $\dfrac{n!}{a!\, b!\, 2^b}$ is an integer: it counts
+the partial matchings of $[n]$ with $a$ unmatched points and $b$ pairs.
+\end{theorem}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{conjecture}[Hermite]\label{thm:hermite}
+$D_{mk}$ is a weighted count of perfect matchings. Colour $m$ points
+red and $k$ points blue; then
+\[
+  D_{mk} \;=\; \sum_{\substack{\text{perfect matchings}\\
+  \text{of the } m+k \text{ points}}}
+  4^{\#\{\text{red--blue pairs}\}} \; (-2)^{\#\{\text{same-colour pairs}\}} .
+\]
+\end{conjecture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Hermite diagonal]\label{thm:hermite-diag}
+The diagonal is manifestly positive:
+\[
+  \frac{D_{nn}}{n!}
+  \;=\; \sum_{j} \binom{n}{2j} \binom{2j}{j}\, 4^{\,n-2j}
+  \;=\; 1, 4, 18, 88, 454, 2424, \ldots \quad (\text{OEIS A081671}),
+\]
+the largest coefficient of $(1 + 4x + x^2)^n$, with ordinary
+generating function $1/\sqrt{(1-2x)(1-6x)}$ and exponential
+generating function $e^{4x} I_0(2x)$.
+\end{theorem}
+\end{tcolorbox}
+
+
+\subsubsection*{Reverse}
+
+The \emph{reverse} expansion $\widehat H_m = \sum_k \widetilde b_{mk}\, \Phi_k$
+has one power of $\sqrt W$ in place of three:
+\[
+  \widetilde b_{mk} = \int \widehat H_m \widehat H_k\, e^{-x^2/2}\, dx .
+\]
+With $\widetilde b_{00} = \sqrt2$, the same rescaling without the
+power of $3$,
+\[
+  S_{mk} \;=\; \frac{\widetilde b_{mk}}{\widetilde b_{00}}\,
+  \sqrt{2^m m!\; 2^k k!} \;\in\; \N .
+\]
+$S_{mk} = 0$ for $m+k$ odd. The even entries ($m \le k \le 7$):
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrr}
+$S_{mk}$ & $k=m$ & $m{+}2$ & $m{+}4$ & $m{+}6$ \\
+\hline
+$m=0$ & $1$      & $2$      & $12$      & $120$ \\
+$1$   & $4$      & $24$     & $240$     & $3360$ \\
+$2$   & $36$     & $408$    & $6000$    &  \\
+$3$   & $528$    & $9120$   & $181440$  &  \\
+$4$   & $10896$  & $254880$ &           &  \\
+$5$   & $290880$ & $8588160$&           &  \\
+$6$   & $9529920$&           &           &  \\
+$7$   & $369895680$ &        &           &  \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Hermite, reverse direction]\label{thm:hermite-rev}
+$S_{mk} = (-1)^{(k-m)/2}\, D_{mk}$ --- the forward matrix with the
+signs stripped. In the matchings of Conjecture~\ref{thm:hermite} the
+same-colour weight $-2$ is replaced by $+2$, making the sum
+manifestly positive:
+\[
+  S_{mk} \;=\; \sum_{\substack{\text{perfect matchings}\\
+  \text{of the } m+k \text{ points}}}
+  4^{\#\{\text{red--blue pairs}\}} \; 2^{\#\{\text{same-colour pairs}\}} .
+\]
+\end{theorem}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Laguerre}
+
+For the Laguerre polynomials with $\alpha = 0$ the kernel is
+$W = e^{-x}$ on $(0,\infty)$. We denote the Laguerre polynomials by
+$L_n$ and the Laguerre functions by
+$\Phi_n = L_n e^{-x/2}$. They are already orthonormal ($h_n = 1$). The coefficients
+\[
+  b_{mk} = \int_0^\infty L_m L_k\, e^{-3x/2} dx ,
+\]
+are all exactly rational. We rescale:
+\[
+  b_{mk} \;=\; \frac{2\, E_{mk}}{3^{\,m+k+1}}, \qquad E_{mk} \in \N :
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrrrr}
+$E_{mk}$ & $k=0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\hline
+$m=0$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+$1$ &  & $5$ & $9$ & $13$ & $17$ & $21$ \\
+$2$ &  &  & $33$ & $73$ & $129$ & $201$ \\
+$3$ &  &  &  & $245$ & $593$ & $1181$ \\
+$4$ &  &  &  &  & $1921$ & $4881$ \\
+$5$ &  &  &  &  &  & $15525$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Laguerre]\label{thm:laguerre}
+$E_{mk}$ counts weighted Delannoy paths:
+\[
+  E_{mk} \;=\; \sum_{\text{paths } (0,0) \to (m,k)} 3^{\#\text{diagonal steps}}
+  \;=\; \sum_{j \ge 0} \binom{m}{j} \binom{m+k-j}{m}\, 3^{\,j},
+\]
+the sum over monotone lattice paths with steps $(1,0)$, $(0,1)$,
+$(1,1)$, a diagonal step weighing $3$. In particular
+$E_{1,k} = 4k+1$ and
+$E_{nn} = \sum_j \binom{n}{j}^2 4^j = {}_2F_1(-n,-n;1;4)$.
+\end{theorem}
+\end{tcolorbox}
+
+\subsubsection*{Reverse}
+
+The \emph{reverse} expansion $L_m = \sum_k \widetilde b_{mk}\, \Phi_k$
+gives the same Delannoy numbers:
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrrrr}
+$\widetilde b_{mk}$ & $k=0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\hline
+$m=0$ & $2$ & $-2$ & $2$ & $-2$ & $2$ & $-2$ \\
+$1$ &  & $10$ & $-18$ & $26$ & $-34$ & $42$ \\
+$2$ &  &  & $66$ & $-146$ & $258$ & $-402$ \\
+$3$ &  &  &  & $490$ & $-1186$ & $2362$ \\
+$4$ &  &  &  &  & $3842$ & $-9762$ \\
+$5$ &  &  &  &  &  & $31050$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Laguerre, reverse direction]\label{thm:laguerre-rev}
+\[
+  \widetilde b_{mk} = \int_0^\infty L_m L_k\, e^{-x/2}\, dx
+  \;=\; 2\,(-1)^{m+k}\, E_{mk} .
+\]
+Reversing the direction strips the power of $3$ and leaves a sign.
+\end{theorem}
+\end{tcolorbox}
+
+
+%% ===================================================================
+\section{Not quite combinatorial}
+%% ===================================================================
+
+%% -------------------------------------------------------------------
+\subsection{Meixner--Pollaczek ($\lambda = \tfrac14$): a dual pair}
+
+For the Meixner--Pollaczek polynomials with $\lambda = \tfrac14$ the
+kernel is $W = \G(\tfrac14+ix)\,\G(\tfrac14-ix)$ on $\R$, with
+$h_n = h_0 \binom{2n}{n}/4^n$, $h_0 = \sqrt2\, \pi^{3/2}$.
+We denote the Meixner--Pollaczek polynomials by $P_n$.
+Here $\sqrt W$ has branch points at
+$\pm\tfrac{i}{4}$; the analytic split is $w_\pm = \G(\tfrac14 \pm ix)$
+and the dual pair of functions is given by
+\[
+  F_n = \G(\tfrac14+ix)\,\widehat P_n, \qquad
+  G_n = \G(\tfrac14-ix)\,\widehat P_n, \qquad
+  \int_\R F_m G_n\, dx = \delta_{mn}.
+\]
+The coefficients of the approximation matrix are given by:
+\[
+  c^+_{mk} = \int \widehat P_m \widehat P_k\,
+  \G(\tfrac14+ix)^2\,\G(\tfrac14-ix)\, dx, \qquad
+  c^-_{mk} = \int \widehat P_m \widehat P_k\,
+  \G(\tfrac14+ix)\,\G(\tfrac14-ix)^2\, dx
+\]
+They are complex conjugates of each other, $c^-_{mk} = \overline{c^+_{mk}}$.
+With the rescaling
+\[
+  T_{mk} = \frac{2^m m!\; 2^k k!}{h_0}
+  \int_\R P_m P_k\, \G(\tfrac14+ix)^2 \G(\tfrac14-ix)\, dx,
+  \qquad
+  c^+_{mk} = \frac{T_{mk}}{m!\,k!\,
+  \sqrt{\smash[b]{\tbinom{2m}{m}\tbinom{2k}{k}}}} .
+\]
+Up to a factor of $i$ when $m+k$ is odd, every entry lies in
+$\Z A + \Z B$, where
+\[
+  A = \sqrt{2e}\,K_0(\tfrac12), \qquad
+  B = \sqrt{2e}\,K_1(\tfrac12),
+\]
+and the $K_\nu$ are the modified Bessel functions of the third kind
+\[
+  K_\nu(z) = \int_0^\infty e^{-z\cosh t} \cosh(\nu t)\, dt :
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{cl@{\qquad}cl}
+\toprule
+$(m,k)$ & $T_{mk}$ & $(m,k)$ & $T_{mk}$ \\
+\midrule
+$(0,0)$ & $A$                   & $(1,3)$ & $2575A - 1440B$ \\
+$(0,1)$ & $3A - 2B$             & $(1,4)$ & $39411A - 21978B$ \\
+$(0,2)$ & $12B - 23A$           & $(1,5)$ & $394932B - 707389A$ \\
+$(0,3)$ & $138B - 241A$         & $(2,2)$ & $2369A - 1320B$ \\
+$(0,4)$ & $3265A - 1800B$       & $(2,3)$ & $33743A - 18834B$ \\
+$(0,5)$ & $52907A - 29706B$     & $(2,4)$ & $317892B - 569719A$ \\
+$(1,1)$ & $12B - 21A$           & $(2,5)$ & $6190602B - 11092229A$ \\
+$(1,2)$ & $114B - 205A$         & $(3,3)$ & $295572B - 529549A$ \\
+        &                       & $(3,4)$ & $5399634B - 9675553A$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\subsubsection*{Duality}
+
+The approximation of the other function of the pair, computed
+directly,
+\[
+  T^-_{mk} = \frac{2^m m!\; 2^k k!}{h_0}
+  \int_\R P_m P_k\, \G(\tfrac14+ix)\, \G(\tfrac14-ix)^2\, dx
+  \;=\; \overline{T_{mk}}\,,
+\]
+lies in the same lattice $\Z A + \Z B$. Conjugation flips the
+suppressed $i$ to $-i$; at the fixed phase of the $T$-table the
+odd-parity entries change sign:
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{cl@{\qquad}cl}
+\toprule
+$(m,k)$ & $T^-_{mk}$ & $(m,k)$ & $T^-_{mk}$ \\
+\midrule
+$(0,0)$ & $A$                   & $(1,3)$ & $2575A - 1440B$ \\
+$(0,1)$ & $2B - 3A$             & $(1,4)$ & $21978B - 39411A$ \\
+$(0,2)$ & $12B - 23A$           & $(1,5)$ & $394932B - 707389A$ \\
+$(0,3)$ & $241A - 138B$         & $(2,2)$ & $2369A - 1320B$ \\
+$(0,4)$ & $3265A - 1800B$       & $(2,3)$ & $18834B - 33743A$ \\
+$(0,5)$ & $29706B - 52907A$     & $(2,4)$ & $317892B - 569719A$ \\
+$(1,1)$ & $12B - 21A$           & $(2,5)$ & $11092229A - 6190602B$ \\
+$(1,2)$ & $205A - 114B$         & $(3,3)$ & $295572B - 529549A$ \\
+        &                       & $(3,4)$ & $9675553A - 5399634B$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\subsubsection*{Reverse}
+
+The \emph{reverse} expansion $\widehat P_m = \sum_k D_{mk} F_k$ has
+one-Gamma coefficients
+\[
+  D_{mk} = \int \widehat P_m \widehat P_k\, \G(\tfrac14 - ix)\, dx
+\]
+over the single generator $e^{-1}$ (a factor of $i$ suppressed when
+$m+k$ is odd):
+\[
+  S_{mk} = 2^m m!\; 2^k k!\; \frac{e}{2\pi}
+  \int_\R P_m P_k\, \G(\tfrac14-ix)\, dx \;\in\; \Z :
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrrrr}
+$S_{mk}$ & $k=0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\hline
+$m=0$ & $1$ & $3$ & $5$ & $11$ & $249$ & $-2621$ \\
+$1$ &  & $7$ & $47$ & $399$ & $-2005$ & $263$ \\
+$2$ &  &  & $473$ & $-617$ & $22109$ & $-402065$ \\
+$3$ &  &  &  & $31511$ & $-412557$ & $-3017969$ \\
+$4$ &  &  &  &  & $-1916623$ & $-29235989$ \\
+$5$ &  &  &  &  &  & $-1012892921$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=green!8, colframe=green!8, boxrule=0pt, sharp corners]
+\begin{definition}[Defect--chain matching]\label{def:defect-chain}
+A \emph{defect--chain matching} is a combinatorial object richer
+than a matching. Take two rows of labelled points, $[m]$ and $[k]$.
+Within each row, some points are set aside as \emph{defects}; the
+remaining points are arranged into a forest of nonempty ordered
+\emph{chains}. Finally, chains in the $[m]$-row are partially matched
+with chains in the $[k]$-row. Each part carries a weight, and
+$S_{mk}$ is the signed sum over all such configurations.
+\end{definition}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Meixner--Pollaczek $\tfrac14$, reverse direction]\label{thm:mp}
+$S_{mk} = (-1)^{\lfloor (m+k)/2 \rfloor} \sum \operatorname{wt}$,
+summed over the defect--chain matchings of $[m]$, $[k]$; the
+weights are $(-1)^d (2d-1)!!$ per defect set of size $d$,
+$(-1)^{\ell-1} 2^{\ell+1}$ per chain of length $\ell$, and $-1$ per
+matched pair of chains.
+
+Equivalently, with Lah numbers
+$L(n,c) = \binom{n-1}{c-1} n!/c!$,
+\[
+  S_{mk} = (-1)^{\lfloor \frac{m+k}{2} \rfloor}
+  \sum_{d_1, c_1, d_2, c_2}
+  W_m(d_1, c_1)\, W_k(d_2, c_2)\,
+  \sum_j (-1)^j \tbinom{c_1}{j}\tbinom{c_2}{j} j! \,,
+\]
+$W_n(d,c) = \binom{n}{d}(-1)^d (2d-1)!!\; L(n{-}d, c)\,
+(-1)^{n-d-c}\, 2^{n-d+c}$.
+\end{theorem}
+\end{tcolorbox}
+
+\subsubsection*{Reverse dual}
+
+The expansion over the other dual function,
+$\widehat P_m = \sum_k \widetilde D_{mk}\, G_k$ with
+$\widetilde D_{mk} = \int \widehat P_m \widehat P_k\,
+\G(\tfrac14 + ix)\, dx$, obeys two symmetries: conjugation
+($\widehat P$ is real on $\R$) gives
+$\widetilde D_{mk} = \overline{D_{mk}}$, and the substitution
+$x \mapsto -x$ gives $\widetilde D_{mk} = (-1)^{m+k} D_{mk}$.
+Together they force $D_{mk}$ to be real for $m+k$ even and purely
+imaginary for $m+k$ odd --- this is the origin of the suppressed
+factor of $i$. Computing directly, at the fixed phase $i$,
+\[
+  \widetilde S_{mk} = 2^m m!\; 2^k k!\; \frac{e}{2\pi}
+  \int_\R P_m P_k\, \G(\tfrac14+ix)\, dx \;\in\; \Z :
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrrrr}
+$\widetilde S_{mk}$ & $k=0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\hline
+$m=0$ & $1$ & $-3$ & $5$ & $-11$ & $249$ & $2621$ \\
+$1$ &  & $7$ & $-47$ & $399$ & $2005$ & $263$ \\
+$2$ &  &  & $473$ & $617$ & $22109$ & $402065$ \\
+$3$ &  &  &  & $31511$ & $412557$ & $-3017969$ \\
+$4$ &  &  &  &  & $-1916623$ & $29235989$ \\
+$5$ &  &  &  &  &  & $-1012892921$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Meixner--Pollaczek $\tfrac14$, reverse dual]
+\label{thm:mpdual}
+$\widetilde S_{mk} = (-1)^{m+k}\, S_{mk}
+= (-1)^{\lceil (m+k)/2 \rceil} \sum \operatorname{wt}$,
+summed over the same defect--chain matchings, with the same weights,
+as Theorem~\ref{thm:mp}: only the floor becomes a ceiling.
+\end{theorem}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Meixner--Pollaczek ($\lambda = \tfrac34$): a dual pair}
+
+For the Meixner--Pollaczek polynomials with $\lambda = \tfrac34$ the
+kernel is $W = \G(\tfrac34+ix)\,\G(\tfrac34-ix)$ on $\R$, with
+$h_n = h_0\, \G(n+\tfrac32)/(n!\,\G(\tfrac32))$,
+$h_0 = (\pi/2)^{3/2}$.
+We denote the Meixner--Pollaczek polynomials by $Q_n$.
+Here $\sqrt W$ has branch points at
+$\pm\tfrac{3i}{4}$; the analytic split is $w_\pm = \G(\tfrac34 \pm ix)$
+and the dual pair of functions is given by
+\[
+  F_n = \G(\tfrac34+ix)\,\widehat Q_n, \qquad
+  G_n = \G(\tfrac34-ix)\,\widehat Q_n, \qquad
+  \int_\R F_m G_n\, dx = \delta_{mn}.
+\]
+The coefficients of the approximation matrix are given by:
+\[
+  c^+_{mk} = \int \widehat Q_m \widehat Q_k\,
+  \G(\tfrac34+ix)^2\,\G(\tfrac34-ix)\, dx, \qquad
+  c^-_{mk} = \int \widehat Q_m \widehat Q_k\,
+  \G(\tfrac34+ix)\,\G(\tfrac34-ix)^2\, dx
+\]
+They are complex conjugates of each other, $c^-_{mk} = \overline{c^+_{mk}}$.
+With the rescaling
+\[
+  \mathcal U_{mk} = \frac{2^{m+k} m!\, k!}{\pi^2/2}
+  \operatorname{Re}\bigl[(-i)^{m+k} J_{mk}\bigr],
+  \qquad
+  J_{mk} = \int Q_m Q_k\, \G(\tfrac34+ix)^2 \G(\tfrac34-ix)\, dx ,
+\]
+every entry lies in $\Z A' + \Z B'$, where
+\[
+  A' = U(\tfrac32, 1, 1) \approx 0.35793, \qquad
+  B' = U(\tfrac52, 2, 1) \approx 0.21533,
+\]
+$U$ being Tricomi's confluent hypergeometric function
+(no Bessel simplification: $\lambda = \tfrac14$ is the special
+Kummer--Bessel locus):
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\small
+\begin{tabular}{cl@{\qquad}cl}
+\toprule
+$(m,k)$ & $\mathcal U_{mk}$ & $(m,k)$ & $\mathcal U_{mk}$ \\
+\midrule
+$(0,0)$ & $A'$                    & $(1,3)$ & $7035 A' - 11760 B'$ \\
+$(0,1)$ & $3A' - 6B'$             & $(1,4)$ & $128643 A' - 213630 B'$ \\
+$(0,2)$ & $39A' - 60B'$           & $(2,2)$ & $6609 A' - 10920 B'$ \\
+$(0,3)$ & $513A' - 870B'$         & $(2,3)$ & $112695 A' - 187350 B'$ \\
+$(0,4)$ & $8673A' - 14280B'$      & $(2,4)$ & $2215047 A' - 3679860 B'$ \\
+$(1,1)$ & $33 A' - 60 B'$         & $(3,3)$ & $2078169 A' - 3456420 B'$ \\
+$(1,2)$ & $453 A' - 750 B'$       & $(3,4)$ & $43522881 A' - 72346830 B'$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\subsubsection*{Duality}
+
+The approximation of the other function of the pair, computed
+directly at the fixed phase of the $\mathcal U$-table,
+\[
+  \mathcal U^-_{mk} = \frac{2^{m+k} m!\, k!}{\pi^2/2}
+  \operatorname{Re}\bigl[(-i)^{m+k}\, \overline{J_{mk}}\,\bigr],
+\]
+again negates exactly the odd-parity entries; with the phase
+conjugated to $i^{m+k}$ the $\mathcal U$-table reappears identically:
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\small
+\begin{tabular}{cl@{\qquad}cl}
+\toprule
+$(m,k)$ & $\mathcal U^-_{mk}$ & $(m,k)$ & $\mathcal U^-_{mk}$ \\
+\midrule
+$(0,0)$ & $A'$                    & $(1,3)$ & $7035 A' - 11760 B'$ \\
+$(0,1)$ & $6B' - 3A'$             & $(1,4)$ & $213630 B' - 128643 A'$ \\
+$(0,2)$ & $39A' - 60B'$           & $(2,2)$ & $6609 A' - 10920 B'$ \\
+$(0,3)$ & $870B' - 513A'$         & $(2,3)$ & $187350 B' - 112695 A'$ \\
+$(0,4)$ & $8673A' - 14280B'$      & $(2,4)$ & $2215047 A' - 3679860 B'$ \\
+$(1,1)$ & $33 A' - 60 B'$         & $(3,3)$ & $2078169 A' - 3456420 B'$ \\
+$(1,2)$ & $750 B' - 453 A'$       & $(3,4)$ & $72346830 B' - 43522881 A'$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\subsubsection*{Reverse}
+
+The \emph{reverse} expansion $\widehat Q_m = \sum_k D_{mk} F_k$ has
+one-Gamma coefficients
+\[
+  D_{mk} = \int \widehat Q_m \widehat Q_k\, \G(\tfrac34 - ix)\, dx
+\]
+over the single generator $e^{-1}$ (a phase $(-i)^{|m-k|}$
+suppressed):
+\[
+  S_{mk} = 2^m m!\; 2^k k!\; \frac{e}{2\pi}
+  \int Q_m Q_k\, \G(\tfrac34-ix)\, dx \;\in\; \Z :
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrrrr}
+$S_{mk}$ & $k=0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\hline
+$m=0$ & $1$ & $-1$ & $-9$ & $-43$ & $-95$ & $1671$ \\
+$1$ &  & $15$ & $23$ & $-283$ & $-4767$ & $-52649$ \\
+$2$ &  &  & $529$ & $5475$ & $31703$ & $-65119$ \\
+$3$ &  &  &  & $-15145$ & $363979$ & $8950653$ \\
+$4$ &  &  &  &  & $-8709567$ & $-100346585$ \\
+$5$ &  &  &  &  &  & $123082079$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Meixner--Pollaczek $\tfrac34$, reverse direction]
+\label{thm:mp34rev}
+$S_{mk} \in \Z$ for all $m,k$, a signed sum over the same
+defect--chain matchings as Theorem~\ref{thm:mp}: for $m \le k$,
+\[
+  S_{mk} = (-1)^{k}
+  \sum_{d_1, c_1, d_2, c_2}
+  W'_m(d_1, c_1)\, W'_k(d_2, c_2)\,
+  \sum_j (-1)^j \tbinom{c_1}{j}\tbinom{c_2}{j} j! \,,
+\]
+\[
+  W'_n(d,c) = \binom{n}{d}(-1)^d (2d+1)!!\; L(n{-}d, c)\,
+  (-1)^{n-d-c}\, 2^{n-d+c} .
+\]
+Only the defect weight changes, from $(2d-1)!!$ to $(2d+1)!!$: the
+Charlier kernel $e^{-\sigma-\tau+\sigma\tau}$ is universal in
+$\lambda$, and the Jacobian exponent shifts the odd double factorial
+by the half-integer $\lambda$.
+\end{theorem}
+\end{tcolorbox}
+
+\subsubsection*{Reverse dual}
+
+As for $\lambda = \tfrac14$, the expansion over the other dual
+function is the complex conjugate; computed directly, at the fixed
+phase $(-i)^{|m-k|}$,
+\[
+  \widetilde S_{mk} = 2^m m!\; 2^k k!\; \frac{e}{2\pi}
+  \int Q_m Q_k\, \G(\tfrac34+ix)\, dx \;\in\; \Z :
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrrrr}
+$\widetilde S_{mk}$ & $k=0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\hline
+$m=0$ & $1$ & $1$ & $-9$ & $43$ & $-95$ & $-1671$ \\
+$1$ &  & $15$ & $-23$ & $-283$ & $4767$ & $-52649$ \\
+$2$ &  &  & $529$ & $-5475$ & $31703$ & $65119$ \\
+$3$ &  &  &  & $-15145$ & $-363979$ & $8950653$ \\
+$4$ &  &  &  &  & $-8709567$ & $100346585$ \\
+$5$ &  &  &  &  &  & $123082079$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Meixner--Pollaczek $\tfrac34$, reverse dual]
+\label{thm:mp34dual}
+$\widetilde S_{mk} = (-1)^{m+k}\, S_{mk}$: the signed sum of
+Theorem~\ref{thm:mp34rev} with the prefactor $(-1)^k$ replaced by
+$(-1)^m$ (for $m \le k$), the weights $W'$ unchanged.
+\end{theorem}
+\end{tcolorbox}
+
+%% ===================================================================
+\newpage
+\section{Automata}
+%% ===================================================================
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10, boxrule=0pt, sharp corners]
+
+Each generating function below is a composition: an algebraic
+prefactor times $g(\zeta(w,u))$, where $g$ is the kernel of the
+family and $\zeta$ an inner function. Extracting the coefficient of
+$w^m u^k$ applies $\partial_w$ $m$ times and $\partial_u$ $k$ times,
+then evaluates at $w = u = 0$.
+
+Watch the derivatives land on $g(\zeta)$ one at a time:
+\[
+  \partial_1\, g(\zeta) = g'(\zeta)\,\partial_1\zeta, \qquad
+  \partial_2 \partial_1\, g(\zeta)
+  = g''(\zeta)\,\partial_2\zeta\,\partial_1\zeta
+  + g'(\zeta)\,\partial_2\partial_1\zeta .
+\]
+At each step the new derivative either hits $g$ again, opening a new
+inner factor --- a new \emph{block} --- or deepens an existing one.
+Iterating, the terms are indexed by the set partitions $\pi$ of the
+$m+k$ derivative slots (Fa\`a di Bruno):
+\[
+  \partial^{\,m+k} g(\zeta)
+  = \sum_{\pi}\; g^{(|\pi|)}(\zeta) \prod_{B \in \pi} \partial_B\, \zeta .
+\]
+Each term factors in two ways. For each block $B$ the factor
+$\partial_B\, \zeta$ is a mixed partial of the \emph{inner} function
+at the base point --- a rational constant, essentially a Taylor
+coefficient of $\zeta$. So the shape of the partition --- which
+slots are grouped with which --- only multiplies the term by a
+rational dressing. The outer function is differentiated once per
+block, giving $g^{(j)}$ with $j = |\pi|$, and $g^{(j)}$ is what the
+automaton computes. Of all the information in $\pi$ the automaton
+therefore sees only the single number $j$: two partitions with the
+same number of blocks feed it identically, differing only in their
+rational dressing.
+
+The walks compute $g^{(j)}$.
+
+When the kernel satisfies a linear ODE
+of order $r$, its derivatives close on $r$ states, and each
+application of $d/dz$ is an $r \times r$ transfer matrix; expanding
+the $j$-fold matrix product over intermediate states is a sum over
+walks of length $j$ in the $r$-state automaton, one step per block,
+each step weighted by an entry of the transfer matrix.
+
+\medskip
+Two refinements: derivatives may also land on the algebraic
+prefactor, distributed by the Leibniz rule before the partition is
+formed; and the matrix entries are $z$-dependent, so
+repeated differentiation also dresses the walk steps with their
+derivatives. Both contribute rational factors.
+
+\subsubsection*{A toy example}
+
+Take the Meixner--Pollaczek entry $J_{11}$: two derivative slots on
+\[
+  G = \frac{\sqrt2\, h_0\; g(\zeta)}{\sqrt{(1-iw)(1-iu)}},
+  \qquad g(z) = e^{z/2} K_0(z/2), \quad
+  \zeta = \varphi(w)\,\varphi(u).
+\]
+At the base point $w = u = 0$: $\zeta = 1$ and
+\[
+  \partial_w \zeta = \partial_u \zeta = 2i, \qquad
+  \partial_w \partial_u \zeta = -4,
+\]
+while a slot landing on the prefactor contributes $i/2$. The walk
+states carry the values $\sqrt2\, e^{\zeta/2} K_0(\zeta/2) = A$ and
+$\sqrt2\, e^{\zeta/2} K_1(\zeta/2) = B$ at $\zeta = 1$. Each
+$d/d\zeta$ steps $K_0 \to K_0$ with weight $\tfrac12$ (the
+exponential differentiating) or $K_0 \to K_1$ with weight
+$-\tfrac12$; from $K_1$, to $K_0$ with weight $-\tfrac12$ or the
+self-loop with weight $\tfrac12 - 1/\zeta = -\tfrac12$ --- the
+automaton of the next subsection, dressed by the exponential and
+the chain-rule halves. In units of $h_0$:
+\begin{center}
+\begin{tabular}{llll}
+slots & blocks & walk & contributes \\
+\hline
+both on prefactor & --- & empty walk & $-\tfrac14\, A$ \\
+one on $g$ ($\times 2$) & $\{w\}$ or $\{u\}$ & $K_0 \to K_0$ & $-A$ \\
+ & & $K_0 \to K_1$ & $+B$ \\
+both on $g$, split & $\{w\}\{u\}$ & $K_0 \to K_0 \to K_0$,\; $K_0 \to K_1 \to K_0$ & $-2A$ \\
+ & & $K_0 \to K_0 \to K_1$,\; $K_0 \to K_1 \to K_1$ & $0$ \\
+both on $g$, merged & $\{wu\}$ & $K_0 \to K_0$ & $-2A$ \\
+ & & $K_0 \to K_1$ & $+2B$ \\
+\end{tabular}
+\end{center}
+The split partition walks two steps with Taylor factor
+$\partial_w\zeta\,\partial_u\zeta = -4$; the merged block walks one
+step and picks up $\partial_w\partial_u\zeta = -4$ instead --- the
+Cayley transform makes the two coincide, but they weight walks of
+different lengths. Total: $3B - \tfrac{21}{4}A$, i.e.\
+$J_{11} = h_0\,(12B - 21A)/4$ --- the entry $T_{11} = 12B - 21A$
+of the table in \S3.1.
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Meixner--Pollaczek ($\lambda = \tfrac14$): a dual pair}
+
+The unrescaled coefficients
+$J_{mk} = h_0\, T_{mk}/(2^m m!\, 2^k k!)$ have a closed generating
+function: with
+\[
+  \zeta(w,u) = \varphi(w)\,\varphi(u), \qquad
+  \varphi(t) = \frac{1+it}{1-it}
+  \quad (\text{the Cayley transform}),
+\]
+\[
+  \sum_{m,k \ge 0} J_{mk}\, w^m u^k
+  = \frac{2\pi^{3/2}\, e^{\zeta/2}\, K_0(\zeta/2)}
+         {\sqrt{(1-iw)(1-iu)}} .
+\]
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt, sharp corners]
+\begin{conjecture}[Meixner--Pollaczek $\tfrac14$, forward direction]\label{conj:mp}
+$T_{mk} \in \Z A \oplus \Z B$ for all $m, k$. No explicit
+combinatorial formula is known.
+\end{conjecture}
+\end{tcolorbox}
+
+The automaton has states $\{K_0, K_1\}$ for the kernel
+$g(z) = e^{z/2} K_0(z/2)$, with transitions given by the Bessel
+relations
+\[
+  K_0' = -K_1, \qquad K_1' = -K_0 - \frac{K_1}{z},
+\]
+evaluated at $z = \tfrac12$: a step either switches state (weight
+$-1$) or self-loops at $K_1$ (weight $-1/z = -2$). Walks start at
+$K_0$; those ending at $K_0$ contribute to the coefficient of $A$,
+those ending at $K_1$ to that of $B$.
+
+The same automaton covers the other function of the pair:
+conjugating the generating function is the substitution
+$(w,u) \mapsto (-w,-u)$ --- the Cayley transform obeys
+$\varphi(-t) = \overline{\varphi(t)}$ --- which leaves the kernel,
+states and weights unchanged and only flips the sign of the
+odd-parity dressings, reproducing the duality of \S3.1.
+
+%% -------------------------------------------------------------------
+\subsection{Meixner--Pollaczek ($\lambda = \tfrac34$): a dual pair}
+
+The coefficients $J_{mk}$ have a closed generating function: with
+$\zeta$ as above,
+\[
+  \sum_{m,k \ge 0} J_{mk}\, w^m u^k
+  = \frac{\pi^2}{2}\;
+    \frac{U\!\left(\tfrac32,\,1,\,\zeta\right)}
+         {(1-iw)^{3/2}(1-iu)^{3/2}} .
+\]
+This is the $\lambda = \tfrac14$ generating function with the exponent
+$\tfrac12$ promoted to $\tfrac32$ and the Bessel kernel
+$e^{\zeta/2} K_0(\zeta/2)$ replaced by the Tricomi kernel
+$U(\tfrac32, 1, \zeta)$.
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt, sharp corners]
+\begin{conjecture}[Meixner--Pollaczek $\tfrac34$, forward direction]
+\label{conj:mp34}
+$\mathcal U_{mk} \in \Z A' \oplus \Z B'$ for all $m, k$. No explicit
+combinatorial formula is known.
+\end{conjecture}
+\end{tcolorbox}
+
+The automaton has states $\{U_0, U_1\}$ for the kernel
+$U_0 = U(\tfrac32, 1, z)$, $U_1 = U(\tfrac52, 2, z)$, with
+transitions given by the Tricomi contiguous relations
+\[
+  U_0' = -\tfrac32\, U_1, \qquad
+  U_1' = -\frac{U_0}{z} + \frac{z-1}{z}\, U_1 ,
+\]
+evaluated at $z = 1$: the step $U_0 \to U_1$ has weight $-\tfrac32$,
+the step $U_1 \to U_0$ has weight $-1$, and the self-loop on $U_1$
+has weight $0$. Walks start at $U_0$; those ending at $U_0$
+contribute to the coefficient of $A' = U_0(1)$, those ending at
+$U_1$ to that of $B' = U_1(1)$. As for $\lambda = \tfrac14$, the
+other function of the pair is covered by the same automaton via
+$(w,u) \mapsto (-w,-u)$.
+
+%% ===================================================================
+\section{The Mellin Transform and the Riemann Zeta Function}
+%% ===================================================================
+
+\mbox{}\par\vspace{-1.5\baselineskip}
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10, boxrule=0pt, sharp corners]
+The Mellin transform sends the Hermite functions to the
+Meixner--Pollaczek dual functions.
+
+The Mellin transform is the Fourier transform of the multiplicative
+group $\R_+$; on the critical line $s = \tfrac12 + 2ix$ it is
+unitary.
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}\label{thm:mellin}
+For every $n \ge 0$, with $m = \lfloor n/2 \rfloor$,
+\[
+  \mathcal M\bigl[\Phi_n(\sqrt2\,\cdot\,)\bigr]
+  \bigl(\tfrac12 + 2ix\bigr)
+  = \frac{2^{1/4}\sqrt{\pi}}{2}\; i^{m}\, F_m(x),
+\]
+where $F_m$ belongs to the $\lambda = \tfrac14$ family for $n$ even
+and to the $\lambda = \tfrac34$ family for $n$ odd.
+\end{theorem}
+\end{tcolorbox}
+
+One constant serves every $n$ and both parities. Its modulus is
+forced: $|c|^2 = \pi/2\sqrt2$ is the Plancherel constant of the
+$\sqrt2$-dilated Mellin transform, so the map is unitary, and $i^m$
+is its eigenvalue phase --- the Mellin analogue of the Fourier
+eigenvalues $(-i)^n$ of $\Phi_n$. Underneath is a polynomial
+identity: the Bump--Ng polynomials (Bump--Ng 1986) at
+$s = \tfrac12 + 2ix$ \emph{are} the Meixner--Pollaczek polynomials
+(Coffey 2013), and their real-zero property (``local RH'') is
+Meixner--Pollaczek orthogonality. The kernel
+$\G(\tfrac14+ix)\,\G(\tfrac14-ix)$ is $|\G(s/2)|^2$, the archimedean
+factor of the completed zeta function $\xi(s)$; the functional
+equation $s \mapsto 1-s$ is $x \mapsto -x$, which swaps
+$F \leftrightarrow G$ --- the dual pair \emph{is} the functional
+equation, seen locally.
+
+\medskip
+One family on $\R$, two on $\R_+$: Mellin lives on the half-line,
+where even and odd are no longer related by $x \mapsto -x$, and the
+Hermite family splits into two independent halves --- $\G(s/2)$ for
+even, $\G(\tfrac{s+1}{2})$ for odd, the archimedean factors of even
+and odd Dirichlet $L$-functions. The even Hermite functions alone
+are a complete orthogonal system on $\R_+$ (an even function is
+determined by its half), and their Mellin image is the complete
+system $\{F_n\}$; the biorthogonality
+$\int_\R F_m G_n\, dx = \delta_{mn}$ of \S3 is Hermite orthogonality
+on $\R_+$ by Plancherel. What is lost is the orthogonality between
+the halves: on the half-line $\Phi_{2m}$ and $\Phi_{2n+1}$ are no
+longer orthogonal, and their cross-pairing is the unbalanced kernel
+$\G(\tfrac14+ix)\,\G(\tfrac34-ix)$, which we treat elsewhere.
+
+\medskip
+So the two Meixner--Pollaczek families are not an extension of
+Hermite: they \emph{are} the Hermite family, viewed
+multiplicatively. The matrices of this paper change basis between a
+function and its own Mellin shadow --- and why that produces
+integers, and lattices $\Z A \oplus \Z B$, we do not understand.
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Proofs Available Upon Request}
+%% ===================================================================
+
+\end{document}

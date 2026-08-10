@@ -1,0 +1,289 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}[definition]{Remark}
+
+\theoremstyle{plain}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{observation}[definition]{Observation}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\title{\textbf{Dual Meixner--Pollaczek Functions\\
+and a Matching Matrix over a Bessel Ring}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Meixner--Pollaczek weight $W(x) = |\Gamma(\tfrac14+ix)|^2$ does not
+admit a nice square root: $\sqrt{W}$ has branch points at $x = \pm i/4$,
+and the resulting matching matrix (companion paper) has no algebraic
+structure. But $W$ factors \emph{analytically},
+$W = \Gamma(\tfrac14+ix) \cdot \Gamma(\tfrac14-ix)$, giving a
+\emph{dual pair} of Meixner--Pollaczek functions
+$F_m = \Gamma(\tfrac14+ix) \widehat{P}_m$ and
+$G_m = \Gamma(\tfrac14-ix) \widehat{P}_m$, biorthonormal under the
+bilinear pairing $\int fg\,dx$. Projecting $F_m$ onto the polynomial
+basis in $L^2(W)$ yields matching coefficients $c_{mk}$ obeying a
+phase law $c_{mk} = (-i)^{|m-k|}\,|c_{mk}|$, and --- the main
+observation --- after rescaling by $2^m m!\, 2^k k!$ every entry lies in
+the rank-two lattice $\Z A \oplus \Z B$ over the two Bessel constants
+\[
+  A = \sqrt{2e}\; K_0(\tfrac12), \qquad
+  B = \sqrt{2e}\; K_1(\tfrac12).
+\]
+The integrality lost with $\sqrt{W}$ is recovered by the dual pair,
+with two transcendentals replacing the Hermite matrix's single constant
+$\sqrt{2\pi/3}$. The integer pairs grow while the entries shrink:
+each row furnishes rational approximations to
+$K_1(\tfrac12)/K_0(\tfrac12)$.
+\end{abstract}
+
+%% ===================================================================
+\section{The Dual Pair}
+%% ===================================================================
+
+Let $P_n = P_n^{(1/4)}(\,\cdot\,; \tfrac{\pi}{2})$ be the
+Meixner--Pollaczek polynomials, orthogonal on $\R$ with respect to
+$W(x) = |\Gamma(\tfrac14+ix)|^2$, and $\widehat{P}_n = P_n/\sqrt{h_n}$
+the orthonormal family, $h_0 = \int W = \sqrt2\,\pi^{3/2}$.
+
+The Gaussian weight factors as
+$e^{-t^2} = e^{-t^2/2} \cdot e^{-t^2/2}$: two equal positive halves,
+which is why a single orthonormal basis (the Hermite functions)
+suffices there. The Meixner--Pollaczek weight refuses this splitting
+--- $\sqrt{W}$ has branch points at $\pm i/4$ --- but factors into an
+analytic function and its reflection:
+\[
+  W(x) = \Gamma(\tfrac14 + ix)\cdot\Gamma(\tfrac14 - ix).
+\]
+
+\begin{definition}
+The \emph{dual Meixner--Pollaczek functions} are
+\[
+  F_m(x) = \Gamma(\tfrac14 + ix)\, \widehat{P}_m(x),
+  \qquad
+  G_m(x) = \Gamma(\tfrac14 - ix)\, \widehat{P}_m(x).
+\]
+\end{definition}
+
+$F_m$ is meromorphic with poles only at $x = i(\tfrac14 + n)$,
+$n \in \mathbb{N}$ (upper half-plane); $G_m$ has the reflected poles.
+Under the \emph{bilinear} pairing $\langle f, g\rangle = \int_\R fg\,dx$
+(no conjugate),
+\[
+  \langle F_m, G_k \rangle
+  = \int_\R \widehat{P}_m \widehat{P}_k\, W\, dx = \delta_{mk}:
+\]
+a biorthonormal system, with each family carrying one \emph{whole}
+$\Gamma$-factor --- never a half.
+
+\begin{remark}
+$F_m = e^{i\theta(x)}\, \Phi_m$ where
+$\Phi_m = \widehat{P}_m\sqrt{W}$ is the ``obvious''
+Meixner--Pollaczek function and
+$e^{i\theta(x)} = \Gamma(\tfrac14+ix)/|\Gamma(\tfrac14+ix)|$ is a
+unimodular phase (the $\Gamma$-part of the Riemann--Siegel theta
+function). Multiplication by $e^{i\theta}$ is unitary on $L^2(\R)$, so
+$\{F_m\}$ is also orthonormal in the usual sesquilinear sense, and
+$G_m = \overline{F_m}$. By Bump--Ng, $F_m$ is (up to constants) the
+Mellin transform of the even Hermite function $\psi_{2m}$ on the
+critical line.
+\end{remark}
+
+%% ===================================================================
+\section{The Matching Coefficients}
+%% ===================================================================
+
+Projecting $F_m$ onto the polynomial basis in $L^2(W)$:
+\begin{equation}\label{eq:cmk}
+  c_{mk} = \langle F_m, \widehat{P}_k \rangle_W
+  = \int_\R \widehat{P}_m \widehat{P}_k\;
+    \Gamma(\tfrac14+ix)^2\, \Gamma(\tfrac14-ix)\, dx.
+\end{equation}
+The coefficients of $G_m$ are the complex conjugates. Three whole
+$\Gamma$-factors appear --- no branch points anywhere.
+
+\begin{proposition}[Checkerboard]
+$c_{mk} = c_{km}$, and $x \mapsto -x$ gives
+$c_{mk} = (-1)^{m+k}\, \overline{c_{mk}}$: entries with $m+k$ even are
+real, entries with $m+k$ odd are purely imaginary. There is no parity
+vanishing --- the matrix is full.
+\end{proposition}
+
+\begin{observation}[Phase law]\label{obs:phase}
+For all computed entries ($m, k \le 11$),
+\[
+  c_{mk} = (-i)^{\,|m-k|}\; |c_{mk}|.
+\]
+The phase depends only on $|m-k|$ --- an echo of the Fourier
+eigenvalues $(-i)^m$ of the Hermite functions on the Mellin side.
+\end{observation}
+
+Table~\ref{tab:numeric} gives the upper-left $10 \times 10$ corner
+(\texttt{mp\_dual\_matching.py}, 40-digit quadrature, cache
+\texttt{mp\_dual\_matching.pkl}).
+
+\begin{table}[ht]
+\centering
+\caption{$c_{mk}$ for $0 \le m, k \le 9$. Real for $m+k$ even,
+imaginary for $m+k$ odd; the phase is $(-i)^{|m-k|}$.}
+\label{tab:numeric}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{r|rrrrrrrrrr}
+\toprule
+$m \backslash k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ & $8$ & $9$ \\
+\midrule
+$0$ & $2.155$ & $-.890i$ & $-.659$ & $.504i$ & $.425$ & $-.365i$ & $-.324$ & $.291i$ & $.265$ & $-.244i$ \\
+$1$ & $-.890i$ & $.542$ & $-.226i$ & $-.301$ & $.222i$ & $.223$ & $-.190i$ & $-.182$ & $.165i$ & $.156$ \\
+$2$ & $-.659$ & $-.226i$ & $.335$ & $-.084i$ & $-.213$ & $.125i$ & $.162$ & $-.124i$ & $-.135$ & $.116i$ \\
+$3$ & $.504i$ & $-.301$ & $-.084i$ & $.235$ & $-.039i$ & $-.169$ & $.076i$ & $.133$ & $-.086i$ & $-.111$ \\
+$4$ & $.425$ & $.222i$ & $-.213$ & $-.039i$ & $.175$ & $-.024i$ & $-.139$ & $.051i$ & $.114$ & $-.062i$ \\
+$5$ & $-.365i$ & $.223$ & $.125i$ & $-.169$ & $-.024i$ & $.140$ & $-.017i$ & $-.117$ & $.037i$ & $.099$ \\
+$6$ & $-.324$ & $-.190i$ & $.162$ & $.076i$ & $-.139$ & $-.017i$ & $.118$ & $-.012i$ & $-.101$ & $.028i$ \\
+$7$ & $.291i$ & $-.182$ & $-.124i$ & $.133$ & $.051i$ & $-.117$ & $-.012i$ & $.102$ & $-.009i$ & $-.089$ \\
+$8$ & $.265$ & $.165i$ & $-.135$ & $-.086i$ & $.114$ & $.037i$ & $-.101$ & $-.009i$ & $.089$ & $-.007i$ \\
+$9$ & $-.244i$ & $.156$ & $.116i$ & $-.111$ & $-.062i$ & $.099$ & $.028i$ & $-.089$ & $-.007i$ & $.080$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ===================================================================
+\section{Closed Forms: the Bessel Ring}
+%% ===================================================================
+
+The base integral has a closed form. The three-$\Gamma$ Mellin--Barnes
+integral evaluates in terms of Tricomi's confluent hypergeometric
+function,
+\[
+  \int_\R \Gamma(a+ix)\Gamma(b+ix)\Gamma(c-ix)\, dx
+  = 2\pi\, \Gamma(a+c)\Gamma(b+c)\; U(a+c,\, a-b+1,\, 1),
+\]
+and $U(\tfrac12, 1, z) = e^{z/2} K_0(z/2)/\sqrt{\pi}$ gives, at
+$a = b = c = \tfrac14$,
+\[
+  \int_\R \Gamma(\tfrac14+ix)^2\,\Gamma(\tfrac14-ix)\, dx
+  = 2\pi^{3/2} \sqrt{e}\; K_0(\tfrac12)
+  = 16.97348192607767\ldots
+\]
+(verified to 20 digits). Dividing by $h_0 = \sqrt2\,\pi^{3/2}$:
+\[
+  c_{00} = \sqrt{2e}\; K_0(\tfrac12).
+\]
+
+Since $(a+ix)\Gamma(a+ix) = \Gamma(a+1+ix)$, every polynomial moment
+of the kernel reduces to three-$\Gamma$ integrals with
+integer-shifted parameters, hence to \emph{contiguous} $U$-values ---
+all expressible over the two generators $U(\tfrac12,1,1)$ and
+$U(\tfrac32,1,1)$, i.e.\ over
+\[
+  A = \sqrt{2e}\, K_0(\tfrac12) = 2.155416\ldots, \qquad
+  B = \sqrt{2e}\, K_1(\tfrac12) = 3.862231\ldots
+\]
+
+\begin{observation}[Integrality]\label{obs:integrality}
+Define the rescaled raw entries
+\[
+  T_{mk} = \frac{2^m m!\; 2^k k!}{h_0}
+  \int_\R P_m P_k\, \Gamma(\tfrac14+ix)^2\,\Gamma(\tfrac14-ix)\, dx.
+\]
+Then (dropping the factor $i$ when $m+k$ is odd) every computed entry
+satisfies
+\[
+  T_{mk} \in \Z A \oplus \Z B,
+\]
+confirmed by PSLQ at 40 digits for all $m \le 3$, $k \le 5$ except
+$(3,5)$, where the integer coefficients exceed the search bound.
+\end{observation}
+
+\begin{table}[ht]
+\centering
+\caption{Exact entries $T_{mk} = \mathfrak{a}_{mk} A +
+\mathfrak{b}_{mk} B$ recovered by PSLQ.}
+\label{tab:exact}
+\small
+\begin{tabular}{cl@{\qquad}cl}
+\toprule
+$(m,k)$ & $T_{mk}$ & $(m,k)$ & $T_{mk}$ \\
+\midrule
+$(0,0)$ & $A$                   & $(1,3)$ & $2575A - 1440B$ \\
+$(0,1)$ & $3A - 2B$             & $(1,4)$ & $39411A - 21978B$ \\
+$(0,2)$ & $12B - 23A$           & $(1,5)$ & $394932B - 707389A$ \\
+$(0,3)$ & $138B - 241A$         & $(2,2)$ & $2369A - 1320B$ \\
+$(0,4)$ & $3265A - 1800B$       & $(2,3)$ & $33743A - 18834B$ \\
+$(0,5)$ & $52907A - 29706B$     & $(2,4)$ & $317892B - 569719A$ \\
+$(1,1)$ & $12B - 21A$           & $(2,5)$ & $6190602B - 11092229A$ \\
+$(1,2)$ & $114B - 205A$         & $(3,3)$ & $295572B - 529549A$ \\
+        &                       & $(3,4)$ & $5399634B - 9675553A$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[Diophantine near-cancellation]
+The integer pairs grow rapidly while $T_{mk} \to 0$, so each entry is a
+near-cancellation: $\mathfrak{b}_{mk}/\mathfrak{a}_{mk} \approx -A/B$,
+i.e.\ the rows generate rational approximations to
+\[
+  \frac{B}{A} = \frac{K_1(\tfrac12)}{K_0(\tfrac12)} = 1.791825\ldots
+  \qquad \Bigl(\text{e.g. } \tfrac{52907}{29706} = 1.78103\ldots\Bigr).
+\]
+This is the Pad\'e/continued-fraction mechanism behind irrationality
+results for Bessel ratios (the Gauss continued fraction), here arising
+spontaneously from an approximation problem in $L^2(W)$.
+\end{remark}
+
+%% ===================================================================
+\section{Comparison with the Self-Dual Matrix}
+%% ===================================================================
+
+Against the $\sqrt{W}$ matching matrix of the companion paper:
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lll}
+\toprule
+ & self-dual ($\sqrt{W}$) & dual pair ($\Gamma^{+}, \Gamma^{-}$) \\
+\midrule
+$\Gamma$-count in integrals & $3/2$ (branch points) & $3$ (poles only) \\
+parity & $b_{mk} = 0$, $m+k$ odd & full matrix, real/imaginary \\
+algebraic structure & none (PSLQ negative) & $\Z A \oplus \Z B$ \\
+base constant & $20.9154\ldots$ (no closed form) & $2\pi^{3/2}\sqrt{e}\,K_0(\tfrac12)$ \\
+biorthogonal expansion & --- & $\langle F_m, G_k\rangle = \delta_{mk}$ (exact) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The decay of $|c_{0k}|$ remains slow (the pole of $F_m$ at $x = i/4$
+is still at finite distance; local log-log slope $\approx 0.7$ at
+$k = 11$), so the dual pair does not speed up $L^2$ truncation. What it
+changes is the \emph{arithmetic}: the coefficients are now exact
+elements of a rank-two Bessel lattice, computable by residue calculus
+rather than quadrature, and the biorthogonal expansion itself
+($F$ against $G$) is exact at every order.
+
+\sloppy
+In the Hermite case a single transcendental $\sqrt{2\pi/3}$ carried an
+integer matrix with a Wick matching interpretation, and the modified
+Bessel function $I_0$ appeared in the diagonal's generating function.
+Here \emph{two} transcendentals $K_0(\tfrac12)$ and $K_1(\tfrac12)$
+carry a pair of integer matrices
+$(\mathfrak{a}_{mk}, \mathfrak{b}_{mk})$.
+Open: a combinatorial law for $(\mathfrak{a}, \mathfrak{b})$ (the
+denominators $2^m m!\, 2^k k!$ and the diagonal pattern suggest a
+weighted-path model on the Jacobi matrix), a proof of the phase law
+(Observation~\ref{obs:phase}), and the exact decay exponent.
+
+\end{document}

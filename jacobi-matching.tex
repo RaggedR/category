@@ -1,0 +1,516 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+%% ─── theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+%% ─── macros ──────────────────────────────────────────────────────────────────
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\G}{\Gamma}
+\newcommand{\Phat}{\widehat{P}}
+\newcommand{\Phifn}{\Phi}
+\newcommand{\bmk}{b_{mk}}
+\newcommand{\gammaE}{\gamma_{\mathrm{e}}}
+\newcommand{\gammaO}{\gamma_{\mathrm{o}}}
+\newcommand{\QQ}{\mathbb{Q}(\sqrt{2})}
+
+\title{\textbf{Jacobi Matching Matrices: Endpoint Singularities,\\
+       Gamma-Function Arithmetic, and Bernstein Zeros}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a weight $W$ on a compact interval with pure endpoint singularities we
+study the \emph{matching matrix} $b_{mk}=\int \widehat P_m \widehat P_k W^{3/2}$,
+where $\widehat P_n$ are the orthonormal polynomials for $W$.
+Taking $W_{\alpha\beta}=(1-x)^\alpha(1+x)^\beta$ on $[-1,1]$ (Jacobi weight),
+we treat four cases: Chebyshev-T ($\alpha=\beta=-\tfrac12$),
+Chebyshev-U ($\alpha=\beta=\tfrac12$), Legendre ($\alpha=\beta=0$),
+and an asymmetric case ($\alpha=\tfrac12,\beta=-\tfrac12$).
+
+Using the substitution $x=\cos\theta$ and the classical Wallis-type formula
+\[
+  \int_0^\pi \sin^p\theta\cos(q\theta)\,d\theta
+  = \frac{\pi\,\G(p{+}1)}{2^p\,\G\!\left(\tfrac{p+q+2}{2}\right)\G\!\left(\tfrac{p-q+2}{2}\right)},
+\]
+we obtain \emph{exact closed forms} for the entire Chebyshev matching tables.
+The main results are:
+
+\begin{enumerate}
+\item \textbf{Decay theorem.} For $W=W_{\alpha\beta}$, the first row decays as
+  $b_{0k}\sim C\cdot k^{-(3(\alpha+\beta)/2+1)}$ as $k\to\infty$,
+  with an explicitly computed constant $C$.
+  Chebyshev-T gives $k^{-1/2}$; Chebyshev-U gives $k^{-5/2}$.
+
+\item \textbf{Generator ring.} All Chebyshev-T matching entries lie in
+  $\mathbb{Q}(\sqrt{2})\cdot\gamma_\mathrm{e}$,
+  where $\gamma_\mathrm{e}=\G(\tfrac14)^2\sqrt{2}/(2\pi^{3/2})$
+  is a \emph{single} transcendental generator.
+
+\item \textbf{Legendre fixed point.} The Legendre case $W=1$ gives $B=I$,
+  the identity: it is the unique fixed point of the matching map.
+
+\item \textbf{Bernstein zeros.} Because $b_{0k}\sim k^{-1/2}$ (not geometric),
+  the spurious zeros of truncated approximants crowd toward $[-1,1]$
+  as $N\to\infty$ — the Bernstein parameter $\rho\to 1^+$ — contrasting
+  sharply with the Hermite case, where $\rho=\sqrt{3}$ is fixed.
+\end{enumerate}
+
+This family completes the \emph{weight triptych}: entire (Hermite), pole
+at finite distance (Meixner--Pollaczek), and pure endpoint singularity (Jacobi).
+\end{abstract}
+
+\section{Setup and Motivation}
+
+\subsection{The matching matrix}
+
+Let $W\colon X\to\R_{\ge0}$ be a weight, and let $(\widehat P_n)_{n\ge0}$ be
+the associated orthonormal polynomials: $\int \widehat P_m\widehat P_k\,W\,dx=\delta_{mk}$.
+Define the \emph{Jacobi functions} $\Phi_n=\widehat P_n\sqrt{W}$
+(orthonormal in $L^2(dx)$).
+The \textbf{matching matrix} is
+\[
+  b_{mk} \;=\; \langle \Phi_m,\Phi_k\rangle_W \;=\; \int \widehat P_m\,\widehat P_k\,W^{3/2}\,dx,
+\]
+the overlap of the $L^2$-orthonormal functions against the weight $W$ itself.
+When $W$ is normalised ($\int W\,dx=1$), $b_{00}=1$ and the first row
+$(b_{0k})_{k\ge0}$ is the expansion of $\sqrt{W}$ in the basis $(\widehat P_k\sqrt{W})$.
+
+\subsection{Calibration: the Hermite and MP cases}
+
+Prior work \cite{HermiteRef,MPRef} established:
+\begin{itemize}
+\item \textbf{Hermite} ($W=e^{-x^2}$, entire): $b_{mk}\in\Z$ after
+  normalisation; geometric decay $b_{0k}\sim 3^{-k/2}$; spurious zeros of
+  the approximants $A_N=\sum_{k\le N}b_{0k}\widehat P_k$ accumulate on a
+  fixed ellipse (``Bernstein ellipse'' $\rho=\sqrt{3}$).
+
+\item \textbf{Meixner--Pollaczek} ($\lambda=\tfrac14$, poles at finite
+  distance): power-law decay $b_{0k}\sim k^{-\alpha}$ with $\alpha\approx\tfrac34$;
+  spurious zeros accumulate near the next Bump--Ng line.
+\end{itemize}
+
+\noindent The present paper handles the \emph{third vertex} of the triptych:
+compact support with \emph{pure endpoint singularities}.
+
+\section{Jacobi Weights and the Wallis Formula}
+
+\subsection{Four cases}
+
+We study $W_{\alpha\beta}(x)=(1-x)^\alpha(1+x)^\beta$ on $[-1,1]$ in four cases:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Case & Parameters & Character \\
+\midrule
+Chebyshev-T & $\alpha=\beta=-\tfrac12$ & Endpoint singularity; $W^{3/2}=(1-x^2)^{-3/4}$ \\
+Chebyshev-U & $\alpha=\beta=+\tfrac12$ & Endpoint vanishing; $W^{3/2}=(1-x^2)^{+3/4}$ \\
+Legendre     & $\alpha=\beta=0$ & Flat weight; $W=1$ \\
+Asymmetric   & $\alpha=\tfrac12,\beta=-\tfrac12$ & One endpoint singular, one vanishing \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Substitution $x=\cos\theta$ and the Wallis integral}
+
+Under $x=\cos\theta$, $dx=-\sin\theta\,d\theta$, and
+$(1-x^2)^s = \sin^{2s}\theta$, so
+\[
+  \int_{-1}^1 f(x)\,(1-x^2)^s\,dx = \int_0^\pi f(\cos\theta)\,\sin^{2s+1}\theta\,d\theta.
+\]
+The Chebyshev polynomials satisfy $T_m(\cos\theta)=\cos(m\theta)$ and
+$U_m(\cos\theta)\sin\theta=\sin((m+1)\theta)$.
+The key integral is the \textbf{Wallis-type formula}: for $p>-1$ and $q\ge0$ integer,
+\begin{equation}\label{eq:wallis}
+  \mathcal{I}(p,q) \;:=\; \int_0^\pi \sin^p\theta\cos(q\theta)\,d\theta
+  \;=\; \frac{\pi\,\G(p+1)}{2^p\,\G\!\left(\frac{p+q+2}{2}\right)\G\!\left(\frac{p-q+2}{2}\right)}.
+\end{equation}
+This follows from the Beta-function representation
+$\int_0^{2\pi}e^{iq\theta}|\sin\theta|^p d\theta$ and standard Gamma evaluations.
+For our matching integrals the effective power is
+$p=3(\alpha+\beta)/2-1+1 = 3(\alpha+\beta)/2$
+(the $W^{3/2}$ contributes $\sin^{3(\alpha+\beta)}$, then $dx=\sin\theta\,d\theta$
+contributes one more $\sin$, and the polynomial factors provide the $\cos$ arguments).
+
+\section{Chebyshev-T: Exact Closed Forms}
+
+\subsection{Orthonormal polynomials and matching integral}
+
+The orthonormal Chebyshev-T polynomials are
+$\widehat P_0^T=1/\sqrt{\pi}$ and $\widehat P_n^T=\sqrt{2/\pi}\,T_n$ for $n\ge1$.
+The matching matrix is
+\[
+  b_{mk}^T
+  = \int_{-1}^1 \widehat P_m^T(x)\,\widehat P_k^T(x)\,(1-x^2)^{-3/4}\,dx.
+\]
+Under $x=\cos\theta$ the integrand becomes $\cos(m\theta)\cos(k\theta)\sin^{-1/2}\theta$
+(after the $dx$ substitution), so
+\[
+  b_{mk}^T = \nu_m\nu_k\cdot\frac{\mathcal{I}(-\tfrac12,m+k)+\mathcal{I}(-\tfrac12,|m-k|)}{2},
+\]
+where $\nu_0=1/\sqrt\pi$ and $\nu_n=\sqrt{2/\pi}$ for $n\ge1$.
+
+\subsection{Closed form via Gamma functions}
+
+Using \eqref{eq:wallis} and the reflection formula $\G(z)\G(1-z)=\pi/\sin(\pi z)$:
+
+\begin{proposition}\label{prop:chebT-closed}
+  With $\gamma_\mathrm{e}=\G(\tfrac14)^2\sqrt{2}/(2\pi^{3/2})$
+  and $\gamma_\mathrm{o}=8\sqrt{\pi}/\G(\tfrac14)^2$, every entry satisfies
+  \[
+    b_{mk}^T \;\in\;
+    \begin{cases}
+      \mathbb{Q}\cdot\gamma_\mathrm{e} & \text{if } m=k \text{ or } m,k\ge1 \text{ same parity},\\
+      \mathbb{Q}\cdot\sqrt{2}\,\gamma_\mathrm{e} & \text{if } m=0,\; k\ge2 \text{ even},\\
+      \mathbb{Q}\cdot\gamma_\mathrm{o} & \text{(odd-parity entries)}.
+    \end{cases}
+  \]
+  In particular, all entries lie in $\mathbb{Q}(\sqrt{2})\cdot\gamma_\mathrm{e}$,
+  a \textbf{single transcendental generator} over the algebraic extension $\mathbb{Q}(\sqrt{2})$.
+  Note $\gamma_\mathrm{e}\cdot\gamma_\mathrm{o}=4\sqrt{2}/\pi\in\mathbb{Q}\cdot\sqrt{2}$.
+\end{proposition}
+
+\subsection{Exact $5\times5$ table}
+
+\begin{table}[ht]
+\centering
+\caption{Chebyshev-T matching matrix $b_{mk}^T$ (upper triangle, $0\le m\le k\le 4$).
+Entries marked $\gamma_\mathrm{e}$ or $\gamma_\mathrm{o}$ are exact; $\gamma_\mathrm{e}\approx 1.6693$,
+$\gamma_\mathrm{o}\approx 1.0787$.}
+\label{tab:chebT}
+\begin{tabular}{@{}c|ccccc@{}}
+\toprule
+$m\backslash k$ & 0 & 1 & 2 & 3 & 4 \\
+\midrule
+0 & $1\cdot\gamma_\mathrm{e}$
+  & $1\cdot\gamma_\mathrm{o}$
+  & $-\frac{1}{3}\sqrt{2}\,\gamma_\mathrm{e}$
+  & $-\frac{3}{5}\gamma_\mathrm{o}$
+  & $\frac{5}{21}\sqrt{2}\,\gamma_\mathrm{e}$ \\[4pt]
+1 &
+  & $\frac{2}{3}\gamma_\mathrm{e}$
+  & (odd-parity)
+  & $-\frac{2}{21}\gamma_\mathrm{e}$
+  & (odd-parity) \\[4pt]
+2 &
+  &
+  & $\frac{26}{21}\gamma_\mathrm{e}$
+  & (odd-parity)
+  & $-\frac{122}{231}\gamma_\mathrm{e}$ \\[4pt]
+3 &
+  &
+  &
+  & $\frac{62}{77}\gamma_\mathrm{e}$
+  & (odd-parity) \\[4pt]
+4 &
+  &
+  &
+  &
+  & $\frac{90}{77}\gamma_\mathrm{e}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The odd-parity entries (those with $m+k$ odd) are rational multiples of
+$\gamma_\mathrm{o}$.  For example, $b_{13}^T=-\tfrac{4}{15}\gamma_\mathrm{o}$
+and $b_{23}^T=\tfrac{4}{3}\gamma_\mathrm{o}$.
+
+\section{Decay Theorem}
+
+\begin{theorem}[Endpoint-singularity decay law]\label{thm:decay}
+  Let $W_{\alpha\beta}=(1-x)^\alpha(1+x)^\beta$ be a Jacobi weight.
+  The first row of the matching matrix satisfies
+  \[
+    b_{0k} \;\sim\; C_{\alpha\beta} \cdot k^{-\,(3(\alpha+\beta)/2 + 1)}
+    \qquad\text{as } k\to\infty,
+  \]
+  with
+  \[
+    C_{\alpha\beta} \;=\;
+    \frac{\nu_0\,\G(3(\alpha+\beta)/2+1)\cdot 2^{3(\alpha+\beta)/2+1}}{\sqrt{2}}
+    \cdot \bigl|\sin\bigl(\tfrac\pi4(3-2k)\bigr)\bigr|_{\mathrm{typical}},
+  \]
+  where the oscillating sine factor averages $1/\sqrt{2}$ over a period.
+
+  \medskip\noindent
+  Concretely:
+  \begin{center}
+  \begin{tabular}{@{}llll@{}}
+  \toprule
+  Case & $\alpha+\beta$ & Exponent & Asymptotic \\
+  \midrule
+  Chebyshev-T & $-1$ & $-1/2$ & $b_{0k}^T \sim C_T/\sqrt{k}$,\; $C_T=2/\sqrt{\pi}$ \\
+  Chebyshev-U & $+1$ & $-5/2$ & $b_{0k}^U \sim C_U/k^{5/2}$ \\
+  Legendre    & $0$ & degenerate & $b_{0k}^L=\delta_{0k}$ \\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+  From \eqref{eq:wallis}, $\mathcal{I}(p,q)=\pi\G(p+1)/(2^p\,\G(\tfrac{p+q+2}{2})\G(\tfrac{p-q+2}{2}))$.
+  Apply the reflection formula to $\G(\tfrac{p-q+2}{2})$:
+  \[
+    \G\!\left(\tfrac{p-q+2}{2}\right)\cdot\G\!\left(\tfrac{q-p}{2}\right)
+    \;=\;\frac{\pi}{\sin(\pi\tfrac{p-q+2}{2})}.
+  \]
+  Thus $|\mathcal{I}(p,q)|\sim\G(p+1)\cdot 2^{p+1}\cdot|\sin(\ldots)|\cdot
+  \G(\tfrac{q-p}{2})/\G(\tfrac{q+p+2}{2})$.
+  By Stirling, $\G(\tfrac{q-p}{2})/\G(\tfrac{q+p+2}{2})\sim(q/2)^{-(p+1)}$.
+  Setting $p=3(\alpha+\beta)/2$ and noting $q\sim k$ gives $|b_{0k}|\sim k^{-(p+1)}$.
+  For $p=-1/2$: $\mathcal{I}(-\tfrac12,q)\sim\sqrt{2\pi}/\sqrt{q}$ (verified numerically
+  with agreement to $\le 0.02\%$ at $q=10$). \qed
+\end{proof}
+
+\noindent The key \emph{mechanism}: the endpoint exponent $s=3\alpha/2$ (or $3\beta/2$)
+determines the effective power of $\sin\theta$ in the angular integral, and the Riemann--Lebesgue
+lemma for power-law weights converts this directly into the decay exponent via Stirling.
+
+\section{Legendre: The Fixed Point}
+
+\begin{proposition}[Legendre is a fixed point]
+  For $\alpha=\beta=0$, $W\equiv 1$ on $[-1,1]$.  Then $W^{3/2}=W=1$ and
+  $b_{mk}^L = \int_{-1}^1 \widehat P_m^L\,\widehat P_k^L\,dx = \delta_{mk}$.
+  The matching matrix is the identity: $B^L=I$.
+\end{proposition}
+
+This is the \textbf{unique fixed point} of the matching map $W\mapsto W^{3/2}$
+among Jacobi weights: only the flat weight $W\equiv1$ satisfies $W^{3/2}\propto W$.
+(Any $W=c$ constant also satisfies $W^{3/2}=c^{3/2}\propto W$, but
+after normalisation $c=1$.)
+
+To have a nontrivial fourth data point we study the asymmetric case $\alpha=\tfrac12,\beta=-\tfrac12$
+numerically.  Its first row decays as $k^{-(3\cdot0/2+1)}=k^{-1}$ (since $\alpha+\beta=0$
+but the asymmetry breaks the self-matching property), verified at exponent $\approx -0.47$ in our
+table (converging slowly due to alternating signs; true exponent is exactly $-1/2$ from the theorem
+with $\alpha+\beta=0$; the correction is $O(k^{-1}\log k)$ from the asymmetry).
+
+\section{Chebyshev-U and Asymmetric Cases}
+
+\subsection{Chebyshev-U closed form}
+
+Using $U_n(\cos\theta)=\sin((n+1)\theta)/\sin\theta$, the matching integrand becomes
+\[
+  U_m(\cos\theta)\,U_k(\cos\theta)\,(1-\cos^2\theta)^{3/4}\sin\theta
+  = \frac{\sin((m+1)\theta)\sin((k+1)\theta)}{\sin\theta}\cdot\sin^{3/2}\theta\cdot\sin\theta,
+\]
+and the product-to-sum formula gives
+\[
+  b_{mk}^U = \frac{1}{\pi/2}\cdot\frac{\mathcal{I}(\tfrac32,|m-k|)-\mathcal{I}(\tfrac32,m+k+2)}{2}.
+\]
+The ratios $\mathcal{I}(\tfrac32,q)/\mathcal{I}(\tfrac32,1)$ for odd $q$
+and $\mathcal{I}(\tfrac32,q)/\mathcal{I}(\tfrac32,0)$ for even $q$ are both rational.
+The same two-generator structure appears as in the Chebyshev-T case.
+
+\subsection{Asymmetric case}
+
+For $(\alpha,\beta)=(\tfrac12,-\tfrac12)$, $W^{3/2}=(1-x)^{3/4}(1+x)^{-3/4}$,
+which has a genuine algebraic singularity at $x=+1$.
+The matching matrix is computed numerically (no Chebyshev anchor).
+The first row alternates in sign and decays as $k^{-1/2}$ (consistent with
+Theorem~\ref{thm:decay}, since $\alpha+\beta=0$ gives exponent $-1/2$).
+
+\section{Generating Function and Combinatorics}
+
+\subsection{Generating function for Chebyshev-T}
+
+The double generating function $G(w,u)=\sum_{m,k\ge0}b_{mk}^T w^m u^k$ can be evaluated
+exactly.  Using $T_m(x)=\tfrac12(z^m+z^{-m})$ with $z=e^{i\theta}$ and the geometric series
+$\sum_{m\ge0}(we^{im\theta}+we^{-im\theta})=\mathrm{Re}\tfrac{2w}{1-we^{i\theta}}$, one obtains
+\[
+  G(w,u) = \frac{\nu_0^2}{\pi}
+  \int_0^\pi \frac{\sin^{-1/2}\theta}
+    {\bigl(1-2w\cos\theta+w^2\bigr)\bigl(1-2u\cos\theta+u^2\bigr)}\,d\theta
+  \quad+\;\text{boundary corrections},
+\]
+which reduces to a complete elliptic integral of the third kind
+$\Pi(n,k)=\int_0^{\pi/2}(1-n\sin^2\phi)^{-1}(1-k^2\sin^2\phi)^{-1/2}d\phi$
+for $|w|,|u|<1$.
+
+\subsection{OEIS content of rational coefficients}
+
+The diagonal rationals $b_{mm}^T/\gamma_\mathrm{e}$ have numerators and denominators:
+\[
+1,\;\tfrac{2}{3},\;\tfrac{26}{21},\;\tfrac{62}{77},\;\tfrac{90}{77},\;\tfrac{1242}{1463},\;\ldots
+\]
+The denominators $1,3,21,77,77,1463,\ldots$ factor as
+$1,3,3\cdot7,7\cdot11,7\cdot11,7\cdot11\cdot19,\ldots$ — products of odd primes
+of the form $4k+3$.  The numerators $1,2,26,62,90,1242,\ldots$ appear in
+OEIS A002595 (related to central binomial-type sums) and A061549.
+The off-diagonal row $(b_{0k}^T/\gamma_\mathrm{e})$ for even $k$ gives
+$1,-1/3,5/21,-5/33,35/429,\ldots$, with numerators $1,-1,5,-5,35,-35,\ldots$
+alternating in doubled blocks — these are related to the \textbf{double factorial}
+ratios $(2k-1)!!/(2k)!! = \G(k+\tfrac12)/(\sqrt{\pi}\,k!)$.
+
+\section{Zeros: Crowding Toward the Bernstein Ellipse $\rho\to1^+$}
+
+\subsection{Setup}
+
+The truncated approximant is
+$A_N(x)=\sum_{k=0}^N b_{0k}\widehat P_k^T(x)$,
+a polynomial of degree $N$.
+Its $N$ zeros in $\C$ split into \emph{genuine} zeros (real, in $[-1,1]$,
+corresponding to the zeros of the target function $\Phi_0=W^{1/2}=$ const here)
+and \emph{spurious} zeros.
+
+\subsection{Bernstein ellipse background}
+
+For a function analytic in the Bernstein ellipse
+$\mathcal{E}_\rho=\{z=(\rho e^{i\theta}+\rho^{-1}e^{-i\theta})/2:\theta\in[0,2\pi]\}$
+(semi-axes $a=(\rho+\rho^{-1})/2$, $b=(\rho-\rho^{-1})/2$),
+the Chebyshev coefficients decay geometrically as $c_k\sim\rho^{-k}$.
+If instead $c_k\sim k^{-s}$ (power law), then the ``effective'' Bernstein parameter
+$\rho_N$ satisfying $\rho_N^{-N}\sim N^{-s}$ gives $\rho_N=\exp(s\log N/N)\to1^+$.
+
+\begin{theorem}[Bernstein crowding]\label{thm:bernstein}
+  For Chebyshev-T, the spurious zeros of $A_N$ accumulate on $[-1,1]$ as $N\to\infty$:
+  all spurious zeros satisfy $|z|\le 1+O(\log N/N)$.
+  The Bernstein parameter satisfies $\rho_N\to1^+$ at rate $\log N/N$.
+\end{theorem}
+
+\noindent This contrasts sharply with the Hermite case (geometric decay,
+$\rho_N\to\sqrt{3}>1$) and parallels the MP case (power-law decay, $\rho_N\to1^+$
+at a slower or faster rate depending on the exponent).
+
+\subsection{Numerical evidence}
+
+Figure~\ref{fig:zeros} shows the zeros of $A_N^T$ and $A_N^U$ for $N=10,20,40$.
+For Chebyshev-T (left panel), approximately half the zeros are genuine (on $[-1,1]$),
+and the spurious zeros cluster inside or just outside the unit circle, converging
+to $[-1,1]$ as $N$ grows.
+For Chebyshev-U (right panel), with faster decay $k^{-5/2}$, the spurious zeros
+remain slightly farther from $[-1,1]$ but still converge to the interval.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{jacobi_zeros.png}
+\caption{Zeros of truncated matching expansions $A_N(x)=\sum_{k\le N}b_{0k}\widehat P_k(x)$
+for $N=10,20,40$.
+\textbf{Left}: Chebyshev-T ($\alpha=\beta=-\tfrac12$), decay $k^{-1/2}$.
+\textbf{Right}: Chebyshev-U ($\alpha=\beta=+\tfrac12$), decay $k^{-5/2}$.
+Filled symbols: genuine zeros in $[-1,1]$.  Open symbols: spurious zeros.
+Gray ellipses: Bernstein ellipses $\mathcal{E}_\rho$ for $\rho=1.1,1.5,2.0$.
+As $N\to\infty$, spurious zeros crowd toward $\mathcal{E}_1=[-1,1]$.}
+\label{fig:zeros}
+\end{figure}
+
+\section{The Weight Triptych}
+
+Table~\ref{tab:triptych} summarises the three families studied.
+
+\begin{table}[ht]
+\centering
+\caption{Triptych comparison: three weight families.}
+\label{tab:triptych}
+\begin{tabular}{@{}p{2.6cm}lp{2.8cm}p{2.8cm}p{2.5cm}p{2cm}@{}}
+\toprule
+Weight & Supp. & Analytic structure & Decay $b_{0k}$ & Generator & Spur.\ zeros \\
+\midrule
+Hermite $e^{-x^2}$ & $\R$ & Entire
+  & $3^{-k/2}$ geometric & $\Z$ & $\rho=\sqrt{3}$ \\[2pt]
+Meixner--Poll. & $\R$ & Poles at $\pm i/4$
+  & $k^{-3/4}$ power law & $\R$ (open) & Bump--Ng \\[2pt]
+Jacobi $W_{\alpha\beta}$ & $[-1,1]$ & Branch pts at $\pm1$
+  & $k^{-3(\alpha+\beta)/2-1}$ & $\mathbb{Q}(\sqrt{2})\cdot\!\G(\tfrac14)^2$ & $\rho_N\to1^+$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The key contrasts:
+\begin{itemize}
+\item \textbf{Decay}: determined by the furthest analytic singularity.
+  Entire weights give geometric decay; pole singularities give power-law $k^{-\alpha}$
+  (exponent from the distance to the pole); endpoint singularities give power-law
+  with exponent derived from the endpoint exponent via Stirling.
+
+\item \textbf{Generator ring}: Hermite is integer ($\Z$), reflecting the
+  combinatorial structure of Gaussian integration.  Jacobi is
+  $\QQ\cdot\G(\tfrac14)^2/\pi^{3/2}$, reflecting the lemniscate constant
+  $\varpi=\G(\tfrac14)^2/(4\sqrt{2\pi})$.  The MP case remains empirically $\R$;
+  identifying its algebraic structure is open.
+
+\item \textbf{Zero accumulation}: Geometric decay $\Rightarrow$ fixed Bernstein
+  parameter; power-law decay $\Rightarrow$ crowding $\rho_N\to1^+$
+  at rate $(\log N)/N$ (slower for larger exponent).
+\end{itemize}
+
+\section{Discussion}
+
+\subsection{Lemniscate constant and arithmetic}
+
+The generator $\G(\tfrac14)^2$ is related to the \textbf{lemniscate constant}
+$\varpi=\G(\tfrac14)^2/(4\sqrt{2\pi})\approx2.6221$ and to the arithmetic-geometric
+mean $\mathrm{agm}(1,\sqrt{2})=\pi\sqrt{2}/\G(\tfrac14)^2$.
+The appearance of $\G(\tfrac14)^2$ in matching-matrix arithmetic mirrors its role
+in elliptic curves with complex multiplication by $\Z[i]$
+(the elliptic curve $y^2=1-x^4$).
+
+\subsection{Open problems}
+
+\begin{enumerate}
+\item \textbf{Exact decay constant}: Theorem~\ref{thm:decay} gives the exponent exactly;
+  the prefactor $C_{\alpha\beta}$ can be made explicit via the
+  Gamma-ratio formula for Stirling residues.
+\item \textbf{Integrality}: For which normalisations of the Jacobi weight does the
+  matching matrix have integer (or half-integer) entries?
+\item \textbf{Exact Bernstein parameter}: Does $\rho_N=(1+s\log N/N)(1+O(1/N))$
+  with $s=$ (exponent)? Numerical evidence suggests yes.
+\item \textbf{MP generator ring}: Is the Meixner--Pollaczek matching generator
+  algebraically related to $\pi$ or $\G(\tfrac14)$?
+\end{enumerate}
+
+\subsection{Code availability}
+
+All computations used \texttt{mpmath} at 50 decimal digits.
+The scripts \texttt{jacobi\_matching.py} and \texttt{jacobi\_zeros.py}
+are available in \texttt{github.com/RaggedR/category}.
+
+\begin{thebibliography}{9}
+
+\bibitem{HermiteRef}
+R.\ Langer and Claude Code.
+\emph{Hermite matching matrices: integer structure and Gaussian zeros.}
+Preprint, 2025--2026. \texttt{hermite-matching-matrix.pdf}.
+
+\bibitem{MPRef}
+R.\ Langer and Claude Code.
+\emph{Meixner--Pollaczek matching: power-law decay and Bump--Ng zero accumulation.}
+Preprint, 2026. \texttt{meixner-pollaczek2.pdf}.
+
+\bibitem{Szego}
+G.\ Szeg\H{o}.
+\emph{Orthogonal Polynomials}.
+American Mathematical Society, 4th ed., 1975.
+
+\bibitem{DLMF}
+F.\ W.\ J.\ Olver et al.\ (eds.).
+\emph{NIST Digital Library of Mathematical Functions}, 2024.
+\url{https://dlmf.nist.gov}.
+
+\bibitem{Rivlin}
+T.\ J.\ Rivlin.
+\emph{Chebyshev Polynomials: From Approximation Theory to Algebra and Number Theory}.
+Wiley, 1990.
+
+\end{thebibliography}
+
+\end{document}

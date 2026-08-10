@@ -1,0 +1,1232 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,cd}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Shortcuts
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\gl}{\mathfrak{gl}}
+\newcommand{\fU}{\mathfrak{U}}
+\newcommand{\fD}{\mathfrak{D}}
+\newcommand{\fL}{\mathfrak{L}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\Stab}{\operatorname{Stab}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Rep}{\mathcal{R}\mathrm{ep}}
+\newcommand{\Vect}{\mathcal{V}\!\mathit{ect}}
+\newcommand{\Kl}{\mathrm{Kl}}
+\newcommand{\EM}{\mathrm{EM}}
+\newcommand{\Sab}{\mathrm{Sab}}
+\newcommand{\Hecke}{\mathcal{H}}
+
+\title{The Mackey Formula as Monad Decomposition}
+\author{Notes}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a detailed account of the Mackey formula through two worked
+examples: $S_n$ inside $S_{n+1}$ (two double cosets, the Heisenberg
+relation) and $\GL_n(\F_q)$ inside $\GL_{n+1}(\F_q)$ ($q^2+2q-2$
+double cosets, new field-arithmetic channels). We explain the
+monad $\Ind \circ \Res$, whose Mackey decomposition recovers the
+Hecke algebra as Kleisli endomorphisms, and connect to Sabidussi
+coset graphs and Fomin's local rules.
+\end{abstract}
+
+\tableofcontents
+
+%% ====================================================================
+\section{The Mackey formula}
+\label{sec:mackey}
+%% ====================================================================
+
+\subsection{Double cosets}
+
+Let $G$ be a finite group and $H \leqslant G$ a subgroup. The set of
+\emph{double cosets} $H \backslash G / H$ partitions $G$ into disjoint
+subsets $HgH = \{hgk : h, k \in H\}$.
+
+The key geometric idea: every conjugate $gHg^{-1}$ is another copy of
+$H$ inside $G$. The double coset $HgH$ measures \emph{how this
+conjugate copy sits relative to the original}, up to the symmetry of
+$H$ itself. Two elements $g, g'$ give the same double coset if and
+only if the ``relative position'' of $gHg^{-1}$ and $H$, as seen by
+$H$, is the same.
+
+Each double coset $HgH$ determines:
+\begin{itemize}
+\item the \emph{intersection subgroup} $H \cap gHg^{-1} \leqslant H$
+  (how much the two copies overlap),
+\item the \emph{index} $[H : H \cap gHg^{-1}] = |HgH|/|H|$
+  (how ``far apart'' the copies are).
+\end{itemize}
+
+\subsection{Twisted modules}
+
+Let $M$ be a representation of $H$. For each $g \in G$, define $M_g$
+to be the vector space $M$ with the $H$-action twisted by $g$: an
+element $h \in H$ acts by
+\[
+  h \cdot_g m \;=\; (g^{-1}hg) \cdot m.
+\]
+This makes sense because $g^{-1}hg$ lies in $g^{-1}Hg \cong H$, so
+we are just composing the original action with the automorphism
+$h \mapsto g^{-1}hg$ of $H$. When $g \in H$, this is an inner
+automorphism and $M_g \cong M$.
+
+From $M_g$ we can build an $H$-module $N_g$ by restricting to the
+intersection $H \cap gHg^{-1}$ and inducing back:
+\[
+  N_g \;:=\; \Ind_{H \cap gHg^{-1}}^{H}\;
+  \Res_{H \cap gHg^{-1}}^{gHg^{-1}}\; M_g.
+\]
+
+\begin{lemma}\label{lem:Ng-well-defined}
+If $g' = h_1 g h_2$ for some $h_1, h_2 \in H$, then
+$N_{g'} \cong N_g$ as $H$-modules. So $N_g$ depends only on the
+double coset $HgH$.
+\end{lemma}
+
+\begin{proof}
+We check the two factors $h_1$ and $h_2$ separately.
+
+\medskip\noindent\textbf{Right multiplication: $g' = gh_2$.}
+Then $g'Hg'^{-1} = g(h_2 H h_2^{-1})g^{-1} = gHg^{-1}$ (since
+$h_2 \in H$ normalises $H$). So the conjugate subgroup is unchanged,
+the intersection $H \cap g'Hg'^{-1} = H \cap gHg^{-1}$ is unchanged,
+and the twisted module $M_{g'} = M_{gh_2}$ has action
+$h \cdot_{g'} m = (h_2^{-1} g^{-1} h g h_2) \cdot m
+= h_2^{-1} \cdot (h \cdot_g (h_2 \cdot m))$.
+This is $M_g$ conjugated by the action of $h_2 \in H$ on $M$, which
+gives an isomorphic module after induction.
+
+\medskip\noindent\textbf{Left multiplication: $g' = h_1 g$.}
+Then $g'Hg'^{-1} = h_1(gHg^{-1})h_1^{-1}$, and
+$H \cap g'Hg'^{-1} = H \cap h_1(gHg^{-1})h_1^{-1}
+= h_1(H \cap gHg^{-1})h_1^{-1}$ (since $h_1 \in H$). Conjugation by
+$h_1$ gives an isomorphism
+\[
+  \Ind_{H \cap gHg^{-1}}^{H}(\text{--})
+  \;\xrightarrow{\;\sim\;}\;
+  \Ind_{h_1(H \cap gHg^{-1})h_1^{-1}}^{H}(\text{--})
+\]
+(induction from conjugate subgroups gives isomorphic results), and
+$M_{h_1 g}$ corresponds to $M_g$ under this conjugation. So
+$N_{h_1 g} \cong N_g$.
+\end{proof}
+
+\subsection{The Mackey decomposition}
+
+\begin{theorem}[Mackey]\label{thm:mackey}
+Let $H \leqslant G$ and let $M$ be a representation of $H$. Then
+\begin{equation}\label{eq:mackey-KH}
+  \Res_H^G\;\Ind_H^G(M)
+  \;\cong\;
+  \bigoplus_{HgH \,\in\, H \backslash G / H} N_g
+  \;=\;
+  \bigoplus_{HgH \,\in\, H \backslash G / H}
+  \Ind_{H \cap gHg^{-1}}^{H}\;
+  \Res_{H \cap gHg^{-1}}^{gHg^{-1}}\;
+  M_g.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Recall that the induced representation is
+\[
+  \Ind_H^G(M) = k[G] \otimes_{k[H]} M,
+\]
+the tensor product of $M$ with the group algebra of $G$ over the group
+algebra of $H$. The tensor is over $k[H]$, meaning we impose
+$xh \otimes m = x \otimes h \cdot m$ for all $h \in H$. As a
+$k$-vector space, choosing one representative $x$ from each left coset
+$Hx \in H \backslash G$, we have
+\[
+  \Ind_H^G(M) = \bigoplus_{Hx \in H \backslash G} x \otimes M.
+\]
+An element $g \in G$ acts by left multiplication on the first factor:
+\begin{equation}\label{eq:G-action-on-ind}
+  g \cdot (x \otimes m) = (gx) \otimes m.
+\end{equation}
+If $gx$ lies in a different coset $Hy$, write $gx = hy$ for a unique
+$h \in H$, and then $(gx) \otimes m = hy \otimes m = y \otimes h \cdot m$
+(using the $k[H]$-tensor relation). So $g$ moves the element from the
+$Hx$-summand to the $Hgx$-summand, and the $H$-part of the coset
+change acts on $m$.
+
+\begin{example}
+$G$ acts on the set of left cosets $G/H = \{aH : a \in G\}$ by
+left multiplication: $g \cdot (aH) = (ga)H$. This is well-defined
+because $gaH = ga'H$ whenever $aH = a'H$. Linearising this action
+(taking the vector space with basis $\{e_{aH}\}$ and extending
+$g \cdot e_{aH} = e_{gaH}$ linearly) gives the \emph{permutation
+representation} $k[G/H]$. The induced representation of the trivial
+module is exactly this:
+$\Ind_H^G(\mathbf{1}_H) \cong k[G/H]$.
+\end{example}
+
+Now consider $\Res_H^G \Ind_H^G(M)$: we have the $G$-module
+$\Ind_H^G(M) = \bigoplus_{Hx \in H \backslash G} x \otimes M$,
+and we restrict the action to $H \leqslant G$. The $G$-action
+permuted the summands transitively, but $H$ only permutes them among
+themselves according to how $H$ acts on $H \backslash G$. The coset
+space $H \backslash G$ decomposes into orbits under the left
+$H$-action, and these orbits are exactly the double cosets:
+$H \backslash G = \bigsqcup_{HgH} (H \backslash HgH)$.
+Within a single double coset $HgH$, the right cosets $\{Hx : x \in HgH\}$
+form the set $H \backslash HgH$, which is in bijection with
+$H / (H \cap gHg^{-1})$ via $Hx \leftrightarrow H \cap gHg^{-1} \cdot y$
+(where $x = gy$ for appropriate $y$).
+
+So the $H$-module $\Res_H^G \Ind_H^G(M)$ decomposes as
+\[
+  \Res_H^G \Ind_H^G(M)
+  = \bigoplus_{HgH \in H \backslash G / H}
+  \underbrace{\bigoplus_{Hx \in H \backslash HgH} x \otimes M}_{
+    \text{contribution of the double coset } HgH}.
+\]
+It remains to identify each inner sum as
+$\Ind_{H \cap gHg^{-1}}^{H}\, \Res_{H \cap gHg^{-1}}^{gHg^{-1}}\,
+g \cdot M$.
+
+Fix a double coset $HgH$. Any element $x \in HgH$ can be written as
+$x = h g h'$ for some $h, h' \in H$. The right cosets of $H$ inside
+$HgH$ are $\{Hg h' : h' \in H\}$, but $Hgh_1' = Hgh_2'$ if and only
+if $h_2' (h_1')^{-1} \in g^{-1}Hg \cap H = g^{-1}(H \cap gHg^{-1})g$.
+So the right cosets are indexed by
+$(H \cap gHg^{-1}) \backslash H$ (from the right action of $H$ on $gH$).
+
+Thus the inner sum, as an $H$-module under the left action, is
+\[
+  \bigoplus_{Hx \in H \backslash HgH} x \otimes M
+  \;\cong\;
+  k[H] \otimes_{k[H \cap gHg^{-1}]} (g \otimes M),
+\]
+where $H \cap gHg^{-1}$ acts on $g \otimes M$ by
+$\gamma \cdot (g \otimes m) = g \otimes (g^{-1}\gamma g) \cdot m$
+for $\gamma \in H \cap gHg^{-1}$ (noting that $g^{-1}\gamma g \in H$).
+This is precisely
+\[
+  \Ind_{H \cap gHg^{-1}}^{H}\, \Res_{H \cap gHg^{-1}}^{gHg^{-1}}\,
+  g \cdot M. \qedhere
+\]
+\end{proof}
+
+\begin{remark}
+More generally, for two subgroups $H, K \leqslant G$, the same
+argument gives
+\[
+  \Res_K^G\;\Ind_H^G(M)
+  \;\cong\;
+  \bigoplus_{KgH \,\in\, K \backslash G / H}
+  \Ind_{K \cap gHg^{-1}}^{K}\;
+  \Res_{K \cap gHg^{-1}}^{gHg^{-1}}\;
+  g \cdot M.
+\]
+The proof is identical, decomposing $K \backslash G$ into
+$(K, H)$-double cosets instead of $(H, H)$-double cosets.
+\end{remark}
+
+Each double coset contributes one summand. The summand for $HgH$
+routes $M$ through a \emph{bottleneck}: restrict to $H \cap gHg^{-1}$
+(the overlap between the original and conjugate copies of $H$), then
+induce back. The smaller the intersection, the tighter the bottleneck,
+and the more the representation is ``reshuffled.''
+
+\begin{itemize}
+\item The \textbf{identity coset} $HeH = H$ gives intersection
+  $H \cap H = H$ (no bottleneck). Its summand is $M$ itself.
+\item Every \textbf{non-trivial coset} gives a proper subgroup
+  $H \cap gHg^{-1} \lneq H$. The representation must squeeze through
+  this smaller group and then expand back.
+\end{itemize}
+
+\begin{remark}\label{rem:G-disappears}
+Notice that $G$ barely appears on the right-hand side
+of~\eqref{eq:mackey-KH}. The sum is over the double cosets
+$H \backslash G / H$ (which depend on $G$), and the conjugation
+$g \cdot M$ uses an element $g \in G$. But every operation on
+representations---the restriction, the induction, the subgroups
+involved---takes place entirely within $H$ and its subgroups.
+The ambient group $G$ sets the \emph{stage} (determining which double
+cosets exist and which intersections arise), but does not
+\emph{act} in the decomposition. The formula reduces a question about
+$G$-representations to bookkeeping inside $H$.
+\end{remark}
+
+\subsection{The Hecke algebra}
+
+\begin{definition}\label{def:hecke}
+Let $\Hecke(G, H)$ be the space of $H$-bi-invariant functions on $G$:
+\[
+  \Hecke(G, H) = \{f : G \to k \mid f(h_1 g h_2) = f(g)
+  \;\forall\, h_1, h_2 \in H\},
+\]
+with the \emph{convolution product}
+$(f_1 * f_2)(g) = \sum_{x \in G} f_1(x)\, f_2(x^{-1}g)$.
+\end{definition}
+
+Since $H$-bi-invariant functions are constant on double cosets, the
+characteristic functions $\{e_{HgH}\}$ form a basis, so
+$\dim \Hecke(G, H) = |H \backslash G / H|$.
+
+\begin{proposition}\label{prop:hecke-algebra}
+$\Hecke(G, H)$ is a unital associative algebra under convolution.
+\end{proposition}
+
+\begin{proof}
+We must check three things.
+
+\medskip\noindent\textbf{Closure.} If $f_1, f_2$ are
+$H$-bi-invariant, then so is $f_1 * f_2$. For any $h_1, h_2 \in H$:
+\begin{align*}
+  (f_1 * f_2)(h_1 g h_2)
+  &= \sum_{x \in G} f_1(x)\, f_2(x^{-1} h_1 g h_2) \\
+  &= \sum_{x \in G} f_1(x)\, f_2(x^{-1} h_1 g)
+    \qquad\text{(right $H$-invariance of $f_2$)} \\
+  &= \sum_{y \in G} f_1(y h_1)\, f_2(y^{-1} g)
+    \qquad\text{(substituting $y = xh_1^{-1}$)} \\
+  &= \sum_{y \in G} f_1(y)\, f_2(y^{-1} g)
+    \qquad\text{(right $H$-invariance of $f_1$)} \\
+  &= (f_1 * f_2)(g).
+\end{align*}
+
+\medskip\noindent\textbf{Associativity.} This follows from
+associativity of multiplication in $G$:
+\[
+  ((f_1 * f_2) * f_3)(g)
+  = \sum_{x,y} f_1(x)\, f_2(x^{-1}y)\, f_3(y^{-1}g)
+  = (f_1 * (f_2 * f_3))(g).
+\]
+
+\medskip\noindent\textbf{Unit.} The function
+$e_H = \frac{1}{|H|}\, \mathbf{1}_H$ (the characteristic function
+of $H$, scaled by $1/|H|$) is the identity:
+$(e_H * f)(g) = \frac{1}{|H|} \sum_{h \in H} f(h^{-1}g)
+= f(g)$
+by $H$-bi-invariance of $f$.
+\end{proof}
+
+We call $\Hecke(G, H)$ the \emph{Hecke algebra} of the pair $(G, H)$.
+
+By the Frobenius--Mackey argument (Frobenius reciprocity applied
+twice):
+\begin{equation}\label{eq:hecke-end}
+  \Hecke(G, H) \cong \End_G\bigl(\Ind_H^G(\mathbf{1}_H)\bigr).
+\end{equation}
+Each basis element $e_{HgH}$ is a $G$-endomorphism of the permutation
+representation $k[G/H]$. In other words, every double coset defines an
+operator on $G/H$, and these operators form an algebra under
+composition.
+
+%% ====================================================================
+\section{Example 1: $S_n$ inside $S_{n+1}$}
+\label{sec:Sn}
+%% ====================================================================
+
+\subsection{The embedding}
+
+Embed $S_n$ into $S_{n+1}$ as the subgroup fixing the element $n{+}1$:
+\[
+  H = \Stab(n{+}1) = \{\sigma \in S_{n+1} : \sigma(n{+}1) = n{+}1\}
+  \;\cong\; S_n.
+\]
+The coset space $S_{n+1}/S_n$ has $[S_{n+1}:S_n] = n+1$ elements,
+one for each possible image of $n{+}1$: the coset $\sigma H$ consists
+of all permutations that send $n{+}1$ to $\sigma(n{+}1)$.
+
+\subsection{Conjugate copies of $S_n$}
+
+A conjugate $gHg^{-1} = g\,\Stab(n{+}1)\,g^{-1} = \Stab(g(n{+}1))$
+is the subgroup fixing $g(n{+}1)$. There are $n{+}1$ such subgroups:
+\[
+  \Stab(1),\; \Stab(2),\; \ldots,\; \Stab(n),\; \Stab(n{+}1) = H.
+\]
+All are copies of $S_n$ inside $S_{n+1}$, and they are all conjugate.
+
+\subsection{Why there are exactly 2 double cosets}
+
+From $H = \Stab(n{+}1)$'s perspective, the $n{+}1$ conjugate copies
+fall into exactly \textbf{two} classes:
+
+\begin{enumerate}
+\item $\Stab(n{+}1)$ itself: the original copy. (1 subgroup.)
+
+\item $\Stab(k)$ for $k \in \{1, \ldots, n\}$: a copy that fixes a
+  \emph{different} point. These all look the same to $H$, because $H$
+  acts transitively on $\{1, \ldots, n\}$---for any $k, k' \in
+  \{1, \ldots, n\}$, there exists $h \in H$ with $h(k) = k'$, and
+  conjugating $\Stab(k)$ by $h$ gives $\Stab(k')$. ($n$ subgroups,
+  all equivalent under $H$-conjugacy.)
+\end{enumerate}
+
+This is the $H$-absorption principle: $n{+}1$ conjugate copies, but
+$H$ can shuffle $n$ of them into each other, leaving 2 orbits.
+
+The two double cosets are:
+\begin{itemize}
+\item \textbf{Identity coset} $HeH = H$: the set of permutations
+  fixing $n{+}1$. Size $|H| = n!$.
+\item \textbf{Non-trivial coset} $H(k,\,n{+}1)H$: the set of all
+  permutations that \emph{move} $n{+}1$. Size
+  $|S_{n+1}| - |H| = (n+1)! - n! = n \cdot n!$.
+  (This is the same double coset for every $k \in \{1,\ldots,n\}$.)
+\end{itemize}
+
+\textbf{Dimension check}: $n! + n \cdot n! = n!(1 + n) = (n+1)!
+= |S_{n+1}|$. \checkmark
+
+\subsection{The intersection (the bottleneck)}
+
+For the non-trivial double coset, pick representative $g = (k,\, n{+}1)$.
+Then $gHg^{-1} = \Stab(k)$, and the intersection is:
+\[
+  H \cap gHg^{-1} = \Stab(n{+}1) \cap \Stab(k)
+  = \{\sigma \in S_{n+1} : \sigma(n{+}1) = n{+}1 \text{ and } \sigma(k) = k\}
+  \cong S_{n-1}.
+\]
+This is the subgroup that fixes \emph{both} points $n{+}1$ and $k$,
+acting on the remaining $n-1$ elements.
+
+\begin{remark}
+The intersection $S_{n-1}$ depends on which representative $k$ we
+choose, but different choices give conjugate copies of $S_{n-1}$ inside
+$S_n$, and the Mackey summand is the same up to isomorphism.
+\end{remark}
+
+\subsection{The Mackey formula for $S_n \subset S_{n+1}$}
+
+Combining the two double cosets, we get for any $S_n$-module $M$:
+\begin{equation}\label{eq:mackey-Sn}
+  \boxed{
+  \Res_{S_n}^{S_{n+1}}\;\Ind_{S_n}^{S_{n+1}}(M)
+  \;\cong\;
+  M \;\oplus\; \Ind_{S_{n-1}}^{S_n}\,\Res_{S_{n-1}}^{S_n}(M).
+  }
+\end{equation}
+
+\medskip\noindent\textbf{The identity coset} ($g = e$):
+$H \cap eHe^{-1} = H$. The bottleneck is $H$ itself---nothing is
+lost. The summand is $\Ind_H^H \Res_H^H(M) = M$. The representation
+passes through unchanged.
+
+\medskip\noindent\textbf{The non-trivial coset} ($g = (k,\, n{+}1)$):
+$H \cap gHg^{-1} = S_{n-1}$. The bottleneck is one level smaller.
+The summand routes $M$ through $S_{n-1}$:
+\[
+  M \;\xrightarrow{\;\Res\;}\;
+  \Res_{S_{n-1}}^{S_n}(M) \;\xrightarrow{\;\Ind\;}\;
+  \Ind_{S_{n-1}}^{S_n}\,\Res_{S_{n-1}}^{S_n}(M).
+\]
+The representation ``forgets'' one level of structure (restriction
+to $S_{n-1}$) and then ``relearns'' it (induction back to $S_n$),
+possibly ending up in a different irreducible component.
+
+\begin{remark}[The Heisenberg relation]\label{rem:heisenberg}
+Writing $U = \Ind_{S_n}^{S_{n+1}}$ and $D = \Res_{S_n}^{S_{n+1}}$,
+equation~\eqref{eq:mackey-Sn} says
+\[
+  DU = \mathrm{Id} + UD,
+\]
+i.e., $DU - UD = \mathrm{Id}$. This is the \emph{Heisenberg
+commutation relation}. The identity coset contributes the
+$\mathrm{Id}$ and the non-trivial coset contributes $UD$.
+
+Summing over all $n$ with generating function weights, this becomes
+the Pieri operator identity
+$\Omega^*[Xu]\,\Omega[Xv] = \frac{1}{1-uv}\,\Omega[Xv]\,\Omega^*[Xu]$,
+where the factor $\frac{1}{1-uv}$ packages the identity coset
+contributions across all levels.
+\end{remark}
+
+\subsection{What happens to an irreducible: walks on Young's lattice}
+
+Let $M = S^\mu$ be the irreducible $S_n$-module labelled by a
+partition $\mu \vdash n$. By the branching rule for the chain
+$S_n \supset S_{n-1}$:
+
+\medskip\noindent\textbf{Restriction} (remove one box):
+$\Res_{S_{n-1}}^{S_n}(S^\mu) = \bigoplus_\nu S^\nu$,
+summing over all partitions $\nu$ obtained from $\mu$ by removing
+one box (i.e., $\mu/\nu$ is a single box).
+
+\medskip\noindent\textbf{Induction} (add one box):
+$\Ind_{S_{n-1}}^{S_n}(S^\nu) = \bigoplus_\lambda S^\lambda$,
+summing over all partitions $\lambda \vdash n$ obtained from $\nu$
+by adding one box.
+
+\medskip\noindent Combining: the non-trivial Mackey summand is
+\begin{equation}\label{eq:two-step-walk}
+  \Ind_{S_{n-1}}^{S_n}\,\Res_{S_{n-1}}^{S_n}(S^\mu)
+  = \bigoplus_\nu \bigoplus_{\lambda \supset \nu} S^\lambda,
+\end{equation}
+where $\nu$ ranges over $\mu$-minus-a-box and $\lambda$ ranges over
+$\nu$-plus-a-box. This is a \textbf{two-step walk on Young's lattice}:
+down one level and back up.
+
+The complete Mackey decomposition is therefore:
+\[
+  \Res \circ \Ind(S^\mu) \;=\;
+  S^\mu \;\oplus\;
+  \bigoplus_{\substack{\nu \subset \mu \\ |\nu| = n-1}}
+  \;\bigoplus_{\substack{\lambda \supset \nu \\ |\lambda| = n}}
+  S^\lambda.
+\]
+
+\subsection{Worked example: $S_2$ inside $S_3$}
+
+Take $n = 2$, so $H = S_2$ (fixing 3) inside $G = S_3$.
+The two irreducibles of $S_2$ are $S^{(2)}$ (trivial) and
+$S^{(1,1)}$ (sign).
+
+\medskip\noindent\textbf{Case $M = S^{(2)}$}: Remove a box from
+$(2)$: the only option is $\nu = (1)$. Add a box to $(1)$: get $(2)$
+or $(1,1)$. So
+\[
+  \Res \circ \Ind(S^{(2)})
+  = S^{(2)} \oplus \bigl(S^{(2)} \oplus S^{(1,1)}\bigr)
+  = (S^{(2)})^{\oplus 2} \oplus S^{(1,1)}.
+\]
+Dimension check: $\dim = 2 + 1 = 3 = [S_3:S_2] \cdot \dim S^{(2)}
+= 3 \cdot 1$. \checkmark
+
+\medskip\noindent\textbf{Case $M = S^{(1,1)}$}: Remove a box from
+$(1,1)$: the only option is $\nu = (1)$. Add a box to $(1)$: get
+$(2)$ or $(1,1)$. So
+\[
+  \Res \circ \Ind(S^{(1,1)})
+  = S^{(1,1)} \oplus \bigl(S^{(2)} \oplus S^{(1,1)}\bigr)
+  = S^{(2)} \oplus (S^{(1,1)})^{\oplus 2}.
+\]
+Dimension check: $1 + 2 = 3$. \checkmark
+
+\begin{remark}
+In both cases, $\Res \circ \Ind(M)$ has dimension
+$[G:H] \cdot \dim M = 3 \cdot 1 = 3$. The identity coset contributes
+dimension 1 (returning $M$) and the non-trivial coset contributes
+dimension 2 (the index $[S_2 : S_1] = 2$ times $\dim M = 1$).
+\end{remark}
+
+\subsection{The general case: $S_m \times S_n$ inside $S_{m+n}$}
+
+Embed $H = S_m \times S_n$ into $G = S_{m+n}$ as the subgroup
+preserving the partition $\{1, \ldots, m\} \mid \{m{+}1, \ldots, m{+}n\}$.
+A conjugate $gHg^{-1}$ preserves a \emph{different} partition of
+$\{1, \ldots, m{+}n\}$ into blocks of size $m$ and $n$.
+
+From $H$'s perspective, what matters is: how much do the two
+partitions overlap? If the new block of size $m$ shares exactly
+$m - r$ elements with the old block of size $m$, then $r$ elements
+``crossed over.''
+
+\begin{proposition}
+The double cosets $(S_m \times S_n) \backslash S_{m+n} / (S_m \times S_n)$
+are indexed by $r = 0, 1, \ldots, \min(m,n)$, giving $\min(m,n) + 1$
+double cosets. The intersection for the double coset indexed by $r$ is
+\[
+  H \cap gHg^{-1} \;\cong\;
+  (S_{m-r} \times S_r) \times (S_r \times S_{n-r})
+  \;\cong\;
+  S_{m-r} \times S_r \times S_r \times S_{n-r},
+\]
+where $r$ elements from each block have crossed into the other.
+\end{proposition}
+
+The case $S_n \subset S_{n+1}$ is the special case $m = n$, $n = 1$
+(or rather, $H = S_n \times S_1$, but $S_1$ is trivial). Then
+$\min(n, 1) + 1 = 2$ double cosets, recovering our earlier result.
+
+%% ====================================================================
+\section{Example 2: $\GL_n(\F_q)$ and the Borel subgroup}
+\label{sec:GLn}
+%% ====================================================================
+
+The right analogue of $S_n \subset S_{n+1}$ is not
+$\GL_n(\F_q) \subset \GL_{n+1}(\F_q)$ (which has too many double
+cosets for a clean story) but rather $(\GL_n(\F_q),\, B_n(\F_q))$,
+where $B_n$ is the Borel subgroup of upper triangular matrices.
+
+\subsection{The Borel subgroup}
+
+Let $G = \GL_n(\F_q)$ and let $B = B_n(\F_q)$ be the subgroup of
+upper triangular matrices:
+\[
+  B = \left\{\begin{pmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\
+  0 & a_{22} & \cdots & a_{2n} \\
+  \vdots & & \ddots & \vdots \\
+  0 & 0 & \cdots & a_{nn} \end{pmatrix} : a_{ii} \in \F_q^*,\;
+  a_{ij} \in \F_q \text{ for } i < j\right\}.
+\]
+The order is $|B| = (q-1)^n \cdot q^{\binom{n}{2}}$.
+
+\subsection{The flag variety}
+
+$B$ is the stabiliser of the \emph{standard flag}
+\[
+  F_\bullet : \quad \{0\} \subset \langle e_1 \rangle \subset
+  \langle e_1, e_2 \rangle \subset \cdots \subset
+  \langle e_1, \ldots, e_n \rangle = \F_q^n.
+\]
+The coset space $G/B$ is the \emph{complete flag variety}: the set of
+all complete flags $\{0\} = V_0 \subset V_1 \subset \cdots \subset
+V_n = \F_q^n$ with $\dim V_i = i$.
+
+For $n = 2$: a flag is just a line in $\F_q^2$, so $G/B =
+\mathbb{P}^1(\F_q)$ with $q + 1$ points.
+
+For $n = 3$: a flag is an incident line-plane pair $(\ell, \pi)$
+with $\ell \subset \pi \subset \F_q^3$.
+
+\subsection{The Bruhat decomposition}
+
+The Weyl group of $\GL_n$ is $W = S_n$, realised as permutation
+matrices. The key structural result:
+
+\begin{theorem}[Bruhat]\label{thm:bruhat}
+$\GL_n(\F_q) = \bigsqcup_{w \in S_n} BwB$. The double cosets
+$B \backslash \GL_n / B$ are indexed by the symmetric group $S_n$.
+\end{theorem}
+
+\begin{proof}[Proof for $n = 2$]
+$W = \{e, s\}$ where
+$s = \bigl(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\bigr)$.
+Any $g = \bigl(\begin{smallmatrix} a & b \\ c & d \end{smallmatrix}\bigr)$:
+if $c = 0$ then $g \in B = BeB$; if $c \neq 0$ then $g \in BsB$
+(use row and column operations from $B$ to reduce $g$ to $s$). So
+$\GL_2 = B \sqcup BsB$.
+\end{proof}
+
+Compare with the $S_n$ case: $S_n \backslash S_{n+1} / S_n$ had
+$2$ double cosets (the point stabiliser absorbs everything). Here
+$B \backslash \GL_n / B$ has $n!$ double cosets---one per permutation.
+The Borel is ``too small'' to absorb conjugate copies, so the full
+Weyl group is visible.
+
+\subsection{The bottlenecks}
+
+For each $w \in S_n$, the intersection $B \cap wBw^{-1}$ is the
+bottleneck for the double coset $BwB$. Its size depends on $w$:
+\begin{itemize}
+\item $w = e$: $B \cap B = B$. Full overlap, no bottleneck.
+\item $w = s_i$ (simple reflection): $B \cap s_i B s_i^{-1}$ has
+  index $q$ in $B$---a thin bottleneck. The missing ``$q$ directions''
+  correspond to the $q$ lines in a local $\mathbb{P}^1$.
+\item $w = w_0$ (longest element): $B \cap w_0 B w_0^{-1} = T$
+  (the torus, diagonal matrices). The tightest bottleneck---all the
+  upper-triangular structure is lost.
+\end{itemize}
+
+In general, $[B : B \cap wBw^{-1}] = q^{\ell(w)}$ where $\ell(w)$ is
+the Bruhat length (number of simple reflections in a reduced
+expression for $w$). So longer elements have tighter bottlenecks.
+
+\subsection{The Mackey formula for $(\GL_n, B)$}
+
+Applying Theorem~\ref{thm:mackey} to the pair $(G, H) = (\GL_n, B)$:
+\begin{equation}\label{eq:mackey-GLn-B}
+  \Res_B^G\;\Ind_B^G(M)
+  \;\cong\;
+  \bigoplus_{w \in S_n}
+  \Ind_{B \cap wBw^{-1}}^{B}\;
+  \Res_{B \cap wBw^{-1}}^{wBw^{-1}}\; M_w.
+\end{equation}
+This has $n!$ summands, one per permutation. Each summand routes $M$
+through the bottleneck $B \cap wBw^{-1}$, which has codimension
+$\ell(w)$ in $B$.
+
+\subsection{The quadratic relation from $\mathbb{P}^1(\F_q)$}
+
+We now derive the Hecke algebra relations from this Mackey
+decomposition. Start with $n = 2$, where $B \backslash \GL_2 / B$
+has two elements and $\Hecke(\GL_2, B)$ is $2$-dimensional with
+basis $\{T_e, T_s\}$.
+
+The permutation representation $k[G/B] = k[\mathbb{P}^1(\F_q)]$
+has $q + 1$ basis vectors $\delta_L$, one per line $L$ in $\F_q^2$.
+The operator $T_s$ (the double coset $BsB$) sends each point to the
+sum of all other points:
+\begin{equation}\label{eq:Ts-action}
+  T_s \cdot \delta_L = \sum_{L' \neq L} \delta_{L'}.
+\end{equation}
+This is because $BsB$ consists of matrices sending
+$\langle e_1 \rangle$ to a different line, and $B$ acts transitively
+on the $q$ lines other than $\langle e_1 \rangle$.
+
+\begin{theorem}\label{thm:quadratic}
+$(T_s - q)(T_s + 1) = 0$.
+\end{theorem}
+
+\begin{proof}
+Apply $T_s$ twice to $\delta_L$:
+\[
+  T_s^2 \cdot \delta_L
+  = \sum_{L' \neq L}\; \sum_{L'' \neq L'} \delta_{L''}.
+\]
+Count how often each $L''$ appears:
+\begin{itemize}
+\item $L'' = L$: each of the $q$ choices of $L' \neq L$ contributes
+  $\delta_L$ once (since $L \neq L'$). Total: $q \cdot \delta_L$.
+\item $L'' \neq L$: among the $q$ choices of $L'$ (all $\neq L$),
+  exactly one is excluded ($L' = L''$), leaving $q - 1$.
+  Total: $(q-1) \cdot \delta_{L''}$.
+\end{itemize}
+So $T_s^2 = q \cdot T_e + (q-1) \cdot T_s$, which factors as
+$(T_s - q)(T_s + 1) = 0$.
+\end{proof}
+
+\begin{remark}
+The eigenvalues $q$ and $-1$ correspond to:
+$T_s = q$ on the trivial representation (the constant function:
+$T_s$ sends it to $q$ times itself), and $T_s = -1$ on the
+$q$-dimensional complement (functions summing to zero:
+$T_s = J - I$ acts as $-I$ on $\ker J$).
+\end{remark}
+
+\subsection{The braid relation from flags in $\F_q^3$}
+
+For $n = 3$, the generators $T_{s_1}$ and $T_{s_2}$ act on
+flags $(\ell, \pi)$ by:
+\begin{itemize}
+\item $T_{s_1}$: replace the line $\ell$ by another line in $\pi$
+  (sum over $q$ choices).
+\item $T_{s_2}$: replace the plane $\pi$ by another plane through
+  $\ell$ (sum over $q$ choices).
+\end{itemize}
+Each is a ``local $T_s$'' on a copy of $\mathbb{P}^1(\F_q)$
+(the lines in a plane, or the planes through a line), so each
+satisfies $(T_{s_i} - q)(T_{s_i} + 1) = 0$.
+
+\begin{theorem}\label{thm:braid}
+$T_{s_1} T_{s_2} T_{s_1} = T_{s_2} T_{s_1} T_{s_2}$.
+\end{theorem}
+
+\begin{proof}
+Both sides produce a sum over flags at Bruhat distance $3$ from
+$(\ell, \pi)$.
+$T_{s_1}T_{s_2}T_{s_1}$ traces the path
+$(\ell, \pi) \to (\ell', \pi) \to (\ell', \pi') \to (\ell'', \pi')$
+(change line, change plane, change line).
+$T_{s_2}T_{s_1}T_{s_2}$ traces
+$(\ell, \pi) \to (\ell, \pi') \to (\ell', \pi') \to (\ell', \pi'')$
+(change plane, change line, change plane).
+Both equal $T_{w_0}$ (the basis element for the longest element of
+$S_3$), because $s_1 s_2 s_1 = s_2 s_1 s_2 = w_0$ and both products
+are length-additive: $\ell(w_0) = 3 = 1 + 1 + 1$.
+\end{proof}
+
+\subsection{The isomorphism}
+
+\begin{definition}
+The \emph{Iwahori--Hecke algebra} $H_n(q)$ is the associative algebra
+generated by $T_1, \ldots, T_{n-1}$ subject to:
+\begin{align}
+  (T_i - q)(T_i + 1) &= 0
+  && \text{for all } i, \label{eq:IH-quad} \\
+  T_i T_{i+1} T_i &= T_{i+1} T_i T_{i+1}
+  && \text{for all } i, \label{eq:IH-braid} \\
+  T_i T_j &= T_j T_i
+  && \text{for } |i - j| > 1. \label{eq:IH-comm}
+\end{align}
+At $q = 1$: $(T_i - 1)(T_i + 1) = 0$ gives $T_i^2 = 1$, and
+$H_n(1) = \C[S_n]$.
+\end{definition}
+
+\begin{theorem}[Iwahori, 1964]\label{thm:iwahori}
+$H_n(q) \cong \Hecke(\GL_n(\F_q),\, B_n(\F_q))$,
+sending $T_i$ to the characteristic function of $B s_i B$.
+Both algebras have dimension $n!$.
+\end{theorem}
+
+\subsection{Comparison: $S_n$ versus $(\GL_n, B)$}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}p{4cm}cc@{}}
+\toprule
+& $\boldsymbol{(S_{n+1},\, S_n)}$
+& $\boldsymbol{(\GL_n(\F_q),\, B_n(\F_q))}$ \\
+\midrule
+Double cosets & $2$ & $n!$ (Bruhat) \\
+Indexed by & \{identity, non-trivial\}
+  & $S_n$ (Weyl group) \\
+Hecke algebra dim & $2$ & $n!$ \\
+Bottleneck for $w$ & $S_{n-1}$ & $B \cap wBw^{-1}$, index $q^{\ell(w)}$ \\
+Quadratic relation & $T_s^2 = 1$ (involution)
+  & $(T_s - q)(T_s + 1) = 0$ \\
+At $q = 1$ & --- & recovers $\C[S_n]$ \\
+Mackey gives & Heisenberg $DU - UD = I$
+  & Iwahori--Hecke algebra $H_n(q)$ \\
+Centralises & $\gl_N$ on $V^{\otimes n}$
+  & $U_q(\gl_N)$ on $V^{\otimes n}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The parameter $q$ counts the points of a ``local
+$\mathbb{P}^1(\F_q)$'' (lines in a plane, or planes through a line).
+The quadratic relation $(T_s - q)(T_s + 1) = 0$ encodes this
+geometry: $T_s$ has eigenvalue $q$ on the constant function and $-1$
+on its complement. As $q \to 1$, $\mathbb{P}^1$ shrinks to two
+points, $T_s$ becomes a transposition, and $H_n(q)$ degenerates to
+$\C[S_n]$.
+
+%% ====================================================================
+\section{The Hall algebra: $q$-deformed Heisenberg}
+\label{sec:hall}
+%% ====================================================================
+
+For $S_n \subset S_{n+1}$, two double cosets gave the Heisenberg
+relation $DU - UD = \mathrm{Id}$ (Remark~\ref{rem:heisenberg}). What
+replaces this for $\GL_n(\F_q)$?
+
+\subsection{Finite modules and their extensions}
+
+Let $\F_q$ be a finite field. A \emph{finite $\F_q[t]$-module} is a
+finite-dimensional $\F_q$-vector space $V$ equipped with an
+$\F_q$-linear endomorphism $T : V \to V$. Equivalently, it is a
+finitely generated $\F_q[t]$-module that is killed by some power of
+$t$ (we consider only nilpotent endomorphisms, for simplicity).
+
+By the structure theorem for modules over a PID, every such module is
+isomorphic to
+\[
+  M_\lambda = \F_q[t]/(t^{\lambda_1}) \oplus \cdots \oplus
+  \F_q[t]/(t^{\lambda_\ell}),
+\]
+for a unique partition $\lambda = (\lambda_1 \geqslant \cdots
+\geqslant \lambda_\ell)$. The partition $\lambda$ records the sizes
+of the Jordan blocks of $T$, and $|M_\lambda| = q^{|\lambda|}$.
+
+\begin{definition}\label{def:hall-number}
+For partitions $\lambda, \mu, \nu$, the \emph{Hall number}
+$g^\lambda_{\mu\nu}(q)$ is the number of submodules
+$N \subseteq M_\lambda$ such that $N \cong M_\nu$ and
+$M_\lambda / N \cong M_\mu$:
+\[
+  g^\lambda_{\mu\nu}(q) = \bigl|\{N \leqslant M_\lambda :
+  N \cong M_\nu,\; M_\lambda/N \cong M_\mu\}\bigr|.
+\]
+\end{definition}
+
+The Hall numbers count \emph{extensions}: the number of ways to
+build $M_\lambda$ as an extension of $M_\mu$ by $M_\nu$, up to the
+automorphisms already accounted for. Philip Hall (1959) showed that
+$g^\lambda_{\mu\nu}(q)$ is a polynomial in $q$ with integer
+coefficients.
+
+\begin{example}\label{ex:hall-number}
+$g^{(2)}_{(1)(1)}(q)$: how many submodules $N \cong M_{(1)} = \F_q$
+of $M_{(2)} = \F_q[t]/(t^2)$ have $M_{(2)}/N \cong M_{(1)}$? The
+module $M_{(2)}$ has underlying space $\F_q^2$ with $T$ acting by
+$T(a,b) = (b, 0)$. The only $T$-invariant subspace isomorphic to
+$\F_q$ with the correct quotient is $\ker(T) = \{(a, 0)\}$.
+So $g^{(2)}_{(1)(1)}(q) = 1$.
+
+$g^{(1,1)}_{(1)(1)}(q)$: how many submodules $N \cong \F_q$ of
+$M_{(1,1)} = \F_q \oplus \F_q$ (where $T = 0$) have quotient
+$\cong \F_q$? Any one-dimensional subspace works, and there are
+$q + 1$ of them (the lines in $\F_q^2$). But each is isomorphic to
+$\F_q$ with $T = 0$, so $g^{(1,1)}_{(1)(1)}(q) = q + 1$.
+\end{example}
+
+\subsection{Definition of the Hall algebra}
+
+\begin{definition}\label{def:hall-algebra}
+The \emph{Hall algebra} $\mathcal{A}_q$ is the $\Z$-module freely
+generated by symbols $[M_\lambda]$ for each partition $\lambda$, with
+multiplication
+\begin{equation}\label{eq:hall-mult}
+  [M_\mu] \cdot [M_\nu] =
+  \sum_\lambda g^\lambda_{\mu\nu}(q)\; [M_\lambda].
+\end{equation}
+\end{definition}
+
+\begin{proposition}
+The Hall algebra $\mathcal{A}_q$ is a unital associative algebra.
+\end{proposition}
+
+\begin{proof}
+\emph{Associativity}: $([M_\mu] \cdot [M_\nu]) \cdot [M_\rho]$ counts
+the number of chains $0 \subset N_1 \subset N_2 \subset M_\lambda$
+with $N_1 \cong M_\rho$, $N_2/N_1 \cong M_\nu$,
+$M_\lambda/N_2 \cong M_\mu$. This equals
+$[M_\mu] \cdot ([M_\nu] \cdot [M_\rho])$, which counts the same chains
+(a filtration of $M_\lambda$ with graded pieces $M_\rho, M_\nu, M_\mu$
+is the same data regardless of whether we group the first two or last
+two).
+
+\emph{Unit}: $[M_\varnothing] = [0]$, corresponding to the empty
+partition, satisfies $[0] \cdot [M_\lambda] = [M_\lambda]$ since the
+only submodule isomorphic to $M_\lambda$ of $M_\lambda$ with zero
+quotient is $M_\lambda$ itself.
+\end{proof}
+
+\subsection{The simplest case: multiplying two copies of $[M_{(1)}]$}
+
+The element $[M_{(1)}]$ corresponds to the one-dimensional module
+$\F_q$ (with $T = 0$). Computing $[M_{(1)}]^2$:
+\[
+  [M_{(1)}] \cdot [M_{(1)}]
+  = g^{(2)}_{(1)(1)}(q)\, [M_{(2)}]
+  + g^{(1,1)}_{(1)(1)}(q)\, [M_{(1,1)}].
+\]
+From Example~\ref{ex:hall-number}: $g^{(2)}_{(1)(1)} = 1$ and
+$g^{(1,1)}_{(1)(1)} = q + 1$. So
+\begin{equation}\label{eq:hall-square}
+  [M_{(1)}]^2 = [M_{(2)}] + (q+1)\,[M_{(1,1)}].
+\end{equation}
+For comparison, in the ring of symmetric functions (the $q \to \infty$
+/ $t \to 0$ limit), we have $h_1^2 = h_2 + e_2$, i.e., the
+coefficient of $e_2$ is just $1$, not $q + 1$. The factor $q + 1$
+counts the lines in $\F_q^2$---this is the finite field enrichment
+that deforms the symmetric function product.
+
+\subsection{The Hall algebra is a deformation of symmetric functions}
+
+There is an isomorphism (the \emph{characteristic map})
+\[
+  \mathcal{A}_q \;\xrightarrow{\;\sim\;}\; \Lambda \otimes_\Z
+  \Z[q],
+\]
+from the Hall algebra to the ring of symmetric functions with
+coefficients extended to $\Z[q]$, sending $[M_\lambda]$ to a
+scalar multiple of the Hall--Littlewood polynomial
+$P_\lambda(x;\, q^{-1})$. Under this isomorphism, the Hall product
+becomes a $q$-deformation of the product of symmetric functions.
+
+In particular, defining $u_n = [M_{(1^n)}]$ (the class of
+$\F_q^n$ with $T = 0$) and $e_n = [M_{(n)}]$ (the class of
+$\F_q[t]/(t^n)$), we get $q$-deformed elementary and complete
+symmetric functions.
+
+\subsection{The commutation relation}
+
+We now derive the $q$-Heisenberg relation. Define creation and
+annihilation operators on $\mathcal{A}_q$ by:
+\begin{align*}
+  U(v) &= \text{multiplication by } \sum_{n \geqslant 0} [M_{(1^n)}]\, v^n
+  \quad\text{(``add a semisimple module'')}, \\
+  D(u) &= \text{adjoint operator (with respect to the Hall pairing)}.
+\end{align*}
+The Hall pairing is $\langle [M_\mu], [M_\nu] \rangle =
+\delta_{\mu\nu}\, |\mathrm{Aut}(M_\mu)|$, where $|\mathrm{Aut}(M_\mu)|$
+is the number of automorphisms of $M_\mu$.
+
+The key computation: $D(u)\, U(v)$ counts pairs (submodule, quotient)
+while $U(v)\, D(u)$ counts the same pairs in the opposite order. The
+discrepancy between the two orderings is controlled by the number of
+automorphisms, which introduces factors of $q$.
+
+\begin{theorem}[Jing, 1991]\label{thm:HL-comm}
+The vertex operators for the Hall algebra satisfy
+\begin{equation}\label{eq:HL-comm}
+  D(u)\, U(v) = \frac{1-uv/q}{1-uv}\; U(v)\, D(u).
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+At the level of modes, the underlying Lie algebra relation is
+\[
+  [a_m, a_n^\dagger] = m\,(1 - q^{-|m|})\,\delta_{m+n,0},
+\]
+where $a_m, a_n^\dagger$ are the annihilation and creation modes.
+At $q = \infty$ (i.e., $q^{-|m|} = 0$), this is the standard
+Heisenberg relation $[a_m, a_n^\dagger] = m\,\delta_{m+n,0}$.
+
+The factor $(1 - q^{-|m|})$ arises because the automorphism group
+$\mathrm{Aut}(M_\lambda)$ has order divisible by powers of $q$: for
+instance $|\mathrm{Aut}(\F_q^n)| = |\GL_n(\F_q)| =
+\prod_{i=0}^{n-1}(q^n - q^i)$. When you commute creation past
+annihilation, the ratio of automorphism groups for the two orderings
+(submodule first vs.\ quotient first) produces the factor
+$(1 - q^{-|m|})$.
+
+Exponentiating the mode relation gives the generating function
+form~\eqref{eq:HL-comm}.
+\end{proof}
+
+\subsection{Comparison with the Heisenberg relation}
+
+Writing $t = 1/q$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}p{5cm}p{6cm}@{}}
+\toprule
+\textbf{Symmetric groups ($t = 0$)} & \textbf{Hall algebra ($t = 1/q$)} \\
+\midrule
+$D(u)\, U(v) = \frac{1}{1-uv}\, U(v)\, D(u)$
+  & $D(u)\, U(v) = \frac{1-tuv}{1-uv}\, U(v)\, D(u)$ \\
+$[a_m, a_n^\dagger] = m\,\delta_{m+n,0}$
+  & $[a_m, a_n^\dagger] = m(1 - t^{|m|})\,\delta_{m+n,0}$ \\
+Schur functions $s_\lambda$
+  & Hall--Littlewood $P_\lambda(x;\, t)$ \\
+Hall numbers $= 0$ or $1$
+  & Hall numbers $\in \Z[q]$ \\
+$|\mathrm{Aut}(M_\lambda)| = 1$
+  & $|\mathrm{Aut}(M_\lambda)| = $ polynomial in $q$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The extra factor $(1 - tuv)$ in the numerator can be traced to the
+automorphism groups of $\F_q[t]$-modules. In the symmetric group
+case ($q \to \infty$, $t \to 0$), these automorphism groups become
+trivial and the factor disappears.
+
+\subsection{Limiting cases}
+
+\begin{itemize}
+\item $t = 0$ ($q \to \infty$): the factor becomes $\frac{1}{1-uv}$,
+  recovering the Heisenberg relation. The symmetric group case is the
+  ``generic'' case where the finite field structure contributes
+  nothing.
+
+\item $t = 1$ ($q = 1$, formal limit): the factor becomes
+  $\frac{1-uv}{1-uv} = 1$, so $DU = UD$ and creation and
+  annihilation commute. This is the ``maximally abelian'' limit.
+
+\item $t = 1/q$ for a prime power $q$: the actual $\GL_n(\F_q)$
+  case. The commutation factor $\frac{1-uv/q}{1-uv}$ interpolates
+  between the Heisenberg algebra and the abelian limit.
+\end{itemize}
+
+\begin{remark}
+The Hall--Littlewood polynomials $P_\lambda(x;\, t)$ interpolate
+between Schur functions ($t = 0$) and monomial symmetric functions
+($t = 1$). At $t = 1/q$, they encode the representation theory of
+$\GL_n(\F_q)$ in the same way that Schur functions encode $S_n$.
+\end{remark}
+
+%% ====================================================================
+\section{The monad and its decomposition}
+\label{sec:monad}
+%% ====================================================================
+
+\subsection{$\Ind \circ \Res$ as a monad}
+
+For finite groups, induction and restriction participate in two
+adjunctions:
+\begin{align}
+  \Ind_H^G &\;\dashv\; \Res_H^G
+  && \text{(Frobenius reciprocity)},
+  \label{eq:frob} \\
+  \Res_H^G &\;\dashv\; \Ind_H^G
+  && \text{(since $\Ind \cong \mathrm{Coind}$ for finite groups)}.
+  \label{eq:res-left}
+\end{align}
+From adjunction~\eqref{eq:res-left}, $T = \Ind_H^G \circ \Res_H^G :
+\Rep(G) \to \Rep(G)$ is a \textbf{monad}. The Mackey formula
+decomposes this monad into a direct sum of functors, one per double
+coset.
+
+\subsection{The Hecke algebra and the monad}
+
+The Hecke algebra $\Hecke(G, H)$ (Definition~\ref{def:hecke}) has
+dimension $|H \backslash G / H|$: for $S_n \subset S_{n+1}$ this
+is $2$, for $\GL_1(\F_3) \subset \GL_2(\F_3)$ this is $13$. By
+the isomorphism $\Hecke(G,H) \cong \End_G(\Ind_H^G(\mathbf{1}_H))$
+from~\eqref{eq:hecke-end}, each basis element $e_{HgH}$ is a
+$G$-endomorphism of the permutation representation---and these are
+exactly the adjacency operators of the Sabidussi coset graphs
+$\Sab(G, H, g)$.
+
+The monad perspective explains \emph{why} the Hecke algebra has a
+multiplication: the monad $T = \Ind \circ \Res$ is composable, and
+the monad multiplication $T^2 \to T$ (applying two Ind$\circ$Res
+cycles and merging them) gives the convolution product on double
+coset operators.
+
+\subsection{Eilenberg--Moore algebras ($T$-algebras)}
+
+A $T$-algebra is a $G$-representation $V$ with a structure map
+$\alpha : T(V) = \Ind(\Res(V)) \to V$ satisfying unit and
+associativity axioms. Via the Mackey decomposition, $\alpha$
+decomposes as one projection $\alpha_{HgH}$ per double coset.
+
+For finite groups in characteristic zero, the Barr--Beck theorem gives
+$\Rep(G) \simeq T\text{-}\mathrm{Alg}$: a $G$-representation is the
+same as an $H$-representation with coherent descent data (one
+projection per double coset, satisfying compatibility conditions).
+
+\subsection{The Kleisli category}
+
+The Kleisli category $\Kl(T)$ has the same objects as $\Rep(G)$ but
+morphisms
+\[
+  \Hom_{\Kl(T)}(V, W)
+  = \Hom_G(V,\, \Ind\,\Res(W))
+  \cong \Hom_H(\Res(V),\, \Res(W)).
+\]
+A Kleisli morphism is an $H$-equivariant map between restrictions:
+$\Rep(G)$ with morphisms relaxed to $H$-equivariance.
+
+The Hecke algebra appears as the Kleisli endomorphism algebra
+of the trivial representation under the monad
+$T' = \Res \circ \Ind$ on $\Rep(H)$:
+\[
+  \End_{\Kl(T')}(\mathbf{1}_H)
+  \cong \Hom_G(\Ind(\mathbf{1}_H),\, \Ind(\mathbf{1}_H))
+  = \Hecke(G, H).
+\]
+Each double coset = one Kleisli endomorphism = one Sabidussi graph
+= one Mackey summand.
+
+%% ====================================================================
+\section{Connection to local rules and Schur--Weyl duality}
+\label{sec:local-rules}
+%% ====================================================================
+
+\subsection{The Schur--Weyl double cosets}
+
+For $G = S_{m+n}$ and $H = S_m \times S_n$, the $\min(m,n) + 1$
+double cosets (indexed by the crossing parameter $r$) control the
+Mackey decomposition of $\Ind \circ \Res$ for representations of
+the symmetric group.
+
+The Pieri operator $\Omega[Xv]$ (generating function for induction
+along $S_n \hookrightarrow S_{n+1}$) and its dual $\Omega^*[Xu]$
+satisfy
+\[
+  \Omega^*[Xu]\;\Omega[Xv]
+  = \frac{1}{1-uv}\;\Omega[Xv]\;\Omega^*[Xu].
+\]
+This is the Mackey formula for the pair $(S_{n+1},\, S_n)$, with the
+factor $\frac{1}{1-uv} = \sum_{m \geqslant 0}(uv)^m$ arising from
+the non-trivial double coset.
+
+\subsection{Local rules as Mackey steps}
+
+Fomin's local rule for growth diagrams computes this Mackey
+decomposition one cell at a time: the integer $m$ in the local rule
+$\fU_{\alpha,\beta}(m, \mu) = \lambda$ is the identity-coset
+contribution, and the partition data tracks the routing through the
+non-trivial bottleneck.
+
+\subsection{The categorical framework}
+
+Davydov--Molev~\cite{DM} define Schur--Weyl categories
+$\mathcal{C}(A_*)$ from multiplicative sequences of algebras.
+The Hecke algebra appears in two guises:
+\begin{enumerate}
+\item $\Hecke(G, H)$: the double-coset Hecke algebra (this paper).
+\item $\mathrm{H}_n(q)$: the Iwahori--Hecke algebra, which equals
+  $\Hecke(\GL_n(\F_q),\, B_n(\F_q))$ for the Borel subgroup $B_n$.
+\end{enumerate}
+The passage from $k[S_n]$ to $\mathrm{H}_n(q)$ in Davydov--Molev
+categorifies the passage from the symmetric group pair (2 double
+cosets, clean bottleneck) to the $\GL_n(\F_q)$ pair (many double
+cosets, field-arithmetic channels).
+
+%% ====================================================================
+\section{Summary}
+\label{sec:summary}
+%% ====================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}p{3.2cm}p{4.2cm}p{4.8cm}@{}}
+\toprule
+\textbf{Concept}
+  & $\boldsymbol{S_n \subset S_{n+1}}$
+  & $\boldsymbol{\GL_1(\F_q) \subset \GL_2(\F_q)}$ \\
+\midrule
+Double cosets
+  & 2 (fix same point, or different)
+  & $q^2 + 2q - 2$ (field invariants) \\
+Hecke algebra dim
+  & 2
+  & $q^2 + 2q - 2$ \\
+Bottleneck
+  & $S_{n-1}$ (one level down)
+  & trivial (maximal reshuffling) \\
+Central channels
+  & none
+  & $q - 2$ (from $Z(\GL_2)$) \\
+Mackey formula
+  & $M \oplus \Ind \Res(M)$
+  & $(q{-}1)$ copies of $M$ plus reshuffled terms \\
+Heisenberg relation
+  & $UD = I + DU$
+  & more complex commutation \\
+Sabidussi graphs
+  & 1 non-trivial graph (valency $n$)
+  & $q^2 + 2q - 3$ non-trivial graphs \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The unifying principle: double cosets count how many essentially
+different ways a conjugate copy of $H$ can sit inside $G$, up to the
+symmetry of $H$ itself. For $S_n$, $H$'s transitivity absorbs almost
+all the copies, leaving just 2 classes. For $\GL_n(\F_q)$, the field
+structure creates additional invariants ($d$, the normalised $A$-entry)
+that $H$ cannot absorb, producing polynomially many classes in $q$.
+The Mackey formula decomposes the monad $\Ind \circ \Res$ along these
+classes, the Hecke algebra records their convolution structure, and the
+local rules / Sabidussi graphs are individual channels of the
+decomposition.
+
+\begin{thebibliography}{99}
+
+\bibitem{DM}
+A.~Davydov and A.~Molev,
+\emph{A categorical approach to classical and quantum Schur--Weyl
+duality},
+preprint.
+
+\bibitem{Fomin}
+S.~Fomin,
+\emph{Schensted algorithms for dual graded graphs},
+J.~Algebraic Combin.\ \textbf{4} (1995), 5--45.
+
+\bibitem{Iwahori}
+N.~Iwahori,
+\emph{On the structure of a Hecke ring of a Chevalley group over a
+finite field},
+J.~Fac.\ Sci.\ Univ.\ Tokyo Sect.\ I \textbf{10} (1964), 215--236.
+
+\bibitem{Langer}
+R.~Langer,
+\emph{Cylindric partitions and Littlewood--Richardson coefficients},
+PhD thesis, University of Melbourne, 2012.
+
+\bibitem{Mackey}
+G.~W.~Mackey,
+\emph{On induced representations of groups},
+Amer.\ J.\ Math.\ \textbf{73} (1951), 576--592.
+
+\bibitem{Sabidussi}
+G.~Sabidussi,
+\emph{Vertex-transitive graphs},
+Monatsh.\ Math.\ \textbf{68} (1964), 426--438.
+
+\end{thebibliography}
+
+\end{document}
