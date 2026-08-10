@@ -62,7 +62,68 @@ Gaussian → ℤ; Chebyshev → quartic Pochhammers (¼)ₙ, (¾)ₙ over the
 lemniscatic period Γ(¼)²; asymmetric half-integer → dyadic Catalan/central
 binomial (ballot paths); MP → Bessel-period lattice ℤA⊕ℤB.
 
-## Tasks, in order
+## ✅ Session results 2026-08-10 — sextic test DONE, conjecture graduates (refined)
+
+Scripts + logs in repo: `jacobi_sextic.py` (exact Gram–Schmidt, 40-digit
+verification of every entry against the defining integral),
+`jacobi_sextic_analysis.py` (primitive-ℤ frame, integrality),
+`jacobi_sextic_connection.py` (the structural theorem). α = β = −5/9.
+
+1. **Sextic generator confirmed.** ν₀ = B(½,⅙) = 2^{2/3}πΓ(⅓)/Γ(⅔)²
+   (plan's evaluation checked, 40 digits). General ratio, a=(p+2)/2:
+   𝓘(p,2n)/𝓘(p,0) = (1−a)ₙ/(a)ₙ; p=−⅔ gives (⅓)ₙ/(⅔)ₙ — thirds.
+2. **Two-lattice refinement of the central conjecture.** The entry
+   integral (W^{3/2}) contributes the sextic/thirds lattice; the
+   *polynomials themselves* (weight W) contribute a second lattice at
+   eighteenths: monic Gegenbauer λ=−1/18 recurrence
+   βₙ = 9n(9n−10)/((18n−1)(18n−19)) (verified n≤8), so norms live on
+   ∏(9j−10), ∏(18j±1) classes. Chebyshev's single quartic lattice is the
+   λ=0 degeneration (Tₙ∈ℤ[x], β=¼). Matrix = (eighteenths)ᵀ(thirds)(eighteenths).
+3. **Integrality.** In the primitive-ℤ polynomial frame (PZₙ, contents =
+   sliding windows of (18j−1) primes), den(Eₘₖ) = 2^a × primes from
+   {5,11,17,23,…} = **6j−1 — a genuine sextic factorial family**, depending
+   essentially on s=(m+k)/2 only. So an s-dependent rescale gives ℤ entries
+   (same shape as Chebyshev's Q(s)); there is no clean pure-row factor.
+4. **Structural theorem (the real prize; verified ALL m,k≤8 exactly).**
+   With λ = α+½ (polys), μ = 3α/2+½ (i.e. W^{3/2} = (1−x²)^{μ−½}), the
+   classical Gegenbauer connection formula gives every entry as a finite
+   Pochhammer sum — the matching matrix is the **Gram matrix of connection
+   coefficients** C^λ → C^μ in the μ-norm:
+   ⟨πₘ,πₖ⟩_{W^{3/2}} = mfₘ mfₖ Σⱼ A_{(m−j)/2}(m) A_{(k−j)/2}(k) hⱼ^μ,
+   A_k(n) = (λ−μ)ₖ(λ)_{n−k}(n−2k+μ)/(k!(μ)_{n−k+1}),
+   hⱼ^μ/h₀^μ = (2μ)ⱼ μ/(j!(j+μ)), mfₙ = n!/(2ⁿ(λ)ₙ), and λ−μ = −α/2
+   for every symmetric Jacobi weight. Row-0 closed form:
+   q_{0,2n} = (2n)!(λ−μ)ₙ(λ)ₙμ/(2^{2n}(λ)_{2n} n!(μ)ₙ₊₁) — the (5/18)ₙ
+   factor explains the observed primes 5,23,41,59 (≡5 mod 18).
+   The Chebyshev two-term closed form ½[P(d)Q(s)/Q(d)+P(s)] should be the
+   λ→0 limit. This is a *proof mechanism*: general (α,β) follows from
+   Jacobi connection coefficients (also classical, single-sum).
+
+**New pitfall (add to the list):** sympy `nsimplify` numerically re-searches
+even exact Rationals and can return surd garbage (e.g. 621/14840 →
+225·2^{78/145}·…). Never call nsimplify on exact quantities.
+
+### Next steps for the next agent (revised order)
+
+1. **Write it up.** Extend `jacobi-matching.tex` (and/or §2.2 of
+   `matching-coefficients.tex`) with: the sextic data (rows 0–8 exist in
+   `jacobi_sextic.log`), the two-lattice statement, and the connection-Gram
+   theorem with its one-line proof (orthogonality of C^μ). Derive the
+   Chebyshev closed form as the λ→0 limit — this would *prove* the
+   currently-conjectural Chebyshev entries.
+2. **Prove general symmetric α symbolically** (sympy, symbolic α): the
+   connection-Gram identity is classical, so the content is the resulting
+   generator-ring statement: entries ∈ ℚ·ν₀ in any rational-normalized
+   frame, ν₀ = B(½, (3α+2)/2·…) — write the beta value once and check the
+   task-5 prediction for which α give CM periods (thirds ↔ α ∈ −⅓ℤ-ish
+   families; the Pochhammer steps are (−α/2)ₙ, (λ)ₙ, (μ)ₙ, (2μ)ₙ).
+3. Then original Tasks 2–4 below (Wallis-power-zero family, reverse U /
+   asymmetric, ballot-path model). For Task 3 note the reverse kernel has
+   its own μ′ = α/2+½, λ−μ′ = +α/2·(−1)… — same mechanism, sign flipped.
+4. Task 5 (general (α,β)) now has a mechanism: use Jacobi connection
+   coefficients instead of PSLQ guessing.
+
+## Tasks, in order (original — Task 1 done, see above)
 
 ### 1. The sextic test (decisive, do first)
 
