@@ -5,6 +5,8 @@
 \usepackage{booktabs}
 
 \newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}[proposition]{Theorem}
+\newtheorem{lemma}[proposition]{Lemma}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Z}{\mathbb{Z}}
@@ -133,14 +135,21 @@ to be
   B = \sqrt{2e}\; K_1(\tfrac12) = 3.862230968\ldots
 \]
 Since the $P_m$ have rational coefficients, every $J_{mk}/h_0$ lies in
-$\Q A \oplus \Q B$. Empirically the denominators are exactly
-$2^m m!\; 2^k k!$:
+$\Q A \oplus \Q B$. The denominators are exactly $2^m m!\; 2^k k!$.
+
+\begin{theorem}\label{thm:integrality}
 \begin{equation}\label{eq:T}
   T_{mk} = \frac{2^m m!\, 2^k k!}{h_0}\, J_{mk}
   \;\in\; \Z A \oplus \Z B
   \qquad (\text{$T_{mk}$ real for $m+k$ even, } i \cdot \text{real
   for $m+k$ odd}).
 \end{equation}
+\end{theorem}
+
+\noindent
+The proof is a closed combinatorial formula for the two integer
+matrices, extracted from the generating function of \S4; see
+Theorem~\ref{thm:formula}.
 
 %% ===================================================================
 \section{The Generating Function}
@@ -188,18 +197,148 @@ over pairs (set partition of the $m+k$ derivatives, path in the
 automaton with one step per block), each derivative dressed by a
 Taylor coefficient of $\zeta = \varphi(w)\varphi(u)$ at the Cayley
 transform --- the source of the powers of $2$ absorbed by the
-normalisation $2^m m!\, 2^k k!$ in~\eqref{eq:T}. A self-contained
-combinatorial formula for the pair of integer matrices remains to be
-extracted.
+normalisation $2^m m!\, 2^k k!$ in~\eqref{eq:T}. We now extract the
+self-contained formula, and with it the proof of
+Theorem~\ref{thm:integrality}.
+
+%% ===================================================================
+\subsection*{The combinatorial formula}
+%% ===================================================================
+
+The substitution that trivialised the reverse direction (\S6) also
+un-nests the forward generating function. In the rescaled variables
+$v = 2iw$, $\mu = 2iu$ set
+\[
+  \sigma = \frac{v}{1 - v/2}, \qquad \tau = \frac{\mu}{1 - \mu/2}.
+\]
+
+\begin{proposition}\label{prop:cayley}
+$\zeta = \varphi(w)\,\varphi(u) = (1+\sigma)(1+\tau)$, that is,
+$\zeta - 1 = \sigma + \tau + \sigma\tau$, and the algebraic prefactor
+of~\eqref{eq:gf} is $\bigl(\sigma'(v)\,\tau'(\mu)\bigr)^{1/4}$.
+Hence
+\[
+  \sum_{m,k \ge 0} J_{mk}\, w^m u^k
+  = 2\pi^{3/2}\, \bigl(\sigma'\tau'\bigr)^{1/4}\,
+    g\bigl((1+\sigma)(1+\tau)\bigr),
+  \qquad
+  g(\zeta) = e^{\zeta/2} K_0(\zeta/2).
+\]
+\end{proposition}
+
+\begin{proof}
+$1 + \sigma = (1+v/2)/(1-v/2) = (1+iw)/(1-iw) = \varphi(w)$, and
+$\sigma'(v) = (1-v/2)^{-2} = (1-iw)^{-2}$.
+\end{proof}
+
+This is the exact mirror of the reverse kernel of \S6, which factors
+through $\sigma = v/(1+v/2)$ as
+$e^{\sigma+\tau-\sigma\tau}$; the forward direction replaces the
+exponential by the Bessel kernel $g$ and flips the sign of the
+interaction term. The Taylor coefficients of $g$ at the base point
+$\zeta = 1$ are controlled by Kummer's equation.
+
+\begin{lemma}\label{lem:kummer}
+$g(\zeta) = \sqrt{\pi}\, U(\tfrac12, 1, \zeta)$ satisfies
+$\zeta g'' + (1-\zeta) g' - \tfrac12 g = 0$. Consequently the
+rescaled Taylor coefficients
+$u_n = 2^n \sqrt{2}\; g^{(n)}(1)$ obey the integer recurrence
+\[
+  u_{n+2} = -2n\, u_{n+1} + (4n+2)\, u_n,
+  \qquad u_0 = A, \quad u_1 = A - B,
+\]
+so that every $u_n$ lies in $\Z A \oplus \Z B$:
+\[
+  u_n = A,\; A-B,\; 2A,\; 2A - 6B,\; 12A + 24B,\; -44A - 228B,\;
+  568A + 2256B,\; \ldots
+\]
+\end{lemma}
+
+\begin{proof}
+The first claim is Kummer's equation for $U(a,b,\zeta)$ at
+$a = \tfrac12$, $b = 1$. Differentiating it $n$ times and setting
+$\zeta = 1$ gives
+$g^{(n+2)} + n\, g^{(n+1)} - (n + \tfrac12)\, g^{(n)} = 0$; the
+rescaling by $2^n$ clears the half-integer. The initial values are
+$\sqrt2\, g(1) = \sqrt{2e}\, K_0(\tfrac12) = A$ and
+$2\sqrt2\, g'(1) = \sqrt{2e}\,(K_0 - K_1)(\tfrac12) = A - B$, using
+$g' = \tfrac12 e^{\zeta/2}(K_0 - K_1)(\zeta/2)$.
+\end{proof}
+
+\begin{theorem}\label{thm:formula}
+With $L(n,c) = \binom{n-1}{c-1}\, n!/c!$ the Lah numbers and
+$(2d-1)!! = 1 \cdot 3 \cdots (2d-1)$,
+\[
+  T_{mk} = i^{\,m+k} \sum_{d_1, c_1, d_2, c_2}
+  V_m(d_1, c_1)\; V_k(d_2, c_2)
+  \sum_{j \ge 0} \binom{c_1}{j} \binom{c_2}{j}\, j!\; 2^j\;
+  u_{c_1 + c_2 - j},
+\]
+\[
+  V_n(d, c) = \binom{n}{d}\, (2d-1)!!\; L(n-d,\, c)\; 2^{\,n-d}.
+\]
+Every weight is a positive integer, so
+$T_{mk} \in \Z[i]\, A \oplus \Z[i]\, B$, and the phase $i^{m+k}$
+produces the real/imaginary checkerboard of~\eqref{eq:T}. This proves
+Theorem~\ref{thm:integrality}.
+\end{theorem}
+
+\begin{proof}
+Expand $g$ around $\zeta = 1$ in Proposition~\ref{prop:cayley} and
+apply the multinomial theorem to
+$(\sigma + \tau + \sigma\tau)^n$ with $a$ factors $\sigma$, $b$
+factors $\tau$ and $j$ factors $\sigma\tau$; write $c_1 = a + j$,
+$c_2 = b + j$, so $n = c_1 + c_2 - j$ and
+$1/(a!\, b!\, j!) = \binom{c_1}{j}\binom{c_2}{j} j! / (c_1!\, c_2!)$.
+From $\sigma^{c_1} = (2iw)^{c_1} (1-iw)^{-c_1}$,
+\[
+  [w^{m'}]\, \sigma^{c_1}
+  = 2^{c_1}\, i^{\,m'}\, \binom{m'-1}{c_1-1},
+\]
+and for the prefactor
+\[
+  2^d\, d!\; [w^d]\, (1-iw)^{-1/2}
+  = i^{\,d}\, \frac{(2d)!}{2^d\, d!}
+  = i^{\,d}\, (2d-1)!!,
+\]
+where the power of $2$ balances exactly by Legendre's formula. All
+phases combine into the single factor
+$i^{\,d_1 + m' + d_2 + k'} = i^{\,m+k}$. Splitting $m = d_1 + m'$
+against the prefactor, writing
+$m! = \binom{m}{d_1}\, d_1!\; m'!$ and
+$m'!\, \binom{m'-1}{c_1-1} / c_1! = L(m', c_1)$ yields
+$V_m(d_1, c_1)$, with $2^{m}$ distributed as
+$2^{d_1} \cdot 2^{m'}$; the surplus
+$2^{c_1 + c_2}$ from the chains against $2^{-n}$ in
+$u_n = 2^n \sqrt2\, g^{(n)}(1)$ leaves the matching weight $2^j$.
+The formula was verified against the exact expansion of the
+generating function for all $m, k \le 6$, and the expansion itself
+against $40$-digit quadrature of~\eqref{eq:J}
+(\texttt{mp\_symbolic\_lattice.py}).
+\end{proof}
+
+The comparison with \S6 is now sharp. The reverse kernel
+$e^{\sigma+\tau-\sigma\tau}$ carries all its signs in the
+combinatorial weights (defects $(-1)^d$, chains $(-1)^{\ell-1}$,
+matchings $-1$) and none in the analytic factor, which is constant;
+the forward kernel has all weights positive --- defects $(2d-1)!!$,
+chains through the Lah numbers, matchings $2^j\, j!$ --- and every
+sign of the table is carried by the Kummer sequence $u_n$ alone. One
+Gamma factor gives a one-state (exponential) kernel and the single
+generator $2\pi/e$; three Gamma factors give the two-state Bessel
+kernel and the rank-two lattice $\Z A \oplus \Z B$.
 
 %% ===================================================================
 \section{The Coefficients}
 %% ===================================================================
 
 The table lists the rescaled integrals $T_{mk}$ of~\eqref{eq:T}, with
-integer coefficients recovered by PSLQ at $40$ digits (the factor $i$
-for $m+k$ odd is dropped); $(3,5)$ exceeded the coefficient search
-bound. To recover the approximation coefficients of $F_m$: since
+integer coefficients computed exactly by symbolic expansion of the
+generating function~\eqref{eq:gf} (the factor $i$ for $m+k$ odd is
+dropped). The entries were originally recovered by PSLQ at $40$
+digits, which the exact expansion confirms; $(3,5)$, beyond the PSLQ
+coefficient search bound, is supplied by the symbolic computation. To
+recover the approximation coefficients of $F_m$: since
 $h_n = h_0 \binom{2n}{n}/4^n$, the normalisations collapse to
 \[
   c_{mk}
@@ -224,6 +363,7 @@ $(0,5)$ & $52907A - 29706B$     & $(2,4)$ & $317892B - 569719A$ \\
 $(1,1)$ & $12B - 21A$           & $(2,5)$ & $6190602B - 11092229A$ \\
 $(1,2)$ & $114B - 205A$         & $(3,3)$ & $295572B - 529549A$ \\
         &                       & $(3,4)$ & $5399634B - 9675553A$ \\
+        &                       & $(3,5)$ & $201409319A - 112403832B$ \\
 \bottomrule
 \end{tabular}
 \end{table}
