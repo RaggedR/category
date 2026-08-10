@@ -1,0 +1,266 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}{Conjecture}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\title{\textbf{A Dictionary for Matching Coefficients}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+The matching coefficients of an orthogonal-polynomial family --- the
+coefficients approximating the weighted functions $W^{1/2}\widehat{P}_m$
+by the polynomials $\widehat{P}_k$ --- have been computed for ten
+families in a series of standalone papers. Each computation, taken
+alone, deflates to a classical mechanism. What does not deflate is the
+three-column language in which the computations become entries: a
+dictionary between analysis (generating-function kernels), combinatorics
+(transfer-matrix automata) and arithmetic (generator lattices). This
+paper records the dictionary, the four claims only it can state, and the
+one family --- Wilson --- on which it makes a falsifiable prediction.
+\end{abstract}
+
+%% ===================================================================
+\section{The Dictionary}
+%% ===================================================================
+
+The Askey scheme contains almost no theorems and is among the most-used
+objects in the field. This paper is an object of the same kind.
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{analysis} & \textbf{combinatorics} & \textbf{arithmetic} \\
+\midrule
+GF kernel & automaton & generator lattice \\
+ODE order of the kernel & number of states & lattice rank \\
+Taylor coefficients $u_n$ at base point & walk weights & all signs and generators \\
+Cayley/Laguerre substitution & species chassis & universal, sign-free \\
+kernel singularity type & --- & obstruction level \\
+D-module reducibility & --- & algebraic vs.\ transcendental generators \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Four sentences can be said in this language and, so far as we know, in
+no classical one.
+
+\begin{enumerate}
+\item \emph{Rank classifies.} The Gaussian lattice has rank $1$;
+Meixner--Pollaczek has rank $2$ over Bessel (resp.\ Tricomi) values;
+continuous Hahn has rank $2$ with one \emph{algebraic} generator, the
+Jordan--H\"older filtration of its reducible D-module visible in the
+lattice; Wilson admits no finite rank at all. No classical reference
+makes this classification.
+\item \emph{The combinatorics is universal; the family chooses only
+$u_n$.} The defect--chain--matching chassis is identical across
+families; the weight enters through the prefactor exponent and the
+Taylor coefficients $u_n$ of the kernel, which carry every sign.
+Proved for MP at $\lambda=\tfrac14$ and, by changing two lines of the
+proof, at $\lambda=\tfrac34$.
+\item \emph{Degeneration is evaluation, not limit.} The monic Jacobi
+matching entries are rational functions of the parameter $\alpha$; the
+Chebyshev closed forms are their values at $\alpha=-\tfrac12$, not an
+analytic limit.
+\item \emph{Obstructions form a hierarchy.} Entire weight $\to$
+geometric decay and integrality over $\Z$; branch point at finite
+distance $\to$ power-law decay, lattice survives; Barnes factor
+$\Gamma(2ix)$ $\to$ no lattice.
+\end{enumerate}
+
+%% ===================================================================
+\section{The Chassis}
+%% ===================================================================
+
+Fix a weight $W$ on $\R$ with orthonormal polynomials $\widehat{P}_n$
+and set $\Phi_m = W^{1/2}\widehat{P}_m$ (for the Gamma-type weights, the
+analytic split $\Gamma(\lambda+ix)\widehat{P}_m$ replaces the square
+root). The \emph{forward approximation} coefficients are
+$c_{mk} = \langle \Phi_m, \widehat{P}_k\rangle_W$; the \emph{reverse
+expansion} coefficients are
+$\langle \widehat{P}_m, \widehat{P}_k \rangle_{W^{1/2}}$. Both are
+organised by a master generating function
+\[
+  \sum_{m,k} c_{mk}\, w^m u^k
+  = \text{prefactor}(w,u)\; g(\zeta), \qquad \zeta = \varphi(w)\varphi(u),
+\]
+with $\varphi$ a Cayley or Laguerre substitution. The substitution
+factors as $\zeta = (1+\sigma)(1+\tau)$ in rescaled variables, and
+extracting coefficients produces one combinatorial chassis for every
+family: defect sets from the prefactor (double-factorial weights),
+chains from $\sigma,\tau$ (Lah numbers), and a Charlier-type partial
+matching of chains. The kernel $g$ contributes only its Taylor
+coefficients at the base point $\zeta=1$.
+
+When $g$ satisfies a linear ODE of order $r$ with polynomial
+coefficients, differentiating the ODE at the base point yields an
+integer recurrence for the rescaled coefficients $u_n$, hence
+$u_n \in \Z A_1 \oplus \cdots \oplus \Z A_r$ for the $r$ initial
+values $A_i$. This is the whole arithmetic mechanism. The worked
+instance is MP at $\lambda=\tfrac14$, where
+$g = e^{\zeta/2}K_0(\zeta/2) = \sqrt{\pi}\,U(\tfrac12,1,\zeta)$ gives
+$u_{n+2} = -2n\,u_{n+1} + (4n+2)\,u_n$ with $u_0 = A$, $u_1 = A-B$
+\cite{mp14}; at $\lambda=\tfrac34$ the same two steps give
+$u'_{n+2} = -2n\,u'_{n+1} + (4n+6)\,u'_n$ over the Tricomi generators
+\cite{mp34}. Legendre's formula for the $2$-adic valuation of $n!$
+clears every denominator; the walk weights are positive integers and
+every sign of every table lives in $u_n$.
+
+%% ===================================================================
+\section{The Entries}
+%% ===================================================================
+
+One paragraph per family; proofs and tables are in the standalone
+papers.
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lllll}
+\toprule
+family & GF kernel & order & lattice / generators & status \\
+\midrule
+Hermite & $\exp(\text{quadratic})$ & 1 & $\Z$; signed bipartite matchings & proved \cite{herm} \\
+Laguerre & $2/(1+w+u-3wu)$ & 1 & $\Z$; Delannoy numbers & proved \cite{lag} \\
+Charlier & Charlier kernel & 1 & $\Z$; one-state automaton & proved \cite{char} \\
+Chebyshev--Jacobi & Wallis/Beta mass & --- & quartic classes over $\Gamma(\tfrac14)^2/\sqrt{2\pi}$ & proved \cite{jac} \\
+MP $\lambda=\tfrac14$, forward & $e^{\zeta/2}K_0(\zeta/2)$ & 2 & $\Z A \oplus \Z B$, $A,B = \sqrt{2e}\,K_{0,1}(\tfrac12)$ & proved \cite{mp14} \\
+MP $\lambda=\tfrac14$, reverse & $e^{-1/\zeta}$ & 1 & $(2\pi/e)\Z$ & proved \cite{mp14} \\
+MP $\lambda=\tfrac34$ & $U(\tfrac32,1,\zeta)$ & 2 & $\Z A' \oplus \Z B'$, $A',B' = U(\tfrac32,1,1), U(\tfrac52,2,1)$ & proved \cite{mp34} \\
+unbalanced $\Gamma_{1/4}\Gamma_{3/4}$ & first-order & 1 & single $A'' = e\,E_1(1)$ & proved \cite{unb} \\
+continuous Hahn & $\sqrt{\zeta}\;U(1,1,\cdot)$-type & 2 & $\Q\mathcal{A} \oplus \Q\mathcal{B}$, $\mathcal{A} = \sqrt{\pi}e^2E_1(2)$, $\mathcal{B} = \sqrt{\pi}$ & empirical \cite{hahn} \\
+Wilson & Barnes $\Gamma(2ix)$ & $\ge 3$? & none found to $10^{18}$ & open \cite{wil} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Three of the entries carry the dictionary's weight. The MP pair is the
+proved instance of claim~2. Continuous Hahn is the instance of the
+reducibility row, its kernel built on $e^{z}E_1(z)$, whose D-module is
+an extension of the trivial module by a Kummer module; the lattice sees
+the filtration through the algebraic generator $\sqrt{\pi}$, where the
+irreducible MP module has two transcendental generators. Chebyshev is
+the instance of claim~3, recovered from Jacobi by evaluating rational
+functions of $\alpha$ at $-\tfrac12$ \cite{jac}.
+
+The Weil explicit formula provides a remark in the same language. In
+the MP $\lambda=\tfrac14$ basis, the archimedean side compresses to the
+rank-$2$ lattice $\Q\sqrt{2\pi} \oplus \Q\sqrt{2\pi}(\gamma+\log 8\pi)$
+(proved), while the prime side shows no $\Q$-compression among $16$
+entries (empirical) --- the explicit formula's two halves are
+algebraically incommensurable in this basis \cite{weil}.
+
+%% ===================================================================
+\section{The Obstruction Hierarchy}
+%% ===================================================================
+
+The decay of $c_{0k}$ and the arithmetic degrade together, and the
+kernel's singularity type is the common cause.
+
+\begin{enumerate}
+\item \emph{Entire weight} (Hermite, Laguerre, Charlier). Geometric
+decay; integrality over $\Z$; closed combinatorial formulas.
+\item \emph{Branch point at finite distance} (MP, Hahn; the branch
+point of $\Gamma(\lambda+ix)^2\Gamma(\lambda-ix)$-type kernels at
+$i/4$). Power-law decay of the coefficients (exponent $\approx
+\tfrac34$ at $\lambda=\tfrac14$); the lattice survives, with rank the
+ODE order.
+\item \emph{Barnes factor} $\Gamma(2ix)$ (Wilson). No lattice found;
+see \S\ref{sec:test}.
+\end{enumerate}
+
+The dual-pair construction repairs arithmetic, not analysis: replacing
+the orthogonal basis by the biorthogonal pair
+$\Gamma(\lambda\pm ix)\widehat{P}_m$ restores integrality at
+$\lambda=\tfrac14$ without improving the $L^2$ truncation rate.
+
+%% ===================================================================
+\section{The Test}\label{sec:test}
+%% ===================================================================
+
+The dictionary predicts that lattice rank equals the ODE order of the
+GF kernel. Wilson is the falsifiable case.
+
+\begin{conjecture}\label{conj:wilson}
+The generating-function kernel of the Wilson matching coefficients
+satisfies no linear ODE of order $\le 2$ with polynomial coefficients,
+and correspondingly the coefficients generate a $\Q$-vector space of
+unbounded dimension as $m,k \to \infty$.
+\end{conjecture}
+
+Evidence. The entries $c_{mk}$, $m,k \le 5$, are $\Q$-combinations of
+$11$ moments; PSLQ at $200$ digits with coefficient bound $10^{18}$
+finds no relation among the moments beyond the exact
+polynomial-product identities, so their $\Q$-rank is $\ge 16$ counting
+both parity sectors --- against MP and Hahn, which compress to $2$
+generators with coefficients below $10^{8}$. What is missing is the
+analytic half: a computation of the D-module rank of the Wilson kernel
+itself. If that rank were finite and small, the dictionary would be
+wrong, and the failure would be as informative as the confirmations.
+If the language cannot make the Wilson question well-posed --- the
+kernel row of the table is presently conjectural for Wilson --- that
+too should be recorded, and this section is the record.
+
+%% ===================================================================
+\section{Status of the Claims}
+%% ===================================================================
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+claim & status & source \\
+\midrule
+Hermite, Laguerre, Charlier integrality & proved & \cite{herm,lag,char} \\
+Chebyshev--Jacobi classes; connection-Gram & proved & \cite{jac} \\
+MP $\tfrac14$ forward $\Z A \oplus \Z B$ & proved & \cite{mp14} \\
+MP $\tfrac14$ reverse $(2\pi/e)\Z$ & proved & \cite{mp14} \\
+MP $\tfrac34$ $\Z A' \oplus \Z B'$ & proved & \cite{mp34} \\
+unbalanced, single generator & proved & \cite{unb} \\
+Hahn rank-$2$ lattice & empirical (PSLQ) & \cite{hahn} \\
+Hahn generator $\sqrt{\pi}$ from reducibility & structural reading & \cite{hahn} \\
+rank $=$ ODE order, in general & predicted & --- \\
+Wilson, no finite lattice & empirical (to $10^{18}$) & \cite{wil} \\
+Weil archimedean rank $2$ & proved & \cite{weil} \\
+Weil prime side rank $\ge 16$ & empirical & \cite{weil} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Empirical entries are PSLQ identifications at $\ge 40$ digits,
+confirmed at doubled precision with coefficient bound $\ge 10^{10}$;
+no empirical claim is used in the proof of any proved claim.
+
+\begin{thebibliography}{9}
+\bibitem{synth} R.~Langer and Claude Code,
+\emph{Approximating Orthogonal Functions with Orthogonal Polynomials},
+preprint, 2026.
+\bibitem{herm} \emph{The Hermite Matching Matrix}, preprint, 2026.
+\bibitem{lag} \emph{The Laguerre Matching Matrix}, preprint, 2026.
+\bibitem{char} \emph{The Charlier Matching Matrix}, preprint, 2026.
+\bibitem{jac} \emph{The Jacobi Matching Matrix}, preprint, 2026.
+\bibitem{mp14} \emph{The Dual Meixner--Pollaczek Matching Coefficients:
+the Calculation}, preprint, 2026.
+\bibitem{mp34} \emph{The Dual Meixner--Pollaczek Matching Coefficients
+at $\lambda = \tfrac34$}, preprint, 2026.
+\bibitem{unb} \emph{The Unbalanced Dual Pair}, preprint, 2026.
+\bibitem{hahn} \emph{Continuous Hahn Matching Coefficients}, preprint,
+2026.
+\bibitem{wil} \emph{Wilson Matching Coefficients}, preprint, 2026.
+\bibitem{weil} \emph{The Weil Form in the Meixner--Pollaczek Basis},
+preprint, 2026.
+\end{thebibliography}
+
+\end{document}
