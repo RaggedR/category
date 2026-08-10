@@ -358,6 +358,76 @@ was positive; here $D$ is positive and $S$ carries the signs. The
 three quartic residue classes share the work --- $P$ and $Q$ build the
 forward matrix, $Q$ and $\widetilde P$ the reverse.
 
+\subsubsection*{The U-kernel}
+
+The kernel $W = (1-x^2)^{1/2}$ (Chebyshev-U) uses the fourth and
+last quartic class $Q^{+}$. Here $U_m U_k$ linearises into a
+\emph{difference} of cosines, and with
+$K(q) = \int_0^\pi \cos q\theta\, \sin^{3/2}\theta\, d\theta$,
+\[
+  Q^{+}(n) = 7 \cdot 11 \cdots (4n+3),
+  \qquad
+  K(0) = \frac{J(0)}{3},
+  \qquad
+  K(2n) = -\,3K(0)\, \frac{P(n-1)}{Q^{+}(n)} \quad (n \ge 1).
+\]
+Define
+\[
+  D^U_{mk} \;=\; \frac{Q^{+}(s+1)}{K(0)}
+  \int_0^\pi \sin\bigl((m{+}1)\theta\bigr) \sin\bigl((k{+}1)\theta\bigr)
+  \sqrt{\sin\theta}\; d\theta .
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[U integrality]\label{thm:chebU-int}
+$D^U_{mk} = 0$ for $m+k$ odd, and otherwise
+\[
+  D^U_{mk} \;=\; \frac12 \left[\, Q^{+}(s{+}1)\,\rho(d) + 3P(s) \,\right]
+  \;\in\; \Z,
+  \qquad
+  \rho(0)=1, \quad \rho(n) = -\,\frac{3P(n-1)}{Q^{+}(n)} ,
+\]
+with edge $D^U_{0,2n} = -15\,P(n-1)$ for $n \ge 1$ (the quartic
+factorial A007696 again) and diagonal
+\[
+  D^U_{nn} = \frac{Q^{+}(n{+}1) + 3P(n)}{2}
+  \;=\; 5,\, 40,\, 585,\, 11040,\, 253245,\, \ldots
+\]
+not in the OEIS. The diagonal is positive and every other entry
+negative --- a third sign pattern, after the all-positive $D$ and the
+alternating $S$.
+\end{theorem}
+\end{tcolorbox}
+
+\subsubsection*{An asymmetric kernel: Catalan numbers}
+
+The kernel $W = (1-x)^{1/2}(1+x)^{-1/2}$ breaks the $x \mapsto -x$
+symmetry; its orthogonal polynomials are the fourth-kind Chebyshev
+$W_n(\cos\theta) = \sin\bigl((n{+}\tfrac12)\theta\bigr)/\sin(\theta/2)$,
+with $h_n = \pi$ uniformly. The Wallis power drops to zero, the
+constant $\G(\tfrac14)$ disappears, and the whole matching matrix lies
+in $\Z[\tfrac12]\cdot\sqrt2$ --- dyadic rationals. The first row is
+classical combinatorics: with $b_{0k} = \frac1\pi \int W_0 W_k
+W^{3/2}\, dx$,
+\[
+  2^k \sqrt2\; b_{0k} \;=\;
+  \begin{cases}
+    2\binom{2n}{n} & k = 2n \ge 2, \\[4pt]
+    -\,(4n+3)\,\mathrm{Cat}(n) & k = 2n+1,
+  \end{cases}
+  \qquad
+  2^0\sqrt2\; b_{00} = 3,
+\]
+giving $3,\, -3,\, 4,\, -7,\, 12,\, -22,\, 40,\, -75,\, 140,\, -266,
+\ldots$ (verified exactly through $k=13$; the signed sequence is not
+in the OEIS). The quartic weights of the symmetric kernels cannot
+count lattice paths; the asymmetric kernel apparently can.
+
+In total the Chebyshev-type matrices use the four quartic
+factorial classes $1{\cdot}5{\cdots}$, $3{\cdot}7{\cdots}$,
+$5{\cdot}9{\cdots}$, $7{\cdot}11{\cdots}$ --- the four odd
+arithmetic progressions of difference four, each exactly once.
+
 %% -------------------------------------------------------------------
 \subsection{Laguerre}
 
