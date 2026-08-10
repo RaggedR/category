@@ -33,7 +33,9 @@ The Hermite functions --- the eigenfunctions of the Fourier
 transform --- can be approximated by Hermite polynomials. The
 approximation coefficients form a triangular matrix with integer
 entries $D_{mk}$, which we conjecture to count weighted bicolour
-matchings. We extend this construction to the Meixner--Pollaczek
+matchings. For the Chebyshev polynomials only two matchings survive,
+and the matrix is built from quartic factorials. We extend this
+construction to the Meixner--Pollaczek
 polynomials at $\lambda = \tfrac14$ and $\tfrac34$. In this case
 there are constants $A$ and $B$ such that every coefficient in the
 approximation matrix is of the form $sA + tB$ where $s$ and $t$ are
@@ -239,6 +241,122 @@ manifestly positive:
 \]
 \end{theorem}
 \end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Chebyshev}
+
+In the Chebyshev case the kernel is $W = (1-x^2)^{-1/2}$ on $(-1,1)$,
+with $h_0 = \pi$ and $h_n = \pi/2$. The associated functions are
+$\Phi_n = \widehat T_n\, (1-x^2)^{-1/4}$. Substituting $x = \cos\theta$
+turns every matching integral into a two-term sum,
+\[
+  \int_{-1}^{1} T_m T_k\, (1-x^2)^{-3/4}\, dx
+  \;=\; \tfrac12\bigl[\, J(m-k) + J(m+k) \,\bigr],
+  \qquad
+  J(q) = \int_0^\pi \frac{\cos q\theta}{\sqrt{\sin\theta}}\, d\theta ,
+\]
+because $T_m T_k$ linearises into two cosines. Where Hermite sums over
+all matchings, Chebyshev keeps only two.
+
+Let $P(n) = 1 \cdot 5 \cdots (4n-3)$ and $Q(n) = 3 \cdot 7 \cdots
+(4n-1)$ denote the quartic factorials. Then
+\[
+  J(0) = \frac{\sqrt\pi\; \G(\tfrac14)}{\G(\tfrac34)},
+  \qquad
+  J(2n) = J(0)\, \frac{P(n)}{Q(n)} \;>\; 0 .
+\]
+Every coefficient is a rational multiple of the single constant
+$J(0)$. With $s = \tfrac{m+k}{2}$, $d = \tfrac{|m-k|}{2}$, define
+\[
+  D_{mk} \;=\; \frac{Q(s)}{J(0)}
+  \int_{-1}^{1} T_m\, T_k\, (1-x^2)^{-3/4}\, dx .
+\]
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Chebyshev integrality]\label{thm:cheb-int}
+$D_{mk} = 0$ for $m+k$ odd, and otherwise
+\[
+  D_{mk} \;=\; \frac12 \left[\, P(d)\,\frac{Q(s)}{Q(d)} + P(s) \,\right]
+\]
+is a \emph{positive} integer: both bracketed terms are products of odd
+numbers, so their sum is even.
+\end{theorem}
+\end{tcolorbox}
+
+The entries ($m \le k \le 7$):
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrr}
+$D_{mk}$ & $k=m$ & $m{+}2$ & $m{+}4$ & $m{+}6$ \\
+\hline
+$m=0$ & $1$        & $1$         & $5$          & $45$ \\
+$1$   & $2$        & $6$         & $50$         & $630$ \\
+$2$   & $13$       & $61$        & $705$        & $11385$ \\
+$3$   & $138$      & $870$       & $12810$      & $251910$ \\
+$4$   & $2025$     & $15945$     & $284685$     & $6592725$ \\
+$5$   & $37890$    & $356790$    & $7477650$    & $199153350$ \\
+$6$   & $861525$   & $9424485$   & $226586025$  & $6818954625$ \\
+$7$   & $23052330$ & $286937910$ & $7779098250$ & $260942613750$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{theorem}[Chebyshev diagonal and edge]\label{thm:cheb-diag}
+The edge is the quartic factorial, $D_{0,2n} = P(n)$
+(OEIS A007696), and the diagonal is the \emph{average of the two
+quartic factorials},
+\[
+  D_{nn} = \frac{Q(n) + P(n)}{2}
+  \;=\; 1,\, 2,\, 13,\, 138,\, 2025,\, 37890,\, 861525,\, \ldots
+\]
+This sequence is not in the OEIS.
+\end{theorem}
+\end{tcolorbox}
+
+\subsubsection*{Reverse}
+
+The reverse expansion uses $W^{1/2} = (1-x^2)^{-1/4}$ in place of
+$W^{3/2}$, hence $\widetilde J(q) = \int_0^\pi \cos q\theta\,
+\sqrt{\sin\theta}\; d\theta$. The third quartic class
+$\widetilde P(n) = 5 \cdot 9 \cdots (4n+1)$ appears, and the ratios
+turn negative,
+\[
+  \widetilde J(0) = \frac{\sqrt\pi\;\G(\tfrac34)}{\G(\tfrac54)},
+  \qquad
+  \widetilde J(2n) = -\,\widetilde J(0)\,
+  \frac{Q(n-1)}{\widetilde P(n)} \quad (n \ge 1).
+\]
+Define $S_{mk} = \dfrac{\widetilde P(s)}{\widetilde J(0)}
+\displaystyle\int_{-1}^{1} T_m T_k\, (1-x^2)^{-1/4} dx$. Then
+$S_{mk} \in \Z$ by the same parity argument, with edge
+$S_{0,2n} = -Q(n-1)$ and diagonal
+$S_{nn} = \tfrac12 [\widetilde P(n) - Q(n-1)] = 1, 2, 21, 282, 4857,
+\ldots$ (also not in the OEIS). The entries ($m \le k \le 7$):
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt, sharp corners]
+\begin{center}
+\begin{tabular}{r|rrrr}
+$S_{mk}$ & $k=m$ & $m{+}2$ & $m{+}4$ & $m{+}6$ \\
+\hline
+$m=0$ & $1$        & $-1$         & $-3$          & $-21$ \\
+$1$   & $2$        & $-6$         & $-30$         & $-294$ \\
+$2$   & $21$       & $-69$        & $-447$        & $-5481$ \\
+$3$   & $282$      & $-1110$      & $-8694$       & $-126630$ \\
+$4$   & $4857$     & $-22617$     & $-206955$     & $-3474765$ \\
+$5$   & $102690$   & $-555030$    & $-5804190$    & $-110124630$ \\
+$6$   & $2577645$  & $-15898365$  & $-186995655$  & $-3951960705$ \\
+$7$   & $74949210$ & $-520103430$ & $-6796188630$ & $-158228220150$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+The sign pattern is inverted relative to Hermite: there the
+approximation matrix $D$ carried the signs and the reverse matrix $S$
+was positive; here $D$ is positive and $S$ carries the signs. The
+three quartic residue classes share the work --- $P$ and $Q$ build the
+forward matrix, $Q$ and $\widetilde P$ the reverse.
 
 %% -------------------------------------------------------------------
 \subsection{Laguerre}
