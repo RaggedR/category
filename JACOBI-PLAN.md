@@ -103,29 +103,72 @@ verification of every entry against the defining integral),
 even exact Rationals and can return surd garbage (e.g. 621/14840 →
 225·2^{78/145}·…). Never call nsimplify on exact quantities.
 
-### Next steps for the next agent (revised order)
+## ✅ Write-up done 2026-08-10 (evening session, commit 2ba184f)
 
-1. ✅ **DONE 2026-08-10 — Write it up.** New §7 "The Sextic Test" in
-   `jacobi-matching.tex` (Wallis-ratio prop, ν₀ generator, two lattices,
-   E-table, connection-Gram theorem + row-0 corollary, λ→0 corollary);
-   abstract item 5, Discussion + open-problem updates. The λ→0 limit is
-   NOT analytic — every monic entry is a *rational function of α* (the
-   1/(λ)ₙ of the monic factor cancels the (λ)_{n−ℓ} zeros), so Chebyshev
-   is evaluation at α=−½. Verified all m,k≤8 exactly:
-   `jacobi_lambda0_limit.py` / `.log` (also checks the integer two-term
-   form and the degenerate Tₙ-in-C^{−1/4} connection coefficients).
-   Synthesis paper §2.2 NOT touched (Robin's choice).
-2. **Prove general symmetric α symbolically** (sympy, symbolic α): the
-   connection-Gram identity is classical, so the content is the resulting
-   generator-ring statement: entries ∈ ℚ·ν₀ in any rational-normalized
-   frame, ν₀ = B(½, (3α+2)/2·…) — write the beta value once and check the
-   task-5 prediction for which α give CM periods (thirds ↔ α ∈ −⅓ℤ-ish
-   families; the Pochhammer steps are (−α/2)ₙ, (λ)ₙ, (μ)ₙ, (2μ)ₙ).
-3. Then original Tasks 2–4 below (Wallis-power-zero family, reverse U /
-   asymmetric, ballot-path model). For Task 3 note the reverse kernel has
-   its own μ′ = α/2+½, λ−μ′ = +α/2·(−1)… — same mechanism, sign flipped.
-4. Task 5 (general (α,β)) now has a mechanism: use Jacobi connection
-   coefficients instead of PSLQ guessing.
+New §7 "The Sextic Test" in `jacobi-matching.tex` (Wallis-ratio prop, ν₀
+generator, two lattices, E-table + sextic denominator law, connection-Gram
+theorem with DLMF §18.18(iv) cite, row-0 corollary, Chebyshev corollary);
+abstract item 5, Discussion + open problem 5, code availability. Synthesis
+§2.2 NOT touched — Robin's explicit choice; ask before porting anything.
+
+**Key discovery — rationality, not limits.** The planned "λ→0 limit" does
+not exist as an analytic problem: in the *monic frame* every entry
+⟨πₘ,πₖ⟩/𝓘(3α+1,0) is a rational function of α (the 1/(λ)ₙ of the monic
+factor cancels the (λ)_{n−ℓ} zeros in the connection coefficients).
+Chebyshev is *evaluation* at α=−½; proof = two rational functions agreeing
+on (−⅔,∞)∖{−½}. Verified all m,k≤8 exactly, plus the integer two-term form
+and the degenerate Tₙ-in-C^{−1/4} coefficients: `jacobi_lambda0_limit.py`
+(.log is gitignored by `*.log` — use `git add -f`, the repo convention).
+
+**Honest significance assessment (agreed with Robin).** The sextic result
+*deflates* the Jacobi column: connection coefficients are classical and the
+generator is just the Beta-value mass, so quartic/sextic integrality is
+standard special-function bookkeeping. The still-genuine mysteries are on
+the Mellin side (MP Bessel-period lattice ℤA⊕ℤB, Wilson's Barnes
+obstruction, Weil-form positivity) where no connection-coefficient argument
+exists. Calibrate effort accordingly — Jacobi tasks below are consolidation,
+not discovery.
+
+### Next steps for the next agent (priority order)
+
+1. **General (α,β) beta-value law — the one Jacobi task with upside.**
+   W^{3/2} = (1−x)^{3α/2}(1+x)^{3β/2} is again a Jacobi weight, so the
+   matching matrix is the Gram matrix of the Jacobi connection coefficients
+   P^{(α,β)} → P^{(3α/2,3β/2)} (classical single sums; Askey, or
+   Rainville ch. 16) in the target norm. Generator = mass
+   B(3α/2+1, 3β/2+1)·2^{3(α+β)/2+1}-ish — write it once, carefully.
+   The rationality trick extends: monic entries are rational functions of
+   *(α,β) jointly*, so all degenerate cases (Chebyshev 3rd/4th kind,
+   asymmetric ½,−½) are evaluations. Script first
+   (`jacobi_general_connection.py`, exact sympy, verify against the
+   already-computed asymmetric dyadic row 2C(2n,n)/−(4n+3)Cat(n)), then a
+   short section or standalone note. Success criterion: a single theorem
+   "entries ∈ ℚ·B(3α/2+1,3β/2+1) with denominators from explicit
+   Pochhammers (−α/2)ₙ, (−β/2)ₙ, (λ)ₙ, (μ)ₙ" + the CM classification
+   (which (α,β) give Γ-products collapsing to algebraic·π — the
+   Wallis-power-zero family β=−α, original Task 2, becomes a corollary,
+   Γ-free because B(1+t,1−t) = πt/sin(πt)·ℚ).
+2. **Reverse matrices via the same mechanism (original Task 3).** Reverse
+   kernel W^{1/2} ⇒ μ′ = α/2+½, λ−μ′ = +α/2 — sign-flipped Pochhammer,
+   same Gram theorem. Chebyshev reverse (already in matching-coefficients
+   §2.2: P̃, −Q(n−1)) should drop out as the α=−½ evaluation; check, then
+   the U-reverse class-reuse question (does (−¼)ₙ/(5/4)ₙ reuse P,P̃? if
+   yes, soften the "four classes exactly once" sentence in §2.2 — scope it
+   to the four *forward* matrices).
+3. **Ballot-path model for the Catalan row (original Task 4, the deep
+   combinatorial one).** Unchanged; search literature first (Viennot/
+   Flajolet weighted Motzkin paths, 4th-kind Chebyshev moments). Now also
+   ask: do the *Jacobi connection coefficients* at (½,−½) have a known
+   lattice-path interpretation? That would connect Tasks 1 and 4.
+4. **Only if Robin asks:** port a condensed sextic paragraph to
+   matching-coefficients.tex §2.2.
+
+**Alternative worth proposing to Robin before grinding through 2–3:** pivot
+to the Mellin side, where the open problems are real — e.g. prove the MP
+ℤA⊕ℤB integrality (currently empirical + PSLQ) using the Bessel-moment
+literature (Fresán–Sabbah–Yu), or compute the Wilson kernel's D-module rank
+to test "lattice rank = ODE order". The Jacobi story is now clean enough to
+leave.
 
 ## Tasks, in order (original — Task 1 done, see above)
 
