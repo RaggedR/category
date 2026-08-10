@@ -105,12 +105,16 @@ even exact Rationals and can return surd garbage (e.g. 621/14840 →
 
 ### Next steps for the next agent (revised order)
 
-1. **Write it up.** Extend `jacobi-matching.tex` (and/or §2.2 of
-   `matching-coefficients.tex`) with: the sextic data (rows 0–8 exist in
-   `jacobi_sextic.log`), the two-lattice statement, and the connection-Gram
-   theorem with its one-line proof (orthogonality of C^μ). Derive the
-   Chebyshev closed form as the λ→0 limit — this would *prove* the
-   currently-conjectural Chebyshev entries.
+1. ✅ **DONE 2026-08-10 — Write it up.** New §7 "The Sextic Test" in
+   `jacobi-matching.tex` (Wallis-ratio prop, ν₀ generator, two lattices,
+   E-table, connection-Gram theorem + row-0 corollary, λ→0 corollary);
+   abstract item 5, Discussion + open-problem updates. The λ→0 limit is
+   NOT analytic — every monic entry is a *rational function of α* (the
+   1/(λ)ₙ of the monic factor cancels the (λ)_{n−ℓ} zeros), so Chebyshev
+   is evaluation at α=−½. Verified all m,k≤8 exactly:
+   `jacobi_lambda0_limit.py` / `.log` (also checks the integer two-term
+   form and the degenerate Tₙ-in-C^{−1/4} connection coefficients).
+   Synthesis paper §2.2 NOT touched (Robin's choice).
 2. **Prove general symmetric α symbolically** (sympy, symbolic α): the
    connection-Gram identity is classical, so the content is the resulting
    generator-ring statement: entries ∈ ℚ·ν₀ in any rational-normalized

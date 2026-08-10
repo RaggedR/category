@@ -44,7 +44,8 @@ where $\widehat P_n$ are the orthonormal polynomials for $W$.
 Taking $W_{\alpha\beta}=(1-x)^\alpha(1+x)^\beta$ on $[-1,1]$ (Jacobi weight),
 we treat four cases: Chebyshev-T ($\alpha=\beta=-\tfrac12$),
 Chebyshev-U ($\alpha=\beta=\tfrac12$), Legendre ($\alpha=\beta=0$),
-and an asymmetric case ($\alpha=\tfrac12,\beta=-\tfrac12$).
+an asymmetric case ($\alpha=\tfrac12,\beta=-\tfrac12$),
+and a sextic test case ($\alpha=\beta=-\tfrac59$).
 
 Using the substitution $x=\cos\theta$ and the classical Wallis-type formula
 \[
@@ -72,6 +73,15 @@ The main results are:
 
 \item \textbf{Legendre fixed point.} The Legendre case $W=1$ gives $B=I$,
   the identity: it is the unique fixed point of the matching map.
+
+\item \textbf{Sextic test and connection--Gram theorem.} For general
+  symmetric $\alpha$ the matching matrix is the Gram matrix of the
+  Gegenbauer connection coefficients $C^{(\lambda)}\to C^{(\mu)}$,
+  $\lambda=\alpha+\tfrac12$, $\mu=\tfrac32\alpha+\tfrac12$.  At
+  $\alpha=-\tfrac59$ the generator is the sextic period
+  $B(\tfrac16,\tfrac12)$ (the curve $y^2=1-x^6$, CM by $\Z[\omega]$), with
+  moment ratios stepping in thirds and polynomial data in eighteenths; the
+  Chebyshev closed forms are the rational specialisation $\alpha=-\tfrac12$.
 
 \item \textbf{Bernstein zeros.} Because $b_{0k}\sim k^{-1/2}$ (not geometric),
   the spurious zeros of truncated approximants crowd toward $[-1,1]$
@@ -394,6 +404,202 @@ alternating in sign and decaying as $k^{-1/2}$ (exponent verified by quadrature,
 fitted slope $-0.494$ at $k=64$).  Unlike the symmetric cases the odd entries do
 \emph{not} vanish: the broken $x\mapsto-x$ symmetry populates the full row.
 
+\section{The Sextic Test: $\alpha=\beta=-\tfrac{5}{9}$}\label{sec:sextic}
+
+The quartic arithmetic of the Chebyshev family --- Pochhammer steps
+$(\tfrac14)_n/(\tfrac34)_n$ over the lemniscatic period $\G(\tfrac14)^2$ ---
+enters through the single Wallis power $p=-\tfrac12$.  Changing $p$ should
+change the arithmetic, with thirds in place of quarters and the period of
+$y^2=1-x^6$ in place of $y^2=1-x^4$.  This section confirms that prediction
+and identifies the general mechanism.
+
+\subsection{The Wallis ratio and the sextic generator}
+
+\begin{proposition}\label{prop:wallis-ratio}
+  For $p>-1$ and $a=\tfrac{p+2}{2}$,
+  \[
+    \frac{\mathcal{I}(p,2n)}{\mathcal{I}(p,0)} \;=\; \frac{(1-a)_n}{(a)_n}.
+  \]
+\end{proposition}
+
+\begin{proof}
+  By \eqref{eq:wallis} the ratio is
+  $(-1)^n\,\G(a)^2/\bigl(\G(a+n)\G(a-n)\bigr)
+  =(-1)^n/\bigl((a)_n\,(a-1)(a-2)\cdots(a-n)\bigr)=(1-a)_n/(a)_n$.
+\end{proof}
+
+For $p=-\tfrac12$ this is the quartic ratio $r(n)$ of
+Proposition~\ref{prop:chebT-closed}.  Steps in thirds require
+$a\in\tfrac13+\Z$.  The matching integrand of a symmetric Jacobi weight has
+$p=3\alpha+1$, so the first such case is
+\[
+  \alpha=\beta=-\tfrac59,\qquad p=-\tfrac23,\qquad
+  \frac{\mathcal{I}(-\tfrac23,2n)}{\mathcal{I}(-\tfrac23,0)}
+  =\frac{(\tfrac13)_n}{(\tfrac23)_n},\qquad
+  \nu_0:=\mathcal{I}(-\tfrac23,0)=B(\tfrac16,\tfrac12)
+  =\frac{2^{2/3}\pi\,\G(\tfrac13)}{\G(\tfrac23)^2}.
+\]
+The generator $\nu_0$ is a period of the curve $y^2=1-x^6$, with complex
+multiplication by $\Z[\omega]$ --- the sextic analogue of the lemniscatic
+$\G(\tfrac14)^2$.  (All exact statements in this section were verified
+against 40-digit quadrature of the defining integrals for $m,k\le8$;
+see \texttt{jacobi\_sextic.py} and its log.)
+
+\subsection{Two lattices}
+
+The orthogonal polynomials for $W=(1-x^2)^{-5/9}$ are Gegenbauer
+$C_n^{(\lambda)}$ with $\lambda=\alpha+\tfrac12=-\tfrac1{18}$; unlike the
+Chebyshev cases they do not collapse to single cosines.  The monic
+recurrence $\pi_{n+1}=x\pi_n-\beta_n\pi_{n-1}$ has
+\[
+  \beta_n=\frac{9n(9n-10)}{(18n-1)(18n-19)}
+  \;=\;\frac{9}{17},\;\frac{144}{595},\;\frac{459}{1855},\;
+  \frac{936}{3763},\;\ldots
+\]
+so the polynomial side lives on \emph{eighteenths} while the matching
+moments (Proposition~\ref{prop:wallis-ratio}) live on \emph{thirds}.  The
+matrix is a sandwich (eighteenths)$^{\mathsf T}$(thirds)(eighteenths).
+The single quartic lattice of Chebyshev-T is the degeneration $\lambda=0$,
+where $T_n\in\Z[x]$ makes the polynomial lattice invisible.
+
+\subsection{Exact data and integrality}
+
+Let $\mathrm{PZ}_n$ be the primitive integer polynomial proportional to
+$\pi_n$, so $\mathrm{PZ}_2=17x^2-9$, $\mathrm{PZ}_3=35x^3-27x$,
+$\mathrm{PZ}_4=1855x^4-1890x^2+243$; the leading coefficients are sliding
+windows of the primes $18j-1$.  Write
+$E_{mk}=\langle \mathrm{PZ}_m,\mathrm{PZ}_k\rangle_{W^{3/2}}/\nu_0$.
+
+\begin{table}[ht]
+\centering
+\caption{Sextic matching matrix $E_{mk}$ in units $\nu_0=B(\tfrac16,\tfrac12)$
+(upper triangle, $0\le m\le k\le 4$, primitive-$\Z$ polynomial frame).
+Entries with $m+k$ odd vanish identically.}
+\label{tab:sextic}
+\begin{tabular}{@{}c|ccccc@{}}
+\toprule
+$m\backslash k$ & 0 & 1 & 2 & 3 & 4 \\
+\midrule
+0 & $1$ & $0$ & $\frac{15}{4}$ & $0$ & $\frac{621}{8}$ \\[3pt]
+1 &  & $\frac34$ & $0$ & $\frac{27}{8}$ & $0$ \\[3pt]
+2 &  &  & $\frac{1863}{40}$ & $0$ & $\frac{85455}{128}$ \\[3pt]
+3 &  &  &  & $\frac{5913}{128}$ & $0$ \\[3pt]
+4 &  &  &  &  & $\frac{87779133}{2816}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The denominators obey a sextic law.  For all $m,k\le8$ the odd part of
+$\operatorname{den}(E_{mk})$ divides $\prod_{j\le s+2}(6j-1)$ with
+$s=\tfrac{m+k}2$ --- the sextic factorial family $5,11,17,23,\ldots$ ---
+and depends on $s$ only.  An $s$-dependent rescale therefore clears all
+denominators, exactly as $Q(s)$ does for Chebyshev-T; no pure row rescale
+exists.
+
+\subsection{The connection--Gram theorem}
+
+The structure behind both the quartic and the sextic case is classical.
+Set
+\[
+  \lambda=\alpha+\tfrac12,\qquad \mu=\tfrac32\alpha+\tfrac12,
+  \qquad\text{so}\qquad W^{3/2}=(1-x^2)^{\mu-\frac12}
+  \quad\text{and}\quad \lambda-\mu=-\tfrac{\alpha}{2}.
+\]
+The weight $W^{3/2}$ is itself a Gegenbauer weight, of parameter $\mu$.
+
+\begin{theorem}[Connection--Gram]\label{thm:conn-gram}
+  Let $-\tfrac23<\alpha$, $\alpha\ne-\tfrac12$, and let
+  $\pi_n=f_n\,C_n^{(\lambda)}$ with $f_n=n!/(2^n(\lambda)_n)$ be the monic
+  Gegenbauer polynomials for $W=(1-x^2)^\alpha$.  Then
+  $\int\pi_m\pi_k W^{3/2}=0$ for $m+k$ odd, and otherwise
+  \[
+    \int_{-1}^1 \pi_m\pi_k\,W^{3/2}\,dx
+    \;=\; f_m f_k \!\!\sum_{\substack{j\equiv m\ (\mathrm{mod}\ 2)\\
+      0\le j\le\min(m,k)}}\!\!
+      A_{\frac{m-j}{2}}(m)\,A_{\frac{k-j}{2}}(k)\;h_j^{\mu},
+  \]
+  where
+  \[
+    A_\ell(n)=\frac{(\lambda-\mu)_\ell\,(\lambda)_{n-\ell}\,(n-2\ell+\mu)}
+                   {\ell!\,(\mu)_{n-\ell+1}},
+    \qquad
+    h_j^{\mu}=\int_{-1}^1\!\bigl(C_j^{(\mu)}\bigr)^2(1-x^2)^{\mu-\frac12}dx,
+    \qquad
+    \frac{h_j^{\mu}}{h_0^{\mu}}=\frac{(2\mu)_j\,\mu}{j!\,(j+\mu)}.
+  \]
+\end{theorem}
+
+\begin{proof}
+  The classical connection formula for ultraspherical polynomials
+  \cite[\S18.18(iv)]{DLMF} gives
+  $C_n^{(\lambda)}=\sum_{\ell=0}^{\lfloor n/2\rfloor}A_\ell(n)\,
+  C_{n-2\ell}^{(\mu)}$.  Substituting for both factors and using the
+  orthogonality of the $C_j^{(\mu)}$ with respect to $(1-x^2)^{\mu-1/2}$
+  collapses the double sum to the matched indices $j=m-2\ell=k-2\ell'$.
+\end{proof}
+
+The matching matrix is thus the \emph{Gram matrix of the connection
+coefficients} $C^{(\lambda)}\to C^{(\mu)}$ in the $\mu$-norm.  Every
+Pochhammer that appears steps by $\lambda$, $\mu$, $2\mu$, or
+$\lambda-\mu=-\tfrac\alpha2$; for $\alpha=-\tfrac59$ these are the
+eighteenths and thirds of the two lattices.
+
+\begin{corollary}[Row $0$]\label{cor:row0}
+  With $h_0^\mu=\mathcal{I}(3\alpha+1,0)$,
+  \[
+    \frac{\langle\pi_0,\pi_{2n}\rangle_{W^{3/2}}}{h_0^{\mu}}
+    \;=\;\frac{(2n)!\,(\lambda-\mu)_n\,(\lambda)_n\,\mu}
+             {2^{2n}\,(\lambda)_{2n}\,n!\,(\mu)_{n+1}}.
+  \]
+\end{corollary}
+
+At $\alpha=-\tfrac59$ the factor $(\lambda-\mu)_n=(\tfrac{5}{18})_n$
+explains the primes $5,23,41,59\equiv5\ (\mathrm{mod}\ 18)$ observed in the
+row-$0$ numerators of Table~\ref{tab:sextic}.
+
+\subsection{Chebyshev as rational specialisation}
+
+The excluded value $\alpha=-\tfrac12$ is where $\lambda=0$ and
+$C_n^{(\lambda)}$ vanishes.  The monic frame removes the singularity, since
+the pole of $f_n=n!/(2^n(\lambda)_n)$ cancels the zeros of
+$(\lambda)_{n-\ell}$ in $A_\ell(n)$.
+
+\begin{corollary}\label{cor:lambda0}
+  Each normalised entry
+  $\langle\pi_m,\pi_k\rangle_{W^{3/2}}/\mathcal{I}(3\alpha+1,0)$, and each
+  side of Theorem~\ref{thm:conn-gram}, is a rational function of $\alpha$;
+  the theorem therefore extends to $\alpha=-\tfrac12$ by evaluation, where
+  it reproduces Proposition~\ref{prop:chebT-closed}.  In the integer form,
+  for $m,k\ge1$ with $m+k$ even,
+  \[
+    Q(s)\,2^{m+k-2}\,
+    \frac{\langle\pi_m,\pi_k\rangle_{W^{3/2}}}{\mathcal{I}(-\tfrac12,0)}
+    \bigg|_{\alpha=-\frac12}
+    \;=\;\frac12\left[\frac{P(d)\,Q(s)}{Q(d)}+P(s)\right],
+  \]
+  with $P(n)=1\cdot5\cdots(4n-3)$, $Q(n)=3\cdot7\cdots(4n-1)$,
+  $s=\tfrac{m+k}2$, $d=\tfrac{|m-k|}2$.
+\end{corollary}
+
+\begin{proof}
+  Moment ratios are rational in $\alpha$ by
+  Proposition~\ref{prop:wallis-ratio}, hence so are the monic Gram--Schmidt
+  data and the normalised entries; the right-hand side of
+  Theorem~\ref{thm:conn-gram} is rational in $\alpha$ by inspection.  Two
+  rational functions agreeing on $(-\tfrac23,\infty)\setminus\{-\tfrac12\}$
+  agree at $-\tfrac12$.  The evaluation is
+  Proposition~\ref{prop:chebT-closed} in monic units
+  ($T_n=2^{n-1}\widetilde T_n$).
+\end{proof}
+
+The two-term Chebyshev closed form thus acquires a second, structural
+derivation.  At $\lambda=0$ the degenerate connection coefficients are
+those of $T_n$ in the basis $C^{(-1/4)}$, and the Gram sum telescopes to
+the two Wallis terms $r(d)+r(s)$.  The specialisation was checked
+symbolically for all $m,k\le8$
+(\texttt{jacobi\_lambda0\_limit.py}); the degenerate coefficients
+reconstruct $T_n$ exactly.
+
 \section{Generating Function and Combinatorics}
 
 \subsection{Generating function for Chebyshev-T}
@@ -535,6 +741,9 @@ mean $\mathrm{agm}(1,\sqrt{2})=\pi\sqrt{2}/\G(\tfrac14)^2$.
 The appearance of $\G(\tfrac14)^2$ in matching-matrix arithmetic mirrors its role
 in elliptic curves with complex multiplication by $\Z[i]$
 (the elliptic curve $y^2=1-x^4$).
+The sextic case of \S\ref{sec:sextic} supplies the companion example, with
+$B(\tfrac16,\tfrac12)$, the curve $y^2=1-x^6$, and CM by $\Z[\omega]$;
+matching arithmetic appears to be \emph{period arithmetic} of the weight.
 
 \subsection{Open problems}
 
@@ -554,13 +763,20 @@ in elliptic curves with complex multiplication by $\Z[i]$
   with $s=$ (exponent)? Numerical evidence suggests yes.
 \item \textbf{MP generator ring}: Is the Meixner--Pollaczek matching generator
   algebraically related to $\pi$ or $\G(\tfrac14)$?
+\item \textbf{General $(\alpha,\beta)$ and CM classification}: The
+  connection--Gram mechanism of \S\ref{sec:sextic} extends verbatim to
+  asymmetric Jacobi weights via the Jacobi connection coefficients.  Which
+  exponents produce CM periods, and what replaces the two-lattice structure
+  when $\alpha\ne\beta$?
 \end{enumerate}
 
 \subsection{Code availability}
 
 All computations used \texttt{mpmath} at 50 decimal digits.
 The scripts \texttt{jacobi\_matching.py} and \texttt{jacobi\_zeros.py}
-are available in \texttt{github.com/RaggedR/category}.
+are available in \texttt{github.com/RaggedR/category}, together with the
+exact \texttt{sympy} verifications of \S\ref{sec:sextic}
+(the \texttt{jacobi\_sextic*} and \texttt{jacobi\_lambda0\_limit} scripts).
 
 \begin{thebibliography}{9}
 
