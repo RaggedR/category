@@ -7,6 +7,7 @@
 
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
 \newtheorem{conjecture}{Conjecture}[section]
 
 \newcommand{\R}{\mathbb{R}}
@@ -204,6 +205,72 @@ with the replacement $(1-iw)^{-1/2} \to (1-iw)^{-3/2}$ (parameter $\lambda$ appe
 as the exponent) and $e^{\zeta/2} K_0(\zeta/2) \to U(\tfrac32, 1, \zeta)$
 (the two-state Bessel automaton replaced by a Tricomi automaton).
 At $\zeta = 1$ ($w = u = 0$), $U(\tfrac32, 1, 1)$ replaces $e^{1/2} K_0(\tfrac12)/\sqrt\pi$.
+
+%% ===================================================================
+\section{The Integrality Proof}
+%% ===================================================================
+
+Theorem~\ref{thm:integrality} follows by the mechanism of the
+$\lambda = \tfrac14$ case \cite{mp14}. The Cayley factorization is
+identical: with $v = 2iw$, $\sigma = v/(1-v/2)$,
+$\zeta = (1+\sigma)(1+\tau)$ and the prefactor is
+$(\sigma'\tau')^{3/4}$. Only two ingredients change.
+
+\begin{lemma}\label{lem:kummer}
+$y(\zeta) = U(\tfrac32, 1, \zeta)$ satisfies Kummer's equation
+$\zeta y'' + (1-\zeta) y' - \tfrac32 y = 0$. Consequently the
+rescaled Taylor coefficients $u'_n = 2^n\, y^{(n)}(1)$ obey the
+integer recurrence
+\[
+  u'_{n+2} = -2n\, u'_{n+1} + (4n+6)\, u'_n,
+  \qquad u'_0 = A', \quad u'_1 = -3B',
+\]
+so that every $u'_n$ lies in $\Z A' \oplus \Z B'$:
+\[
+  u'_n = A',\; -3B',\; 6A',\; -12A'-30B',\; 132A'+120B',\;
+  -1008A'-1260B',\; \ldots
+\]
+\end{lemma}
+
+\begin{proof}
+Differentiate Kummer's equation $n$ times and set $\zeta = 1$; the
+rescaling by $2^n$ clears the half-integer. The initial values are
+$y(1) = A'$ and $2y'(1) = -3B'$ from $U'(a,b,z) = -a\,U(a{+}1,b{+}1,z)$.
+\end{proof}
+
+\begin{theorem}\label{thm:formula}
+With $L(n,c)$ the Lah numbers,
+\[
+  \mathcal{U}_{mk} = i^{\,m+k} \sum_{d_1, c_1, d_2, c_2}
+  V'_m(d_1, c_1)\; V'_k(d_2, c_2)
+  \sum_{j \ge 0} \binom{c_1}{j} \binom{c_2}{j}\, j!\; 2^j\;
+  u'_{c_1 + c_2 - j},
+\]
+\[
+  V'_n(d, c) = \binom{n}{d}\, (2d+1)!!\; L(n-d,\, c)\; 2^{\,n-d}.
+\]
+Every weight is a positive integer, so
+$\mathcal{U}_{mk} \in \Z A' \oplus \Z B'$. This proves
+Theorem~\ref{thm:integrality}.
+\end{theorem}
+
+\begin{proof}
+Identical to the $\lambda = \tfrac14$ proof \cite{mp14}, with the
+defect weight coming from the prefactor exponent $\tfrac32$:
+\[
+  2^d\, d!\; [w^d]\, (1-iw)^{-3/2} = i^{\,d}\, 2^d\, (\tfrac32)_d
+  = i^{\,d}\, (2d+1)!!.
+\]
+The chains, the Charlier matching sum and the balancing of the powers
+of $2$ are unchanged --- the combinatorics is universal in $\lambda$;
+the family enters only through $u'_n$. Verified against the exact
+expansion of the generating function for all $m,k \le 6$, integrality
+to $m,k \le 8$, and $50$-digit quadrature of the defining integral
+(\texttt{mp34\_symbolic\_lattice.py}).
+\end{proof}
+
+The sequences $u'_n$ (either component) and the diagonal
+$\mathcal{U}_{nn}$ are not in the OEIS.
 
 %% ===================================================================
 \section{The Reverse Expansion}
