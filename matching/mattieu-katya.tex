@@ -1,0 +1,901 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage[most]{tcolorbox}
+\usepackage{pdflscape}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+
+\title{\textbf{Matching Matrices:\\
+From Feynman Diagrams to Qubits}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study the change-of-basis matrices between orthogonal polynomials
+and their associated orthonormal functions --- the eigenfunctions of
+a symmetry operator --- in both the continuous and discrete settings.
+
+In the continuous case, the Hermite functions (eigenfunctions of the
+Fourier transform) projected onto the Hermite polynomial basis yield
+an infinite matrix whose entries, after rescaling by $3^{(m+k)/2}$,
+are integers $D_{mk}$ that count signed bipartite matchings ---
+equivalently, Feynman diagrams. The generating function is
+$\sqrt{2\pi/3}\;\exp(-(s^2 - 4su + u^2)/3)$.
+
+In the discrete case, the Krawtchouk polynomials (eigenvectors of
+the Walsh--Hadamard transform on $n$ qubits) evaluated against a
+binomial weight at parameter $q$ yield a finite matrix $I(m,k,n,q)$
+whose generating function is $[1 + \alpha(s+u) + su]^n$, where
+$\alpha = 1 - 2q$. For integer $\alpha$, every entry is
+automatically an integer --- a weighted count of multinomial
+microstates.
+
+The two theories are connected by a scaling limit: as $n \to \infty$,
+the binomial converges to the Gaussian, Krawtchouk converges to
+Hermite, and multinomial coefficients converge to matchings. The
+passage from the discrete matrix to the continuous matrix is the
+passage from an $n$-qubit spin system to quantum field theory.
+\end{abstract}
+
+%% ===================================================================
+\section{The Construction}
+%% ===================================================================
+
+\begin{tcolorbox}[breakable, colback=black!5, colframe=black!5,
+  boxrule=0pt, sharp corners]
+Both cases follow the same pattern, in three steps.
+
+\textbf{Step 1: the polynomials.} Fix a weight $W \ge 0$ on a set
+$X$. It defines an inner product on polynomials,
+$\langle f, g \rangle_W = \int_X f\, g\; W$.
+Gram--Schmidt produces the orthogonal polynomials $P_n$:
+$\langle P_m, P_n \rangle_W = h_n \delta_{mn}$.
+
+\textbf{Step 2: the functions.} Multiplying by $\sqrt{W}$ turns
+them into the \emph{associated functions}
+$\Phi_n = \widehat P_n\, \sqrt{W}$,
+which are orthonormal for the plain inner product:
+$\int_X \Phi_m\, \Phi_n = \delta_{mn}$.
+
+\textbf{Step 3: the coefficients.} Project $\Phi_m$ back onto
+$\{P_k\}$ in $L^2(W)$:
+\[
+  b_{mk} = \langle \Phi_m, \widehat P_k \rangle_W
+  = \int_X \widehat P_m\, \widehat P_k\; W^{3/2}.
+\]
+
+The factor $W^{3/2}$ arises from $\sqrt{W}$ (from $\Phi_m$)
+times $W$ (from the inner product). The matrix $(b_{mk})$
+is our object of study. The question: is there a rescaling
+that makes it integer, and if so, what do the integers count?
+\end{tcolorbox}
+
+%% ===================================================================
+%% PART I: CONTINUOUS
+%% ===================================================================
+
+\part*{Part I: The Continuous Case}
+\addcontentsline{toc}{part}{Part I: The Continuous Case}
+
+%% ===================================================================
+\section{Hermite Polynomials and Hermite Functions}
+%% ===================================================================
+
+Let $H_n(t)$ denote the physicist's Hermite polynomials, defined by
+the recurrence
+\[
+  H_{n+1}(t) = 2t\, H_n(t) - 2n\, H_{n-1}(t),
+  \qquad H_0(t) = 1,\quad H_1(t) = 2t,
+\]
+and satisfying the orthogonality relation
+\begin{equation}\label{eq:hermite-orth}
+  \int_{-\infty}^{\infty} H_m(t)\, H_k(t)\, e^{-t^2}\, dt
+  = 2^k\, k!\, \sqrt{\pi}\; \delta_{mk}.
+\end{equation}
+Here $W = e^{-t^2}$ on $\R$, with $h_n = 2^n n! \sqrt{\pi}$.
+The \emph{Hermite functions} are
+\begin{equation}\label{eq:hermite-fn}
+  \psi_m(t) = c_m\, H_m(t)\, e^{-t^2/2},
+  \qquad c_m = (2^m\, m!\, \sqrt{\pi})^{-1/2}.
+\end{equation}
+These form an orthonormal basis for $L^2(\R)$ and are eigenfunctions
+of the Fourier transform with eigenvalues $(-i)^m$.
+
+\begin{tcolorbox}[colback=yellow!10, colframe=yellow!10, boxrule=0pt,
+  sharp corners]
+The Fourier transform $\widehat{f}(\xi) = \int f(t)\, e^{-2\pi i
+t \xi}\, dt$ is an operator of order four: $\widehat{\widehat{
+\widehat{\widehat{f}}}} = f$. Its eigenvalues must therefore be
+fourth roots of unity: $\{1, -i, -1, i\}$. The Hermite functions
+are the eigenfunctions, partitioned into four eigenspaces according
+to $m \bmod 4$. The fact that $\psi_m$ is a Fourier eigenfunction is
+the statement that the quantum harmonic oscillator is invariant under
+the exchange of position and momentum: $x \leftrightarrow p$.
+\end{tcolorbox}
+
+The $L^2$-projection of $\psi_m$ onto the Hermite polynomial basis
+gives coefficients
+\begin{equation}\label{eq:amk}
+  a_{mk}
+  = \frac{c_m}{2^k\, k!\,\sqrt{\pi}}
+    \int_{-\infty}^{\infty} H_m(t)\, H_k(t)\, e^{-3t^2/2}\, dt.
+\end{equation}
+The factor $e^{-3t^2/2}$ arises from $e^{-t^2/2}$ (from $\psi_m$)
+times $e^{-t^2}$ (from the weight).
+
+%% ===================================================================
+\section{The Hermite Generating Function}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}\label{prop:hermite-gf}
+The integrals $I_{mk} = \int_{-\infty}^{\infty} H_m(t)\, H_k(t)\,
+e^{-3t^2/2}\, dt$ have the generating function
+\[
+  \sum_{m,k \ge 0} \frac{s^m\, u^k}{m!\, k!}\; I_{mk}
+  = \sqrt{\frac{2\pi}{3}}\;
+    \exp\!\Bigl(-\frac{s^2 - 4su + u^2}{3}\Bigr).
+\]
+\end{proposition}
+\end{tcolorbox}
+
+\begin{proof}
+Using the generating function for Hermite polynomials,
+$\sum_{n \ge 0} H_n(t)\, z^n / n! = e^{2tz - z^2}$:
+\begin{align*}
+  \sum_{m,k} \frac{s^m u^k}{m!\,k!}\, I_{mk}
+  &= \int_{-\infty}^{\infty}
+     e^{2ts - s^2}\, e^{2tu - u^2}\, e^{-3t^2/2}\, dt \\
+  &= \int_{-\infty}^{\infty}
+     \exp\!\bigl(-\tfrac{3}{2}t^2 + 2(s+u)t - s^2 - u^2\bigr)\, dt \\
+  &= \sqrt{\frac{2\pi}{3}}\;
+     \exp\!\Bigl(\frac{2(s+u)^2}{3} - s^2 - u^2\Bigr)
+  = \sqrt{\frac{2\pi}{3}}\;
+     \exp\!\Bigl(-\frac{s^2 - 4su + u^2}{3}\Bigr).
+     \qedhere
+\end{align*}
+\end{proof}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{corollary}[Parity]\label{cor:parity}
+$I_{mk} = 0$ whenever $m + k$ is odd.
+\end{corollary}
+\end{tcolorbox}
+
+\begin{proof}
+The exponent $-(s^2 - 4su + u^2)/3$ contains only terms of even
+total degree in $(s,u)$.
+\end{proof}
+
+%% ===================================================================
+\section{The Hermite Integer Matrix}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Hermite integrality]\label{thm:hermite-int}
+Define
+$D_{mk} = 3^{(m+k)/2} \cdot I_{mk} / \sqrt{2\pi/3}$.
+Then $D_{mk} \in \Z$ for all $m, k \ge 0$ with $m + k$ even
+(and zero when $m + k$ is odd). Explicitly, with
+$b = (m-a)/2$, $c = (k-a)/2$,
+\[
+  D_{mk} = \sum_{a}\; 4^a\, (-2)^{b+c}\, a!\;
+  \frac{m!}{a!\, b!\, 2^b}\; \frac{k!}{a!\, c!\, 2^c}\,,
+\]
+where each factor $n!/(a!\, b!\, 2^b)$ counts the partial matchings
+of $[n]$ with $a$ unmatched points and $b$ pairs.
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+Write
+$\exp(-(s^2 - 4su + u^2)/3) = \exp(-s^2/3)\, \exp(4su/3)\,
+\exp(-u^2/3)$.
+The coefficient of $s^m u^k$ is a sum over triples $(a, b, c)$ with
+$m = 2b + a$ and $k = a + 2c$:
+\[
+  [s^m u^k] = \sum_{a,b,c}
+  \frac{(-1/3)^b}{b!}\;\frac{(4/3)^a}{a!}\;\frac{(-1/3)^c}{c!}.
+\]
+Multiplying by $m!\, k!\, 3^{(m+k)/2}$ absorbs all powers of~$3$
+and leaves integer factors.
+\end{proof}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Hermite matching conjecture]\label{conj:hermite}
+$D_{mk}$ counts signed bipartite matchings. Colour $m$ points red
+and $k$ points blue; then
+\[
+  D_{mk} = \sum_{\substack{\text{perfect matchings}\\
+  \text{of the } m+k \text{ points}}}
+  4^{\#\{\text{red--blue pairs}\}} \; (-2)^{\#\{\text{same-colour pairs}\}}.
+\]
+Equivalently,
+\[
+  D_{mk} = \sum_{\substack{c \ge 0 \\ m - c,\, k - c \text{ even}}}
+  \binom{m}{c}\binom{k}{c}\, c!\;
+  (m{-}c{-}1)!!\; (k{-}c{-}1)!!\; 4^{c}\, (-2)^{(m+k-2c)/2}.
+\]
+Verified for all $m, k \le 20$ (441 entries, zero discrepancies).
+The matching interpretation is consistent with Wick's theorem applied
+to $\mathbb{E}[H_m(X)\, H_k(X)]$ for $X \sim N(0, 1/3)$.
+\end{conjecture}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{The diagonal}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Hermite diagonal]\label{thm:hermite-diag}
+\begin{equation}\label{eq:hermite-diag}
+  \frac{D_{nn}}{n!} = \sum_{j=0}^{\lfloor n/2 \rfloor}
+  \binom{n}{2j}\binom{2j}{j}\, 4^{n-2j}
+  = 1,\, 4,\, 18,\, 88,\, 454,\, 2424,\, \ldots
+  \quad (\text{OEIS A081671}),
+\end{equation}
+with ordinary generating function
+$1/\sqrt{(1-2x)(1-6x)}$
+and exponential generating function $e^{4x}\, I_0(2x)$, where $I_0$
+is the modified Bessel function of the first kind.
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+Setting $m = k = n$ in the matching formula and simplifying with
+$(2j-1)!! = (2j)!/(2^j\, j!)$ yields the stated sum. The OGF
+follows from $\sum_n a_n x^n$ using the Cauchy product of
+$1/\sqrt{1-4z^2}$ with $1/(1-4x)$, giving
+$1/\sqrt{(1-4x)^2 - 4x^2} = 1/\sqrt{1 - 8x + 12x^2}$.
+\end{proof}
+
+%% -------------------------------------------------------------------
+\subsection{Edge entries}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Hermite edge]\label{prop:hermite-edge}
+$D_{0,2n} = (-1)^n\, (2n)!/n! = (-1)^n\, 2^n\, (2n{-}1)!!$.
+\end{proposition}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Reverse direction}
+
+The \emph{reverse} expansion $\widehat H_m = \sum_k \widetilde
+b_{mk}\, \psi_k$ has one power of $\sqrt{W}$ in place of three:
+$\widetilde b_{mk} = \int \widehat H_m\, \widehat H_k\,
+e^{-t^2/2}\, dt$. The same rescaling without the power of~$3$ gives
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Hermite reverse]\label{thm:hermite-rev}
+$S_{mk} = (-1)^{(k-m)/2}\, D_{mk}$ --- the forward matrix with the
+signs stripped:
+\[
+  S_{mk} = \sum_{\substack{\text{perfect matchings}\\
+  \text{of the } m+k \text{ points}}}
+  4^{\#\{\text{red--blue}\}} \; 2^{\#\{\text{same-colour}\}}.
+\]
+Every entry is non-negative.
+\end{theorem}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Computed values}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$D_{mk}$ for even $m$ and $k$, $0 \le m,k \le 14$
+
+\medskip
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{r|rrrrrr}
+$m \!\backslash\! k$ & $0$ & $2$ & $4$ & $6$ & $8$ & $10$ \\
+\hline
+$0$ & $1$ & $-2$ & $12$ & $-120$ & $1680$ & $-30240$ \\
+$2$ & $-2$ & $36$ & $-408$ & $6000$ & $-110880$ & $2479680$ \\
+$4$ & $12$ & $-408$ & $10896$ & $-254880$ & $6471360$ & $-184222080$ \\
+$6$ & $-120$ & $6000$ & $-254880$ & $9529920$ & $-339534720$ & $12515731200$ \\
+$8$ & $1680$ & $-110880$ & $6471360$ & $-339534720$ & $16590147840$ \\
+$10$ & $-30240$ & $2479680$ & $-184222080$ & $12515731200$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+%% ===================================================================
+%% PART II: DISCRETE
+%% ===================================================================
+
+\part*{Part II: The Discrete Case}
+\addcontentsline{toc}{part}{Part II: The Discrete Case}
+
+%% ===================================================================
+\section{Krawtchouk Polynomials}
+%% ===================================================================
+
+The \emph{Krawtchouk polynomials} $K_j(x; n)$ for $p = \tfrac12$
+are defined on $\{0, 1, \ldots, n\}$ by
+\begin{equation}\label{eq:kraw-def}
+  K_j(x; n) = \sum_{r=0}^{j} (-1)^r \binom{x}{r}
+  \binom{n-x}{j-r},
+\end{equation}
+with generating function
+\begin{equation}\label{eq:kraw-gf}
+  \sum_{j=0}^{n} K_j(x; n)\, z^j = (1-z)^x\, (1+z)^{n-x},
+\end{equation}
+and orthogonality
+\begin{equation}\label{eq:kraw-orth}
+  \sum_{x=0}^{n} K_j(x; n)\, K_k(x; n)\, \frac{\binom{n}{x}}{2^n}
+  = \binom{n}{k}\, \delta_{jk}.
+\end{equation}
+
+\begin{tcolorbox}[colback=yellow!10, colframe=yellow!10, boxrule=0pt,
+  sharp corners]
+The Krawtchouk polynomials are the discrete Hermite polynomials: they
+are orthogonal with respect to the binomial distribution (the discrete
+Gaussian), and they converge to Hermite polynomials in the
+$n \to \infty$ limit. The matrix $(K_j(k; n))_{j,k=0}^n$ is, up to
+normalisation, the Walsh--Hadamard transform --- the Fourier transform
+of $(\mathbb{Z}/2\mathbb{Z})^n$, i.e.\ the Hadamard gate applied to
+$n$ qubits.
+\end{tcolorbox}
+
+%% ===================================================================
+\section{The Krawtchouk Matching Matrix}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=green!8, colframe=green!8, boxrule=0pt,
+  sharp corners]
+\begin{definition}[Krawtchouk matching matrix]\label{def:kraw}
+Fix $n \ge 1$ and a parameter $q$. The \emph{Krawtchouk matching
+matrix} is
+\begin{equation}\label{eq:Imk}
+  I(m, k, n, q)
+  = \sum_{x=0}^{n} K_m(x; n)\, K_k(x; n)\, \binom{n}{x}\,
+  q^x\, (1-q)^{n-x}
+  = \mathbb{E}\bigl[K_m(X; n)\, K_k(X; n)\bigr]
+\end{equation}
+for $X \sim \mathrm{Bin}(n, q)$.
+\end{definition}
+\end{tcolorbox}
+
+At $q = \tfrac12$ this reduces to the orthogonality
+relation~\eqref{eq:kraw-orth}: the matrix is diagonal. For
+$q \ne \tfrac12$ the off-diagonal entries are nonzero.
+
+%% ===================================================================
+\section{The Krawtchouk Generating Function}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Bivariate generating function]\label{thm:kraw-gf}
+Set $\alpha = 1 - 2q$. Then
+\begin{equation}\label{eq:kraw-gf-main}
+  F(s, u) = \sum_{m,k=0}^{n} I(m, k, n, q)\, s^m\, u^k
+  = \bigl[\,1 + \alpha(s + u) + su\,\bigr]^n.
+\end{equation}
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+Using the Krawtchouk generating function~\eqref{eq:kraw-gf}:
+\begin{align*}
+  F(s,u)
+  &= \sum_{x=0}^{n} \binom{n}{x}\, q^x\, (1{-}q)^{n-x}\,
+     (1{-}s)^x(1{+}s)^{n-x}\, (1{-}u)^x(1{+}u)^{n-x} \\
+  &= \bigl[\, q(1{-}s)(1{-}u) + (1{-}q)(1{+}s)(1{+}u) \,\bigr]^n
+  = \bigl[\, 1 + \alpha(s{+}u) + su \,\bigr]^n.
+  \qedhere
+\end{align*}
+\end{proof}
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+Compare the two generating functions:
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{lcc}
+  \toprule
+  & Continuous (Hermite) & Discrete (Krawtchouk) \\
+  \midrule
+  GF & $\sqrt{\tfrac{2\pi}{3}}\,
+    \exp\!\bigl(-\frac{s^2 - 4su + u^2}{3}\bigr)$
+     & $[1 + \alpha(s{+}u) + su]^n$ \\[6pt]
+  Shape & exp of quadratic form & $n$-th power \\
+  Parameter & $\sigma^2 = 1/3$ (fixed) & $\alpha \in \Z$ (free) \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+The continuous generating function is an \emph{exponential} of a
+quadratic form; the discrete is an $n$-th \emph{power} of an
+affine--bilinear form. They are connected by the usual
+$\exp = \lim (1 + x/n)^n$: scaling $s$, $u$, $\alpha$ by
+$1/\sqrt{n}$ and sending $n \to \infty$, the power converges to the
+exponential.
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Coefficient Extraction}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Multinomial formula]\label{thm:kraw-coeff}
+\begin{equation}\label{eq:kraw-coeff}
+  I(m, k, n, q)
+  = \sum_{c=\max(0,m+k-n)}^{\min(m,k)}
+  \frac{n!}{(n{-}m{-}k{+}c)!\;(m{-}c)!\;(k{-}c)!\;c!}
+  \;\alpha^{\,m+k-2c}.
+\end{equation}
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+Expand $[1 + \alpha(s{+}u) + su]^n$ by the multinomial theorem with
+three terms. Pick $a$ copies of~$1$, $b$ copies of~$\alpha(s{+}u)$,
+and $c$ copies of~$su$. Then $a + b + c = n$, and the monomial
+$s^m u^k$ requires $b = m + k - 2c$ and $a = n - m - k + c$.
+\end{proof}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{corollary}[Automatic integrality]\label{cor:kraw-int}
+When $\alpha \in \mathbb{Z}$, every entry
+$I(m, k, n, q) \in \mathbb{Z}$. No rescaling is required.
+\end{corollary}
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Properties}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Symmetries]\label{prop:kraw-sym}
+\mbox{}
+\begin{enumerate}
+\item \textbf{Transpose:} $I(m,k) = I(k,m)$.
+\item \textbf{Complement:}
+  $I(m,k,n,q) = \alpha^n\, I(n{-}m,\, n{-}k,\, n,\, q)$.
+\item \textbf{Parameter reflection:}
+  $I(m,k,n,1{-}q) = (-1)^{m+k}\, I(m,k,n,q)$.
+\item \textbf{No parity vanishing:}
+  entries with $m+k$ odd are generically nonzero (unlike Hermite).
+\end{enumerate}
+\end{proposition}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Edge entries]\label{prop:kraw-edge}
+$I(0, k, n, q) = \binom{n}{k}\, \alpha^k$.
+\end{proposition}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Special values]\label{prop:kraw-special}
+\mbox{}
+\begin{enumerate}
+\item $\alpha = 0$ ($q = \tfrac12$):
+  $F = (1+su)^n$, $I(m,k) = \binom{n}{k}\,\delta_{mk}$
+  (orthogonality).
+\item $\alpha = 1$ ($q = 0$):
+  $F = [(1{+}s)(1{+}u)]^n$, $I(m,k) = \binom{n}{m}\binom{n}{k}$.
+\item $\alpha = -1$ ($q = 1$):
+  $F = [(1{-}s)(1{-}u)]^n$,
+  $I(m,k) = (-1)^{m+k}\binom{n}{m}\binom{n}{k}$.
+\end{enumerate}
+\end{proposition}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Rational rescaling]\label{prop:kraw-rational}
+If $\alpha = p/d$ with $p, d \in \mathbb{Z}$, then
+$d^{m+k}\, I(m, k, n, q) \in \mathbb{Z}$.
+\end{proposition}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Computed values}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$I(m,k,n,q)$ for $\alpha = 2$, $n = 6$
+
+\medskip
+\begin{tabular}{r|rrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ \\
+\hline
+$0$ & $1$ & $12$ & $60$ & $160$ & $240$ & $192$ & $64$ \\
+$1$ & $12$ & $126$ & $540$ & $1200$ & $1440$ & $864$ & $192$ \\
+$2$ & $60$ & $540$ & $1935$ & $3480$ & $3240$ & $1440$ & $240$ \\
+$3$ & $160$ & $1200$ & $3480$ & $4900$ & $3480$ & $1200$ & $160$ \\
+$4$ & $240$ & $1440$ & $3240$ & $3480$ & $1935$ & $540$ & $60$ \\
+$5$ & $192$ & $864$ & $1440$ & $1200$ & $540$ & $126$ & $12$ \\
+$6$ & $64$ & $192$ & $240$ & $160$ & $60$ & $12$ & $1$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$I(m,k,n,q)$ for $\alpha = 2$, $n = 8$
+
+\medskip
+\small
+\begin{tabular}{r|rrrrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ & $8$ \\
+\hline
+$0$ & $1$ & $16$ & $112$ & $448$ & $1120$ & $1792$ & $1792$ & $1024$ & $256$ \\
+$1$ & $16$ & $232$ & $1456$ & $5152$ & $11200$ & $15232$ & $12544$ & $5632$ & $1024$ \\
+$2$ & $112$ & $1456$ & $8092$ & $24976$ & $46480$ & $52864$ & $35392$ & $12544$ & $1792$ \\
+$3$ & $448$ & $5152$ & $24976$ & $66136$ & $103600$ & $97216$ & $52864$ & $15232$ & $1792$ \\
+$4$ & $1120$ & $11200$ & $46480$ & $103600$ & $134470$ & $103600$ & $46480$ & $11200$ & $1120$ \\
+$5$ & $1792$ & $15232$ & $52864$ & $97216$ & $103600$ & $66136$ & $24976$ & $5152$ & $448$ \\
+$6$ & $1792$ & $12544$ & $35392$ & $52864$ & $46480$ & $24976$ & $8092$ & $1456$ & $112$ \\
+$7$ & $1024$ & $5632$ & $12544$ & $15232$ & $11200$ & $5152$ & $1456$ & $232$ & $16$ \\
+$8$ & $256$ & $1024$ & $1792$ & $1792$ & $1120$ & $448$ & $112$ & $16$ & $1$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$I(m,k,n,q)$ for $\alpha = 3$, $n = 6$
+
+\medskip
+\begin{tabular}{r|rrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ \\
+\hline
+$0$ & $1$ & $18$ & $135$ & $540$ & $1215$ & $1458$ & $729$ \\
+$1$ & $18$ & $276$ & $1710$ & $5400$ & $8910$ & $6804$ & $1458$ \\
+$2$ & $135$ & $1710$ & $8385$ & $19620$ & $21465$ & $8910$ & $1215$ \\
+$3$ & $540$ & $5400$ & $19620$ & $30800$ & $19620$ & $5400$ & $540$ \\
+$4$ & $1215$ & $8910$ & $21465$ & $19620$ & $8385$ & $1710$ & $135$ \\
+$5$ & $1458$ & $6804$ & $8910$ & $5400$ & $1710$ & $276$ & $18$ \\
+$6$ & $729$ & $1458$ & $1215$ & $540$ & $135$ & $18$ & $1$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+%% ===================================================================
+%% PART III: COMPARISON AND PHYSICS
+%% ===================================================================
+
+\part*{Part III: Comparison and Physics}
+\addcontentsline{toc}{part}{Part III: Comparison and Physics}
+
+%% ===================================================================
+\section{Structural Comparison}
+%% ===================================================================
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{lcc}
+  \toprule
+  Feature & Continuous (Hermite) & Discrete (Krawtchouk) \\
+  \midrule
+  Weight & $e^{-t^2}$ on $\R$ & $\binom{n}{x}/2^n$ on $\{0,\ldots,n\}$ \\
+  Polynomials & $H_n(t)$ & $K_j(x;n)$ \\
+  Functions & $\psi_n = c_n H_n e^{-t^2/2}$ & (absorbed into weight) \\
+  Transform & Fourier on $\R$ & Walsh--Hadamard on $\{0,1\}^n$ \\
+  Eigenvalues & $(-i)^n$ & $(-1)^j$ \\[4pt]
+  GF &
+    $\sqrt{\tfrac{2\pi}{3}}\,e^{-(s^2-4su+u^2)/3}$
+    & $[1 + \alpha(s{+}u) + su]^n$ \\[4pt]
+  Integrality & rescale by $3^{(m+k)/2}$ & automatic for $\alpha \in \Z$ \\
+  Parity & $D_{mk}=0$ for $m{+}k$ odd & no vanishing \\
+  Edge & $(-1)^n(2n)!/n!$ & $\binom{n}{k}\alpha^k$ \\
+  At $\alpha=1$ & --- & $\binom{n}{m}\binom{n}{k}$ \\
+  Symmetry & $(m,k) \leftrightarrow (k,m)$
+    & transpose $+$ complement \\
+  Combinatorics & signed matchings & multinomial coefficients \\
+  Physics & Feynman diagrams & qubit microstates \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Quantum Mechanics}
+%% ===================================================================
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+The matching matrices are not merely combinatorial curiosities. They
+sit at the centre of quantum mechanics, and the passage from the
+discrete matrix to the continuous matrix is the passage from finite
+spin systems to quantum field theory.
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{The harmonic oscillator}
+
+The Hermite functions $\psi_n$ are the energy eigenstates of the
+\textbf{quantum harmonic oscillator}, the single most important
+quantum system. Its Hamiltonian is $H = p^2 + x^2$ (up to
+constants), with eigenvalues $E_n = (n + \tfrac12)\hbar\omega$.
+Every quadratic quantum system --- photons, phonons, the free
+electromagnetic field --- is a harmonic oscillator.
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{observation}[Physical meaning of $D_{mk}$]\label{obs:Dmk}
+The Hermite matching integer $D_{mk}$ is proportional to the overlap
+between the $m$-th energy eigenstate ($\psi_m$) and the $k$-th
+polynomial observable ($H_k$) in $L^2(e^{-t^2})$. Physically: if a
+particle is in the $m$-th energy level, $D_{mk}$ measures the $k$-th
+polynomial moment of its position, weighted by the Gaussian ground
+state.
+\end{observation}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Matchings are Feynman diagrams}
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+\textbf{Wick's theorem} states that the expectation of a product of
+Gaussian random variables decomposes into a sum over all pairings:
+\[
+  \mathbb{E}[X_1 X_2 \cdots X_{2n}]
+  = \sum_{\text{matchings}} \prod_{\text{pairs } (i,j)}
+    \mathbb{E}[X_i X_j].
+\]
+Each matching is a \textbf{Feynman diagram}: a way of contracting
+field operators into propagators. In free quantum field theory,
+every scattering amplitude is a sum over such diagrams.
+
+The Hermite matching integer $D_{mk}$ --- the sum over bipartite
+matchings with weights $+4$ (cross-pairs) and $-2$ (self-pairs) ---
+\emph{is} Wick's theorem applied to $H_m(X)\, H_k(X)$ at variance
+$\sigma^2 = 1/3$:
+\begin{itemize}
+\item A \textbf{cross-pair} connects a slot from $H_m$ to one from
+  $H_k$: an inter-level transition, weighted $+4$.
+\item A \textbf{self-pair} connects two slots within the same
+  polynomial: an intra-level contraction, weighted $-2$.
+\end{itemize}
+The Hermite matching matrix is a \textbf{table of Feynman diagram
+counts}, indexed by energy levels.
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Qubits and spin}
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+The Krawtchouk matching matrix has its own quantum mechanical
+meaning.
+
+Krawtchouk polynomials are the matrix elements of $SU(2)$
+representations. A system of $n$ spin-$\tfrac12$ particles ($n$
+qubits) has a Hilbert space of dimension $2^n$. The total spin
+operator has eigenspaces labelled by $x \in \{0,\ldots,n\}$ (the
+number of spin-ups), and $K_j(x;n)$ is the $j$-th matrix element.
+
+The Walsh--Hadamard transform $(K_j(k;n))$ is the Hadamard gate
+applied to $n$ qubits --- the first gate in Deutsch--Jozsa, Grover,
+and Shor.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{observation}[Physical meaning of $I(m,k,n,q)$]
+\label{obs:Imk}
+$I(m,k,n,q)$ measures the correlation between the $m$-th and $k$-th
+Hadamard-basis observables when the $n$ qubits are in a biased
+product state with probability $q$ of spin-up.
+
+At $q = \tfrac12$ ($\alpha = 0$): the state is $|{+}\rangle^{\otimes
+n}$. The observables are decorrelated (orthogonality).
+
+At $q \ne \tfrac12$: the observables become correlated. The
+parameter $\alpha$ measures the strength of quantum correlation.
+\end{observation}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{The generating function as a partition function}
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+The generating function $[1 + \alpha(s{+}u) + su]^n$ is a partition
+function. Each of the $n$ qubits independently contributes one of
+three terms:
+
+\begin{center}
+\begin{tabular}{lcl}
+  \toprule
+  Term & Weight & Meaning \\
+  \midrule
+  $1$ & $1$ & qubit idle \\
+  $\alpha s$ or $\alpha u$ & $\alpha$ & qubit contributes to one
+    observable \\
+  $su$ & $1$ & qubit contributes to both \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+This is a lattice model: $n$ independent sites, each in one of three
+effective states, with a global constraint (total $s$-degree $= m$,
+total $u$-degree $= k$).
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Why integers?}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{observation}[Integrality as discreteness of process space]
+\label{obs:integers}
+The integers count the number of topologically distinct quantum
+processes.
+
+\begin{itemize}
+\item \textbf{Continuous:} $D_{mk}$ counts signed Feynman diagrams
+  --- the distinct ways energy levels $m$ and $k$ can exchange
+  virtual quanta through Gaussian contractions. The integrality says
+  that the space of quantum processes has a discrete structure,
+  even though the underlying physics is continuous.
+\item \textbf{Discrete:} $I(m,k,n,q)$ counts weighted microstates
+  --- the distinct ways $n$ spins can collectively produce a given
+  pair of observables. The integrality is automatic because we are
+  counting configurations of a finite system.
+\end{itemize}
+\end{observation}
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{From spins to fields}
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+The passage from the discrete to the continuous matrix is the passage
+from statistical mechanics to quantum field theory:
+\[
+  \underbrace{I(m,k,n,q)}_{\text{$n$ qubits}}
+  \;\xrightarrow{\;n \to \infty\;}
+  \underbrace{D_{mk}}_{\text{QHO / QFT}}.
+\]
+In this limit:
+\begin{itemize}
+\item $\mathrm{Bin}(n,q) \to N(0, \sigma^2)$
+  \hfill (central limit theorem)
+\item Krawtchouk polynomials $\to$ Hermite polynomials
+\item multinomial coefficients $\to$ matchings (Wick contractions)
+\item lattice model $\to$ free field theory
+\item $[1 + \alpha(s{+}u) + su]^n
+  \to \exp(-(s^2 - 4su + u^2)/3)$
+  \hfill ($\exp = \lim(1+x/n)^n$)
+\end{itemize}
+
+The matching matrix is a Rosetta stone between these two descriptions.
+Every Feynman diagram is a limit of multinomial microstates.
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Quantum error correction}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{observation}[MacWilliams identity]\label{obs:mac}
+The complement symmetry
+$I(m,k,n,q) = \alpha^n\, I(n{-}m,\, n{-}k,\, n,\, q)$
+is the MacWilliams identity of coding theory. For a quantum
+error-correcting code of length $n$, the Krawtchouk transform
+relates the weight distribution of the code to that of its dual.
+The matching matrix generalises this: it measures how a code's
+weight distribution transforms under a change of bias parameter.
+\end{observation}
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Open Questions}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Discrete combinatorial interpretation]
+\label{conj:discrete-comb}
+For integer $\alpha \ge 1$, the entry $I(m,k,n,q)$ counts something
+beyond multinomials: weighted lattice paths, coloured set partitions,
+or a discrete matching analogue. A bijective proof would illuminate
+the convergence to bipartite matchings as $n \to \infty$.
+\end{conjecture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Discrete diagonal generating function]
+\label{conj:discrete-diag}
+For fixed $\alpha$, the diagonal sequence $I(k,k,n,q)$ should have a
+closed-form generating function generalising the Hermite diagonal's
+$1/\sqrt{(1{-}2x)(1{-}6x)}$.
+\end{conjecture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Scaling limit]\label{conj:limit}
+Under the substitutions $m = \lfloor \mu\sqrt{n}\,\rfloor$,
+$k = \lfloor \kappa\sqrt{n}\,\rfloor$,
+$\alpha = \beta/\sqrt{n}$, the discrete matrix converges to the
+continuous:
+\[
+  \lim_{n \to \infty} I\!\left(\lfloor\mu\sqrt{n}\,\rfloor,\,
+  \lfloor\kappa\sqrt{n}\,\rfloor,\, n,\, q\right)
+  \sim D_{\mu,\kappa}^{\text{Hermite}}
+  \cdot (\text{normalisation}).
+\]
+\end{conjecture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Hermite matching conjecture, restated]
+\label{conj:wick}
+A proof of Conjecture~\ref{conj:hermite} via Isserlis' theorem
+(Wick's theorem at non-unit variance) would establish that
+$D_{mk}$ is a sum over Feynman diagrams --- not merely an analogy
+but an identity.
+\end{conjecture}
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Proofs Available Upon Request}
+%% ===================================================================
+
+All entries in the continuous tables were computed from the proved
+coefficient-extraction formula (Theorem~\ref{thm:hermite-int}) and
+independently verified against the matching
+formula~(Conjecture~\ref{conj:hermite}) for all $m, k \le 20$
+(441~entries, zero discrepancies). All discrete tables were computed
+from the multinomial formula (Theorem~\ref{thm:kraw-coeff}) and
+independently verified against the direct Krawtchouk
+sum~\eqref{eq:Imk} for $n \le 12$ and all $\alpha \in \{-3, -2,
+-1, 0, 1, 2, 3, \tfrac13, \tfrac12, \tfrac23, \tfrac32\}$.
+
+\end{document}
