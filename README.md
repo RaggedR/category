@@ -1,9 +1,6 @@
 # Category
 
-Research notes on category theory topics for LinkedIn posts and related writing — covering Hopf algebras, Connes-Kreimer renormalization, phantom types, Heegaard splitting, Lean verification, and Schur-Weyl duality.
-
-## Tech Stack
-- Markdown, HTML, LaTeX
+Research on orthogonal polynomial matching coefficients, the Riemann zeta function, quantum cohomology, and category theory. See [INDEX.md](INDEX.md) for the full directory guide.
 
 ## License
 MIT

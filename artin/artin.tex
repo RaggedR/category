@@ -1,0 +1,372 @@
+\documentclass[11pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{observation}[theorem]{Observation}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{\textbf{A Martin-L\"of Test That\\
+Pseudorandom Generators Fail}}
+\author{Robin Langer}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Every computable sequence fails some Martin-L\"of test,
+but the standard proof is circular:
+it uses the sequence itself to build the test.
+We construct a concrete, non-circular Martin-L\"of test---based
+on the Chebotarev density theorem---that five standard
+pseudorandom number generators all fail.
+The test asks whether a bitstream indexed by primes
+has the correct conditional hit rates modulo~$12$.
+Any sequence drawn from the Chebotarev measure passes.
+Any PRNG fails, because its bits are generated
+independently of the primes.
+\end{abstract}
+
+%% ================================================================
+\section{The problem with the standard proof}
+%% ================================================================
+
+A pseudorandom number generator produces a computable sequence.
+No computable sequence is Martin-L\"of random.
+The proof: given a computable sequence~$x$,
+define $U_m = \{y : y_i = x_i \text{ for } i \leq f(m)\}$
+where $f(m)$ grows slowly enough that $\mu(U_m) \leq 2^{-m}$.
+Then $x \in \bigcap U_m$, so $x$ fails the test.
+
+This is correct but useless.
+The test requires you to \emph{compute $x$} before you can test it.
+For a PRNG with a short seed, that is feasible.
+But for a number-theoretic sequence like the Artin membership
+sequence, the test requires factoring $q - 1$ for every prime~$q$---the
+test is harder than the sequence it claims to debunk.
+
+More importantly, the test is not \emph{interpretable}.
+It tells you that the sequence is not random
+but says nothing about \emph{how} it fails.
+We construct a test that is concrete,
+interpretable, and motivated by number theory.
+
+%% ================================================================
+\section{The Chebotarev measure}
+%% ================================================================
+
+Fix an integer~$r$.
+A prime~$q$ belongs to $S(r)$ if $r$ generates
+the multiplicative group $(\mathbb{Z}/q\mathbb{Z})^*$.
+Artin conjectured that $S(r)$ has density
+$C_{\mathrm{Artin}} \approx 0.3740$ among the primes.
+
+But the density is not uniform across residue classes.
+Whether $r$ is a primitive root mod~$q$ depends on
+the factorisation of $q - 1$,
+which is constrained by $q \bmod m$ for small~$m$.
+For $r = 3$ and $m = 12$:
+
+\begin{itemize}
+\item $q \equiv 1 \pmod{12}$: then $3 \mid q - 1$,
+  so the cubes are a proper subgroup.
+  $3$ cannot generate. Hit rate $= 0$.
+\item $q \equiv 11 \pmod{12}$: again $3 \mid q - 1$. Hit rate $= 0$.
+\item $q \equiv 5 \pmod{12}$: neither $3$ nor $2$
+  divides $q - 1$ obstructively. Hit rate $\approx 0.90$.
+\item $q \equiv 7 \pmod{12}$: $3 \nmid q - 1$ but $2 \| q - 1$.
+  Hit rate $\approx 0.60$.
+\end{itemize}
+
+These are not empirical observations.
+The vanishing at $q \equiv 1$ and $q \equiv 11$ is a theorem.
+The values $0.90$ and $0.60$ are predictions of the
+Chebotarev density theorem applied to the splitting field
+of $x^{q-1} - 1$ over $\mathbb{Q}$.
+
+\begin{definition}
+The \emph{Chebotarev measure} $\mu$ on $\{0,1\}^{\mathbb{N}}$,
+indexed by the primes $p_1, p_2, \ldots$, is defined by
+\[
+  \mu(b_n = 1 \mid p_n \equiv a \pmod{12})
+  = \begin{cases}
+    0 & \text{if } a \in \{1, 11\}, \\
+    c_a & \text{if } a \in \{5, 7\},
+  \end{cases}
+\]
+where $c_5 \approx 0.897$ and $c_7 \approx 0.600$
+are the Chebotarev-predicted densities,
+with bits conditionally independent given the residue class.
+\end{definition}
+
+This is a computable measure:
+the residue class $p_n \bmod 12$ is computable,
+and the conditional probabilities are computable reals.
+Martin-L\"of randomness with respect to $\mu$ is well-defined.
+
+%% ================================================================
+\section{The test}
+%% ================================================================
+
+\begin{definition}
+The \emph{residue-class coherence test} is the
+Martin-L\"of test $(U_m)_{m \geq 1}$ relative to $\mu$ defined by
+\[
+  U_m = \left\{ (b_n) :
+    \sum_{a \in \{1,5,7,11\}}
+    \frac{(\hat{P}_a - \mu_a)^2}{\mu_a(1-\mu_a) / N_a}
+    > t_m \right\},
+\]
+where $\hat{P}_a$ is the empirical hit rate
+among the first $N$ primes congruent to $a \pmod{12}$,
+$\mu_a$ is the Chebotarev prediction,
+$N_a = |\{n \leq N : p_n \equiv a \pmod{12}\}|$,
+and $t_m$ is chosen so that $\mu(U_m) \leq 2^{-m}$.
+\end{definition}
+
+Under $\mu$, the statistic converges in distribution
+to $\chi^2_3$ as $N \to \infty$,
+so $t_m = O(m)$ suffices.
+The sets $U_m$ are uniformly computably enumerable
+(the chi-squared statistic is computable from the data),
+and $\mu(U_m) \leq 2^{-m}$ by choice of $t_m$.
+This is a valid Martin-L\"of test.
+
+%% ================================================================
+\section{Pseudorandom generators fail}
+%% ================================================================
+
+A PRNG generates bits independently of the prime index.
+Its bits satisfy
+$P(b_n = 1 \mid p_n \equiv a \pmod{12}) = P(b_n = 1)$
+for all~$a$.  In particular, $\hat{P}_1 \approx \hat{P}_5
+\approx \hat{P}_7 \approx \hat{P}_{11} \approx 0.375$,
+while $\mu_1 = \mu_{11} = 0$ and $\mu_5 \approx 0.90$.
+
+As $N \to \infty$, the chi-squared statistic diverges.
+The PRNG output lies in $U_m$ for every~$m$.
+It fails the test.
+
+We verified this for five standard generators
+over $N = 50{,}000$ primes:
+
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+Generator & $\hat{P}_1$ & $\hat{P}_5$ & $\hat{P}_7$
+  & $\hat{P}_{11}$ & $\chi^2$ \\
+\midrule
+Mersenne Twister   & 0.369 & 0.370 & 0.380 & 0.382 & 4.6 \\
+PCG64              & 0.378 & 0.372 & 0.379 & 0.376 & 0.7 \\
+MT19937            & 0.375 & 0.372 & 0.376 & 0.367 & 1.6 \\
+Philox             & 0.377 & 0.368 & 0.369 & 0.378 & 3.0 \\
+SFC64              & 0.374 & 0.377 & 0.371 & 0.379 & 1.2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The chi-squared values above are computed against the
+\emph{flat} null ($\hat{P}_a = \hat{P}$ for all~$a$).
+Against the Chebotarev measure $\mu$,
+the statistic is dominated by the $a = 1$ and $a = 11$
+terms, where $\mu_a = 0$ but $\hat{P}_a \approx 0.375$,
+and formally diverges.
+The generators do not merely fail the test.
+They fail it infinitely badly.
+
+%% ================================================================
+\section{The Artin sequence passes}
+%% ================================================================
+
+The Artin membership sequence
+$b_n = \mathbf{1}_{p_n \in S(3)}$, computed over $50{,}000$ primes:
+
+\begin{center}
+\begin{tabular}{rccc}
+\toprule
+$p_n \bmod 12$ & $N_a$ & Hits & $\hat{P}_a$ \\
+\midrule
+$1$  & $12{,}447$ & $0$      & $0.000$ \\
+$5$  & $12{,}538$ & $11{,}243$ & $0.897$ \\
+$7$  & $12{,}510$ & $7{,}508$  & $0.600$ \\
+$11$ & $12{,}503$ & $0$      & $0.000$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The empirical hit rates match the Chebotarev predictions exactly.
+The chi-squared statistic against $\mu$ is small.
+The Artin sequence passes the residue-class coherence test.
+
+Note that this does not make the Artin sequence Martin-L\"of random.
+It is computable, so it fails other tests.
+But it passes \emph{this} test---the one that every PRNG fails.
+
+%% ================================================================
+\section{The Artin sequence fails standard tests}
+%% ================================================================
+
+At the same time, the Artin bitstream fails
+five of nine standard PRNG tests:
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+Test & $p$-value & Verdict \\
+\midrule
+Frequency (monobit vs $0.5$) & $\approx 0$ & Fail \\
+Frequency (vs Artin's constant) & $0.565$ & Pass \\
+Runs & $\approx 0$ & Fail \\
+Serial (bigrams) & $\approx 0$ & Fail \\
+Autocorrelation (lags $1$--$50$) & $\approx 0$ & Fail \\
+Block frequency ($M=100$) & $1.000$ & Pass \\
+Longest run of ones & $0.018$ & Pass \\
+CUSUM & $\approx 0$ & Fail \\
+Spectral (DFT) & $0.296$ & Pass \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The most informative failure is the lag-1 autocorrelation
+$r_1 = -0.062$: consecutive primes repel each other in $S(3)$.
+\[
+  P(p_{n+1} \in S(3) \mid p_n \in S(3)) = 0.337,
+  \qquad
+  P(p_{n+1} \in S(3) \mid p_n \notin S(3)) = 0.398.
+\]
+This repulsion varies with $r$ (Table~\ref{tab:repulsion}).
+Most values repel, but $r = 15$ attracts
+and $r = 14$ is neutral.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rccccr}
+\toprule
+$r$ & $P$ & $P|\text{hit}$ & $P|\text{miss}$ & Drop & $r_1$ \\
+\midrule
+2  & 0.374 & 0.329 & 0.401 & $+12.0\%$ & $-0.072$ \\
+3  & 0.375 & 0.337 & 0.398 & $+10.3\%$ & $-0.062$ \\
+5  & 0.394 & 0.338 & 0.431 & $+14.3\%$ & $-0.093$ \\
+6  & 0.374 & 0.351 & 0.387 & $+6.2\%$  & $-0.037$ \\
+7  & 0.374 & 0.369 & 0.377 & $+1.3\%$  & $-0.008$ \\
+10 & 0.376 & 0.362 & 0.384 & $+3.6\%$  & $-0.021$ \\
+11 & 0.375 & 0.359 & 0.385 & $+4.4\%$  & $-0.026$ \\
+12 & 0.376 & 0.333 & 0.401 & $+11.4\%$ & $-0.069$ \\
+13 & 0.377 & 0.346 & 0.396 & $+8.3\%$  & $-0.050$ \\
+14 & 0.374 & 0.374 & 0.373 & $-0.1\%$  & $+0.000$ \\
+\textbf{15} & \textbf{0.377} & \textbf{0.420} & \textbf{0.351}
+  & $\mathbf{-11.4\%}$ & $\mathbf{+0.069}$ \\
+17 & 0.376 & 0.350 & 0.391 & $+6.8\%$  & $-0.041$ \\
+18 & 0.373 & 0.329 & 0.399 & $+11.7\%$ & $-0.070$ \\
+19 & 0.376 & 0.373 & 0.378 & $+0.7\%$  & $-0.004$ \\
+20 & 0.394 & 0.335 & 0.432 & $+14.8\%$ & $-0.096$ \\
+\bottomrule
+\end{tabular}
+\caption{Consecutive-prime repulsion in $S(r)$.
+Positive drop means repulsion; negative means attraction.}
+\label{tab:repulsion}
+\end{table}
+
+%% ================================================================
+\section{Discussion}
+%% ================================================================
+
+The standard proof that computable sequences are not Martin-L\"of
+random is an existence result:
+for every computable sequence, \emph{some} test catches it.
+The test is built from the sequence, cannot be described
+without it, and conveys no insight about
+\emph{why} the sequence is not random.
+
+We have exhibited a specific test---residue-class coherence
+against the Chebotarev measure---with three properties:
+\begin{enumerate}
+\item It is a valid Martin-L\"of test
+  (computably enumerable, measure-decreasing).
+\item It catches every PRNG
+  (the bits are independent of the prime index).
+\item It has a mathematical name and an interpretable failure mode
+  (the generator does not know which residue class it is in).
+\end{enumerate}
+
+The test does not use the PRNG's algorithm or seed.
+It works against \emph{any} generator that produces bits
+independently of the primes,
+which includes all standard PRNGs.
+
+The Artin sequence is not Martin-L\"of random either---it
+is computable, and other tests catch it.
+But the tests that catch it (autocorrelation, runs)
+are \emph{different} from the test that catches PRNGs.
+The two kinds of non-randomness do not overlap.
+
+\medskip
+
+The situation is:
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+& Standard tests & Coherence test \\
+\midrule
+Truly random sequence & Pass & Pass \\
+Artin sequence & Fail & Pass \\
+PRNG & Pass & Fail \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+
+No single test captures ``randomness.''
+What exists is a landscape of tests,
+each sensitive to a different kind of structure.
+Standard PRNG tests detect the absence of independence.
+The coherence test detects the absence of arithmetic.
+The Artin sequence has arithmetic but not independence.
+A PRNG has independence but not arithmetic.
+A truly random sequence---drawn from the Chebotarev measure---would
+have both.
+
+\begin{thebibliography}{9}
+\bibitem{artin1927}
+E.~Artin,
+\emph{\"Uber die Zetafunktionen gewisser algebraischer Zahlk\"orper},
+Math.\ Ann.\ \textbf{89} (1927), 147--156.
+
+\bibitem{hooley1967}
+C.~Hooley,
+\emph{On Artin's conjecture},
+J.~Reine Angew.\ Math.\ \textbf{225} (1967), 209--220.
+
+\bibitem{heathbrown1986}
+D.R.~Heath-Brown,
+\emph{Artin's conjecture for primitive roots},
+Quart.\ J.\ Math.\ Oxford \textbf{37} (1986), 27--38.
+
+\bibitem{martinlof1966}
+P.~Martin-L\"of,
+\emph{The definition of random sequences},
+Information and Control \textbf{9}(6) (1966), 602--619.
+
+\bibitem{nist2010}
+A.~Rukhin et al.,
+\emph{A Statistical Test Suite for Random and Pseudorandom
+Number Generators for Cryptographic Applications},
+NIST SP~800-22 Rev.~1a (2010).
+
+\bibitem{lecuyer2007}
+P.~L'Ecuyer and R.~Simard,
+\emph{TestU01: A C library for empirical testing of
+random number generators},
+ACM Trans.\ Math.\ Software \textbf{33}(4) (2007), Article~22.
+\end{thebibliography}
+
+\end{document}

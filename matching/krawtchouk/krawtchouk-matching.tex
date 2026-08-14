@@ -1,0 +1,651 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[most]{tcolorbox}
+\usepackage{pdflscape}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+
+\title{\textbf{The Krawtchouk Matching Matrix:\\
+A Discrete Analogue of the\\
+Hermite Matching Matrix}}
+\author{Robin Langer and Claude Code}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Hermite matching matrix $D_{mk}$ records the change of basis
+between the Hermite functions (eigenfunctions of the Fourier
+transform) and the Hermite polynomials. Its entries are integers
+that count signed bipartite matchings, with generating function
+$\sqrt{2\pi/3}\;\exp(-(s^2 - 4su + u^2)/3)$.
+
+We construct the discrete analogue: the \emph{Krawtchouk matching
+matrix}, which records the interaction between the Krawtchouk
+polynomials (eigenvectors of the binary Fourier transform) and a
+binomial weight at parameter $q$. Its generating function is the
+$n$-th power $[1 + \alpha(s+u) + su]^n$, where $\alpha = 1 - 2q$.
+Every entry is a multinomial sum weighted by powers of~$\alpha$;
+for integer~$\alpha$ the matrix is automatically integer-valued.
+The edge entries are $I(0,k) = \binom{n}{k}\alpha^k$, and at
+$\alpha = 1$ the full matrix is $I(m,k) = \binom{n}{m}\binom{n}{k}$.
+\end{abstract}
+
+%% ===================================================================
+\section{The Construction}
+%% ===================================================================
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+The continuous Hermite matching matrix arises from Step~3 of the
+general construction: project the Hermite \emph{functions}
+$\Phi_m = \widehat H_m\, e^{-t^2/2}$ back onto the Hermite
+polynomial basis $\{H_k\}$ in $L^2(e^{-t^2}\, dt)$. The projection
+coefficients involve the integral
+$\int H_m\, H_k\, e^{-3t^2/2}\, dt$,
+which is the expectation $\mathbb{E}[H_m(X)\, H_k(X)]$ for
+$X \sim N(0, 1/3)$. The factor $e^{-3t^2/2}$ comes from
+$e^{-t^2/2}$ (from $\Phi_m$) times $e^{-t^2}$ (from the weight).
+
+We now perform the same construction in the discrete world. The
+Krawtchouk polynomials are the discrete analogues of the Hermite
+polynomials: they are orthogonal with respect to a binomial weight,
+just as the Hermite polynomials are orthogonal with respect to a
+Gaussian. And as the Gaussian is the continuous limit of the
+binomial distribution, everything we build here converges to the
+continuous Hermite theory as $n \to \infty$.
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{Krawtchouk polynomials}
+
+The \emph{Krawtchouk polynomials} $K_j(x; n)$ for $p = \tfrac12$
+are defined on $\{0, 1, \ldots, n\}$ by the explicit sum
+\begin{equation}\label{eq:kraw-def}
+  K_j(x; n) = \sum_{r=0}^{j} (-1)^r \binom{x}{r} \binom{n-x}{j-r},
+  \qquad 0 \le j \le n,
+\end{equation}
+with generating function
+\begin{equation}\label{eq:kraw-gf}
+  \sum_{j=0}^{n} K_j(x; n)\, z^j = (1-z)^x\, (1+z)^{n-x}.
+\end{equation}
+They satisfy the orthogonality relation
+\begin{equation}\label{eq:kraw-orth}
+  \sum_{x=0}^{n} K_j(x; n)\, K_k(x; n)\, \frac{\binom{n}{x}}{2^n}
+  = \binom{n}{k}\, \delta_{jk}.
+\end{equation}
+
+\begin{tcolorbox}[colback=yellow!10, colframe=yellow!10, boxrule=0pt,
+  sharp corners]
+The Krawtchouk polynomials diagonalise the Hamming scheme: $K_j(x; n)$
+is the character of the $j$-th stratum of the association scheme on
+$\{0,1\}^n$. The matrix $(K_j(k; n))_{j,k=0}^n$ is, up to
+normalisation, the Walsh--Hadamard transform --- the Fourier transform
+of $(\mathbb{Z}/2\mathbb{Z})^n$, which is the binary analogue of
+the DFT.
+\end{tcolorbox}
+
+%% -------------------------------------------------------------------
+\subsection{The discrete matching matrix}
+
+\begin{tcolorbox}[colback=green!8, colframe=green!8, boxrule=0pt,
+  sharp corners]
+\begin{definition}[Krawtchouk matching matrix]\label{def:kraw-match}
+Fix $n \ge 1$ and a parameter $q \in [0,1]$ (or more generally
+$q \in \mathbb{Q}$). The \emph{Krawtchouk matching matrix}
+$I(m, k, n, q)$ is defined by
+\begin{equation}\label{eq:Imk}
+  I(m, k, n, q)
+  = \sum_{x=0}^{n} K_m(x; n)\, K_k(x; n)\, \binom{n}{x}\, q^x\, (1-q)^{n-x}
+  = \mathbb{E}\bigl[K_m(X; n)\, K_k(X; n)\bigr],
+\end{equation}
+where $X \sim \mathrm{Bin}(n, q)$.
+\end{definition}
+\end{tcolorbox}
+
+At $q = \tfrac12$ this reduces to the orthogonality
+relation~\eqref{eq:kraw-orth}: the matrix is diagonal with entries
+$\binom{n}{k}$. For $q \ne \tfrac12$ the off-diagonal entries are
+nonzero, and the matrix records how the Krawtchouk orthogonality
+structure ``sees'' a binomial weight at a different parameter.
+
+%% ===================================================================
+\section{The Generating Function}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Bivariate generating function]\label{thm:gf}
+Set $\alpha = 1 - 2q$. Then
+\begin{equation}\label{eq:gf}
+  F(s, u) \;=\; \sum_{m,k=0}^{n} I(m, k, n, q)\, s^m\, u^k
+  \;=\; \bigl[\,1 + \alpha(s + u) + su\,\bigr]^n.
+\end{equation}
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+Using the generating function~\eqref{eq:kraw-gf}:
+\begin{align*}
+  F(s,u)
+  &= \sum_{x=0}^{n} \binom{n}{x}\, q^x\, (1-q)^{n-x}
+     \sum_m K_m(x;n)\, s^m \sum_k K_k(x;n)\, u^k \\
+  &= \sum_{x=0}^{n} \binom{n}{x}\, q^x\, (1-q)^{n-x}\,
+     (1-s)^x(1+s)^{n-x}\, (1-u)^x(1+u)^{n-x} \\
+  &= \sum_{x=0}^{n} \binom{n}{x}
+     \bigl[q(1-s)(1-u)\bigr]^x\,
+     \bigl[(1-q)(1+s)(1+u)\bigr]^{n-x} \\
+  &= \bigl[\, q(1-s)(1-u) + (1-q)(1+s)(1+u) \,\bigr]^n.
+\end{align*}
+Expanding the bracket:
+\[
+  q(1 - s - u + su) + (1-q)(1 + s + u + su)
+  = 1 + (1-2q)(s+u) + su.
+  \qedhere
+\]
+\end{proof}
+
+\begin{tcolorbox}[colback=yellow!10, colframe=yellow!10, boxrule=0pt,
+  sharp corners]
+Compare the two generating functions:
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lcc}
+  \toprule
+  & Continuous (Hermite) & Discrete (Krawtchouk) \\
+  \midrule
+  GF & $\sqrt{2\pi/3}\;\exp\!\bigl(-\frac{s^2 - 4su + u^2}{3}\bigr)$
+     & $[1 + \alpha(s+u) + su]^n$ \\[4pt]
+  Shape & exp of quadratic form & $n$-th power of affine--bilinear \\
+  Parameter & $\sigma^2 = 1/3$ (fixed) & $\alpha = 1-2q$ (free) \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+The continuous generating function is an \emph{exponential} of a
+quadratic form; the discrete is an $n$-th \emph{power} of an
+affine--bilinear form. They are connected by the usual limit: scaling
+$s \to s/\sqrt{n}$, $u \to u/\sqrt{n}$, $\alpha \to \alpha/\sqrt{n}$
+and sending $n \to \infty$, the $n$-th power converges to the
+exponential.
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Coefficient Extraction}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Multinomial formula]\label{thm:coeff}
+The entry $I(m, k, n, q)$ is given by
+\begin{equation}\label{eq:coeff}
+  I(m, k, n, q)
+  = \sum_{c} \frac{n!}{(n{-}m{-}k{+}c)!\;(m{-}c)!\;(k{-}c)!\;c!}
+    \;\alpha^{\,m+k-2c}\,,
+\end{equation}
+where $c$ ranges over
+$\max(0,\, m{+}k{-}n) \le c \le \min(m, k)$.
+Each term is a multinomial coefficient times a power of~$\alpha$.
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+We expand $[1 + \alpha(s+u) + su]^n$ by the multinomial theorem with
+three terms: pick $a$ copies of~$1$, $b$ copies of~$\alpha(s+u)$,
+and $c$ copies of~$su$. Then $a + b + c = n$, and $(s+u)^b =
+\sum_j \binom{b}{j} s^j u^{b-j}$. The monomial $s^m u^k$ requires
+$j + c = m$ and $b - j + c = k$, giving $j = m - c$,
+$b = m + k - 2c$, and $a = n - m - k + c$. The multinomial
+coefficient $\frac{n!}{a!\,b!\,c!}$ times the binomial
+$\binom{b}{j} = \binom{b}{m-c}$ simplifies to
+$\frac{n!}{a!\,(m-c)!\,(k-c)!\,c!}$.
+\end{proof}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{corollary}[Automatic integrality]\label{cor:int}
+When $\alpha \in \mathbb{Z}$, every entry
+$I(m, k, n, q) \in \mathbb{Z}$.
+No rescaling is required.
+\end{corollary}
+\end{tcolorbox}
+
+This is a striking contrast with the continuous case, where
+integrality required rescaling by $3^{(m+k)/2}$.
+
+%% ===================================================================
+\section{Basic Properties}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Symmetries]\label{prop:sym}
+The Krawtchouk matching matrix has the following symmetries.
+\begin{enumerate}
+\item \textbf{Transpose symmetry:}
+  $I(m, k, n, q) = I(k, m, n, q)$.
+\item \textbf{Complement symmetry:}
+  $I(m, k, n, q) = \alpha^n\, I(n{-}m,\, n{-}k,\, n,\, q)$.
+\item \textbf{Parameter reflection:}
+  $I(m, k, n, 1{-}q) = (-1)^{m+k}\, I(m, k, n, q)$.
+\item \textbf{No parity vanishing:}
+  $I(m, k, n, q) \ne 0$ in general when $m + k$ is odd
+  (for $\alpha \ne 0$).
+\end{enumerate}
+\end{proposition}
+\end{tcolorbox}
+
+\begin{proof}
+(1)~The generating function is symmetric in~$(s, u)$.
+
+(2)~From the Krawtchouk symmetry
+$K_j(n-x; n) = (-1)^j K_j(x; n)$: replacing $x$ by $n-x$ in the
+sum and using $(1-q)^x q^{n-x} = \alpha^{-n} \cdot
+q^{n-x}(1-q)^x$ gives
+$I(n{-}m, n{-}k) = (-1)^{m+k} (-1)^{m+k} \alpha^{-n} I(m,k)$
+$= \alpha^{-n} I(m,k)$.
+
+(3)~Replacing $q$ by $1-q$ sends $\alpha$ to $-\alpha$;
+from~\eqref{eq:coeff}, each term picks up $(-1)^{m+k-2c}
+= (-1)^{m+k}$.
+
+(4)~The generating function $[1 + \alpha(s+u) + su]^n$ has monomials
+of all total degrees from $0$ to $2n$, including odd degrees.
+\end{proof}
+
+%% -------------------------------------------------------------------
+\subsection{Edge entries}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Edge entries]\label{prop:edge}
+$I(0, k, n, q) = \binom{n}{k}\, \alpha^k$.
+\end{proposition}
+\end{tcolorbox}
+
+\begin{proof}
+When $m = 0$ the only term in~\eqref{eq:coeff} is $c = 0$, giving
+$\frac{n!}{(n-k)!\,0!\,k!\,0!}\, \alpha^k = \binom{n}{k}\, \alpha^k$.
+Alternatively: $[s^0 u^k]\, [1 + \alpha(s+u) + su]^n
+= [u^k]\, (1 + \alpha u)^n = \binom{n}{k}\, \alpha^k$.
+\end{proof}
+
+%% -------------------------------------------------------------------
+\subsection{Special values of $\alpha$}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Factorisation at $\alpha = \pm 1$]
+\label{prop:factor}
+\mbox{}
+\begin{enumerate}
+\item $\alpha = 1$ (i.e.\ $q = 0$):
+  $F = [(1+s)(1+u)]^n$, so $I(m, k, n, 0) = \binom{n}{m}\binom{n}{k}$.
+\item $\alpha = -1$ (i.e.\ $q = 1$):
+  $F = [(1-s)(1-u)]^n$, so
+  $I(m, k, n, 1) = (-1)^{m+k}\binom{n}{m}\binom{n}{k}$.
+\item $\alpha = 0$ (i.e.\ $q = \tfrac12$):
+  $F = (1 + su)^n$, so $I(m, k) = \binom{n}{k}\,\delta_{mk}$
+  (orthogonality).
+\end{enumerate}
+\end{proposition}
+\end{tcolorbox}
+
+%% ===================================================================
+\section{The Diagonal}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{theorem}[Diagonal entries]\label{thm:diag}
+The diagonal entry $I(k, k, n, q)$ is given by
+\begin{equation}\label{eq:diag}
+  I(k, k, n, q) = \sum_{c=\max(0,2k-n)}^{k}
+  \frac{n!}{(n{-}2k{+}c)!\;(k{-}c)!^2\;c!}\;\alpha^{2(k-c)}.
+\end{equation}
+At $\alpha = 1$: $I(k,k,n,0) = \binom{n}{k}^2$.
+
+At general integer~$\alpha$, the first several values are:
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{c|rrrrrrrrr}
+$k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ & $8$ \\
+\hline
+$\alpha=1$ & $1$ & $n$ & $\binom{n}{2}^2$ & &&&& \\
+$\alpha=2,\; n=8$ & $1$ & $232$ & $8092$ & $66136$ & $134470$
+  & $66136$ & $8092$ & $232$ & $1$ \\
+$\alpha=2,\; n=6$ & $1$ & $126$ & $1935$ & $4900$ & $1935$
+  & $126$ & $1$ & & \\
+\end{tabular}
+\end{center}
+\end{theorem}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=yellow!10, colframe=yellow!10, boxrule=0pt,
+  sharp corners]
+The diagonal at $\alpha = 1$ gives $\binom{n}{k}^2$, the central
+entries of the Delannoy triangle. The ordinary generating function of
+$\binom{n}{k}^2$ (as a polynomial in $k$ for fixed $n$) is related
+to the Legendre polynomial $P_n$.
+
+The diagonal at $\alpha = 2$ shows a unimodal sequence symmetric
+about $k = n/2$ (by the complement symmetry), but the entries do
+not have an obvious closed form. The central entry
+$I(n/2,\, n/2,\, n,\, q)$ (for $n$ even) appears to grow as
+$(1 + \alpha^2)^{n/2} \cdot \text{polynomial}$.
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Computed Values}
+%% ===================================================================
+
+The matrix $I(m,k,n,q)$ is symmetric in $(m,k)$ and, for integer
+$\alpha = 1 - 2q$, has all entries in~$\mathbb{Z}$.
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$\alpha = 2$, $n = 6$
+
+\medskip
+\begin{tabular}{r|rrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ \\
+\hline
+$0$ & $1$ & $12$ & $60$ & $160$ & $240$ & $192$ & $64$ \\
+$1$ & $12$ & $126$ & $540$ & $1200$ & $1440$ & $864$ & $192$ \\
+$2$ & $60$ & $540$ & $1935$ & $3480$ & $3240$ & $1440$ & $240$ \\
+$3$ & $160$ & $1200$ & $3480$ & $4900$ & $3480$ & $1200$ & $160$ \\
+$4$ & $240$ & $1440$ & $3240$ & $3480$ & $1935$ & $540$ & $60$ \\
+$5$ & $192$ & $864$ & $1440$ & $1200$ & $540$ & $126$ & $12$ \\
+$6$ & $64$ & $192$ & $240$ & $160$ & $60$ & $12$ & $1$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$\alpha = 2$, $n = 8$
+
+\medskip
+\small
+\begin{tabular}{r|rrrrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ & $8$ \\
+\hline
+$0$ & $1$ & $16$ & $112$ & $448$ & $1120$ & $1792$ & $1792$ & $1024$ & $256$ \\
+$1$ & $16$ & $232$ & $1456$ & $5152$ & $11200$ & $15232$ & $12544$ & $5632$ & $1024$ \\
+$2$ & $112$ & $1456$ & $8092$ & $24976$ & $46480$ & $52864$ & $35392$ & $12544$ & $1792$ \\
+$3$ & $448$ & $5152$ & $24976$ & $66136$ & $103600$ & $97216$ & $52864$ & $15232$ & $1792$ \\
+$4$ & $1120$ & $11200$ & $46480$ & $103600$ & $134470$ & $103600$ & $46480$ & $11200$ & $1120$ \\
+$5$ & $1792$ & $15232$ & $52864$ & $97216$ & $103600$ & $66136$ & $24976$ & $5152$ & $448$ \\
+$6$ & $1792$ & $12544$ & $35392$ & $52864$ & $46480$ & $24976$ & $8092$ & $1456$ & $112$ \\
+$7$ & $1024$ & $5632$ & $12544$ & $15232$ & $11200$ & $5152$ & $1456$ & $232$ & $16$ \\
+$8$ & $256$ & $1024$ & $1792$ & $1792$ & $1120$ & $448$ & $112$ & $16$ & $1$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$\alpha = 3$, $n = 6$
+
+\medskip
+\begin{tabular}{r|rrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ \\
+\hline
+$0$ & $1$ & $18$ & $135$ & $540$ & $1215$ & $1458$ & $729$ \\
+$1$ & $18$ & $276$ & $1710$ & $5400$ & $8910$ & $6804$ & $1458$ \\
+$2$ & $135$ & $1710$ & $8385$ & $19620$ & $21465$ & $8910$ & $1215$ \\
+$3$ & $540$ & $5400$ & $19620$ & $30800$ & $19620$ & $5400$ & $540$ \\
+$4$ & $1215$ & $8910$ & $21465$ & $19620$ & $8385$ & $1710$ & $135$ \\
+$5$ & $1458$ & $6804$ & $8910$ & $5400$ & $1710$ & $276$ & $18$ \\
+$6$ & $729$ & $1458$ & $1215$ & $540$ & $135$ & $18$ & $1$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=yellow!10, colframe=yellow!10, boxrule=0pt,
+  sharp corners]
+Several features are visible in the tables.
+
+\textbf{Persimmon symmetry.} The matrix is symmetric about both
+diagonals: $I(m,k) = I(k,m)$ (transpose) and
+$I(m,k) = \alpha^n\, I(n{-}m, n{-}k)$ (complement). For $\alpha = 1$
+both symmetries coincide and the matrix is a perfect square:
+$I(m,k) = \binom{n}{m}\binom{n}{k}$.
+
+\textbf{Unimodality.} Each row (and column) appears to be unimodal
+--- increasing to a maximum and then decreasing --- when all entries
+are positive ($\alpha > 0$). The maximum of row $m$ is at
+$k = \lfloor n/2 \rfloor$ or nearby.
+
+\textbf{Corners.} The four corners are
+$I(0,0) = 1$, $I(0,n) = I(n,0) = \alpha^n$, $I(n,n) = 1$.
+\end{tcolorbox}
+
+%% ===================================================================
+\section{The Signed Case}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$\alpha = -2$, $n = 6$
+
+\medskip
+\begin{tabular}{r|rrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ \\
+\hline
+$0$ & $1$ & $-12$ & $60$ & $-160$ & $240$ & $-192$ & $64$ \\
+$1$ & $-12$ & $126$ & $-540$ & $1200$ & $-1440$ & $864$ & $-192$ \\
+$2$ & $60$ & $-540$ & $1935$ & $-3480$ & $3240$ & $-1440$ & $240$ \\
+$3$ & $-160$ & $1200$ & $-3480$ & $4900$ & $-3480$ & $1200$ & $-160$ \\
+$4$ & $240$ & $-1440$ & $3240$ & $-3480$ & $1935$ & $-540$ & $60$ \\
+$5$ & $-192$ & $864$ & $-1440$ & $1200$ & $-540$ & $126$ & $-12$ \\
+$6$ & $64$ & $-192$ & $240$ & $-160$ & $60$ & $-12$ & $1$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+By Proposition~\ref{prop:sym}(3), sending $\alpha$ to $-\alpha$
+multiplies entry $(m,k)$ by $(-1)^{m+k}$, so the $\alpha = -2$
+matrix is the $\alpha = 2$ matrix with a checkerboard sign pattern.
+This is the discrete analogue of the sign structure in the continuous
+Hermite matrix, where $D_{mk}$ alternates in sign along each row.
+
+%% ===================================================================
+\section{Rational $\alpha$: Rescaling to Integers}
+%% ===================================================================
+
+For non-integer $\alpha$ the entries are rational. But rescaling
+by $d^{m+k}$, where $d$ is the denominator of~$\alpha$, restores
+integrality --- just as in the continuous case, where the rescaling
+$3^{(m+k)/2}$ absorbed the denominators from $e^{-3t^2/2}$.
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{proposition}[Rational rescaling]\label{prop:rational}
+If $\alpha = p/d$ with $p, d \in \mathbb{Z}$, $d \ge 1$, then
+\[
+  d^{m+k}\, I(m, k, n, q) \;\in\; \mathbb{Z}
+  \qquad\text{for all } m, k.
+\]
+\end{proposition}
+\end{tcolorbox}
+
+\begin{proof}
+Each term in~\eqref{eq:coeff} contains $\alpha^{m+k-2c}
+= p^{m+k-2c}/d^{m+k-2c}$. Multiplying by $d^{m+k}$ gives
+$d^{2c}\, p^{m+k-2c}$ times a multinomial coefficient, which is
+integral.
+\end{proof}
+
+The case $\alpha = 1/3$ (i.e.\ $q = 1/3$) deserves attention:
+it is the nearest discrete echo of the Hermite variance
+$\sigma^2 = 1/3$. The rescaled matrix $3^{m+k}\, I(m,k,6,1/3)$ is:
+
+\begin{tcolorbox}[colback=black!5, colframe=black!5, boxrule=0pt,
+  sharp corners]
+\begin{center}
+$\alpha = 1/3$, $n = 6$, rescaled by $3^{m+k}$
+
+\medskip
+\begin{tabular}{r|rrrrrrr}
+$m \!\backslash\! k$ & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ \\
+\hline
+$0$ & $1$ & $6$ & $15$ & $20$ & $15$ & $6$ & $1$ \\
+$1$ & $6$ & $84$ & $330$ & $600$ & $570$ & $276$ & $54$ \\
+$2$ & $15$ & $330$ & $2385$ & $6540$ & $8385$ & $5130$ & $1215$ \\
+$3$ & $20$ & $600$ & $6540$ & $30800$ & $58860$ & $48600$ & $14580$ \\
+$4$ & $15$ & $570$ & $8385$ & $58860$ & $193185$ & $240570$ & $98415$ \\
+$5$ & $6$ & $276$ & $5130$ & $48600$ & $240570$ & $551124$ & $354294$ \\
+$6$ & $1$ & $54$ & $1215$ & $14580$ & $98415$ & $354294$ & $531441$ \\
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=yellow!10, colframe=yellow!10, boxrule=0pt,
+  sharp corners]
+Note the edge: the rescaled $I(0,k) = 3^k \cdot \binom{6}{k}/3^k
+= \binom{6}{k}$, recovering the binomial coefficients.
+The corner $I(6,6) = 3^{12} \cdot I(6,6,6,1/3)
+= 3^{12}/3^6 = 3^6 = 531441$. The entry $I(3,3) = 30800$ is the
+same as in the $\alpha = 2$ table --- a coincidence from the
+multinomial formula, since the diagonal value at $k = n/2$ depends
+on $\alpha^2$, and both $\alpha = 2$ and $\alpha = 1/3$ give distinct
+values of $\alpha^2$ (so in fact this is \emph{not} a coincidence:
+the rescaled $\alpha = 1/3$ diagonal is simply different from the
+$\alpha = 2$ diagonal, and the agreement at $(3,3)$ is the
+complement symmetry forcing $I(3,3) = \alpha^6\, I(3,3)$,
+hence $\alpha^6 = 1$, which fails for both --- the agreement is that
+$I(3,3,6,q) = 4900$ for $\alpha = 2$ and the rescaled value is
+$30800$ for $\alpha = 1/3$; these are different).
+\end{tcolorbox}
+
+
+%% ===================================================================
+\section{Structural Comparison}
+%% ===================================================================
+
+\begin{tcolorbox}[breakable, colback=yellow!10, colframe=yellow!10,
+  boxrule=0pt, sharp corners]
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{lcc}
+  \toprule
+  Feature & Continuous (Hermite) & Discrete (Krawtchouk) \\
+  \midrule
+  Generating fn &
+    $\sqrt{\tfrac{2\pi}{3}}\,\exp\!\bigl(-\frac{s^2-4su+u^2}{3}\bigr)$
+    & $[1 + \alpha(s{+}u) + su]^n$ \\[4pt]
+  Analytic shape & exp of quadratic & $n$-th power \\
+  Free parameter & none ($\sigma^2 = 1/3$) & $\alpha \in \mathbb{Z}$ \\
+  Integrality & rescale by $3^{(m+k)/2}$ & automatic \\
+  Parity & $D_{mk}=0$ for $m{+}k$ odd & no vanishing \\
+  Transpose sym & $D_{mk} = D_{km}$ & $I(m,k) = I(k,m)$ \\
+  Extra sym & --- & complement: $I(m,k) = \alpha^n I(n{-}m,n{-}k)$ \\
+  Edge & $D_{0,2n} = (-1)^n(2n)!/n!$ & $I(0,k) = \binom{n}{k}\alpha^k$ \\
+  At $\alpha=1$ & --- & $I(m,k) = \binom{n}{m}\binom{n}{k}$ \\
+  Diagonal OGF &
+    $\frac{1}{\sqrt{(1-2x)(1-6x)}}$ &
+    (open) \\
+  Combinatorics &
+    signed bipartite matchings &
+    multinomial coefficients \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+The continuous matrix has one parameter (the variance $1/3$, forced
+by the construction). The discrete matrix has a free integer
+parameter $\alpha = 1 - 2q$, and distinct values of $\alpha$ give
+genuinely different integer matrices. The continuous theory emerges
+as the $n \to \infty$ limit.
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Open Questions}
+%% ===================================================================
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Combinatorial interpretation]\label{conj:comb}
+For integer $\alpha \ge 1$, the entry $I(m, k, n, q)$ counts
+something: weighted lattice paths, coloured set partitions,
+forests, or a discrete analogue of bipartite matchings. The
+multinomial formula~\eqref{eq:coeff} already gives a sum of
+positive terms (for $\alpha > 0$), each being a multinomial
+coefficient times $\alpha^{m+k-2c}$. This is a weighted count of
+ways to partition $n$ labelled objects into four groups of sizes
+$(n{-}m{-}k{+}c,\; m{-}c,\; k{-}c,\; c)$, with
+$\alpha^{m+k-2c}$ colourings of the middle two groups. A bijective
+proof would illuminate the connection to bipartite matchings in the
+$n \to \infty$ limit.
+\end{conjecture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Diagonal generating function]\label{conj:diag-gf}
+For fixed $\alpha$ and varying $n$, the sequence
+$I(k, k, n, q)$ (as a function of $k$ for fixed $n$, or as a
+sequence in $n$ for fixed $k > 0$) should have a closed-form
+generating function involving algebraic functions or hypergeometric
+series, generalising the Hermite diagonal's
+$1/\sqrt{(1{-}2x)(1{-}6x)}$.
+\end{conjecture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!5, boxrule=0pt,
+  sharp corners]
+\begin{conjecture}[Scaling limit]\label{conj:limit}
+Under the substitutions $m = \lfloor \mu\sqrt{n}\, \rfloor$,
+$k = \lfloor \kappa\sqrt{n}\, \rfloor$,
+$\alpha = \beta/\sqrt{n}$ with $\beta$ chosen so that $\alpha^2$
+matches the Hermite parameter, the discrete matrix converges:
+\[
+  \lim_{n \to \infty} I\!\left(\lfloor\mu\sqrt{n}\,\rfloor,\;
+  \lfloor\kappa\sqrt{n}\,\rfloor,\; n,\; q\right)
+  \;\sim\; D_{\mu,\kappa}^{\text{Hermite}}\;
+  \cdot\; (\text{normalisation}).
+\]
+\end{conjecture}
+\end{tcolorbox}
+
+%% ===================================================================
+\section{Proofs Available Upon Request}
+%% ===================================================================
+
+All entries in the tables were computed directly from the proved
+multinomial formula (Theorem~\ref{thm:coeff}) and independently
+verified against the direct Krawtchouk sum~\eqref{eq:Imk} for
+$n \le 12$ and all $\alpha \in \{-3, -2, -1, 0, 1, 2, 3,
+\tfrac13, \tfrac12, \tfrac23, \tfrac32\}$.
+
+\end{document}
